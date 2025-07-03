@@ -1,0 +1,37 @@
+project:
+  type: website
+  output-dir: docs
+
+website:
+  title: "Introducción al lenguaje R + RStudio"
+  back-to-top-navigation: true
+  sidebar: 
+    search: true
+    logo: images/logos_ine.svg
+    contents: 
+      - href: index.qmd
+        text: Fundamentos
+      - unidad1.qmd
+      - unidad2.qmd
+      - unidad3.qmd
+      - unidad4.qmd
+      - unidad5.qmd
+      - unidad6.qmd
+      - unidad7.qmd
+      - unidad8.qmd
+      - extra.qmd
+      
+format:
+  html:
+    theme: cosmo
+    lang: es
+    css: styles.css
+    toc: true
+    toc-location: right
+    toc-title: "Contenidos"
+    search: true
+    author: 
+    - "Christian Ballejo"
+
+
+

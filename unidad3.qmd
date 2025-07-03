@@ -1,0 +1,614 @@
+---
+title: "Unidad 3: Exploración, diagnóstico y limpieza de datos"
+editor: 
+  markdown: 
+    wrap: 72
+---
+
+En el ámbito de los proyectos de análisis de datos, el preprocesamiento, también conocido como preparación de datos, es una etapa crucial que precede al análisis propiamente dicho. Esta fase esencial tiene como objetivo acondicionar los datos para su posterior análisis, garantizando su confiabilidad e integridad.
+
+Las tareas de preprocesamiento son específicas para cada conjunto de datos y dependen de los objetivos del proyecto y las técnicas de análisis que se emplearán. Sin embargo, existen tareas comunes que son aplicables a la mayoría de los casos, entre las que se encuentran el diagnóstico y la limpieza de datos.
+
+## Exploración y diagnóstico de datos
+
+La etapa de diagnóstico de datos es fundamental para comprender la estructura y características del conjunto de datos que se va a analizar. Esta fase involucra una serie de tareas esenciales, como:
+
+**Análisis de la estructura de la tabla de datos**: Esta tarea implica comprender la organización de los datos, identificando las variables, sus tipos de datos y la distribución de los registros. Es relevante vincular este proceso con el "diccionario de datos" de la tabla o base, ya sea de fuente secundaria o creada por nosotros mismos. 
+
+**Verificación del tipo de dato de cada variable de interés**: Es crucial determinar el tipo de dato de cada variable (numérica, categórica, fecha-hora, etc.) para aplicar las técnicas de análisis adecuadas.
+
+**Detección de valores faltantes**: La presencia de valores faltantes puede afectar significativamente los resultados del análisis. Es importante identificar estos valores y determinar la mejor manera de manejarlos (eliminación, imputación, etc.).
+
+**Identificación de las categorías de las variables cualitativas**: En el caso de variables categóricas, es necesario identificar las categorías existentes y evaluar su distribución.
+
+**Análisis de los mínimos y máximos de valores de cada variable cuantitativa**: Para variables numéricas, es importante determinar los valores mínimos y máximos para detectar posibles valores atípicos o errores de entrada.
+
+## Exploración de datos
+
+El primer paso en la exploración de un conjunto de datos es conocer su estructura y tamaño.
+
+El tamaño está definido por la cantidad de observaciones (filas) y la cantidad de variables (columnas).
+
+Llamamos estructura a la forma en se organizan sus variables, sus tipos de datos y sus categorías/valores.
+
+```{r, echo = F, message=FALSE, warning=FALSE}
+library(tidyverse)
+library(readxl)
+
+datos <- read_excel("datos/datos_demo.xlsx", 
+                    col_types = c("numeric", "text", "numeric", "numeric", "numeric", "logical", "date")) %>% 
+  mutate(fecha = as.Date(fecha),
+         id = as.integer(id))
+datos <- as.data.frame(datos)
+```
+
+Vamos a utilizar un dataframe de ejemplo con variedad en sus tipos de datos. Para ver su estructura en R base tenemos la función `str()`
+
+```{r}
+str(datos)
+```
+
+Nos informa que la tabla tiene 74 observaciones y 7 variables con su tipo de dato al lado.
+
+En R base los tipos de datos son:
+
+-   **int** (integer): números enteros
+-   **num** (numeric): números reales
+-   **chr** (character): caracteres (texto)
+-   **logi** (logical): valores lógicos
+-   **Date**: fechas
+-   **fct** (factor): factores
+
+En tidyverse, la función que reemplaza a str() es `glimpse()`:
+
+```{r}
+glimpse(datos)
+```
+
+Parece idéntica pero tiene una ventaja cuando la tabla de datos tiene muchas variables. La lista de respuesta de str() se trunca y no nos deja visualizar la totalidad de columnas, cosa que si hace glimpse().
+
+Por otra parte vamos a encontrar distintas definiciones para los tipos de datos, del modo tidyverse:
+
+-   num para a ser **dbl** (double): números reales
+-   logi para a ser **lgl** (logical): valores lógicos
+
+Y se incluyen un tipo nuevo:
+
+-   **dttm** (date-time): fechas y horas
+
+Esta exploración inicial de la estructura generalmente viene acompañada por el "diccionario de datos" (codebook) asociado a la tabla de datos, ya sea que esta tabla provenga de un proyecto de investigación propio (fuente primaria), producto de una fuente secundaria o de un sistema de vigilancia epidemiológica.
+
+## Comprobación y coerción de tipos de datos
+
+La mayoría de las funciones producen un error cuando el tipo de datos que esperan no coincide con los que pasamos como argumentos. En esta situación seguiremos el siguiente camino:
+
+-   Comprobar el tipo de datos utilizando las funciones `is.*()`, que nos responden con un valor lógico (TRUE si el tipo de dato coincide y FALSE si no lo hace). Si el tipo de dato coincide con el formato esperado por el argumento de la función, entonces podemos aplicarla, de lo contrario necesitaremos continuar:
+
+-   Forzar el tipo de datos deseado coercionando con funciones de la familia `as.*()`, que fuerzan el tipo de datos, siempre y cuando esto devuelva valores correctos. Por ejemplo, no podremos obtener valores correctos si intento coercionar caracteres a tipos numéricos.
+
+```{r}
+# Ejmeplo coercionando la variable sexo de caracter a factor
+
+as.factor(datos$sexo) # llamamos a la variable con el formato <dataframe>$<variable>
+
+# detecta que hay dos niveles o categorías posibles (F y M) 
+
+is.factor(as.factor(datos$sexo))
+
+# nos confirma que los datos se coercionaron a factor
+```
+
+-   Transformar el tipo de dato a partir de aplicar funciones específicas incluidas en paquetes que gestionan datos especiales, como por ejemplo las fechas (el paquete *lubridate* del tidyverse, que conoceremos más adelante, se ocupa de esto)
+
+A continuación se muestra una lista con los tipos más importantes que se pueden comprobar o forzar a partir de funciones de R base:
+
+| Tipo      | Comprobación     | Coerción         |
+|-----------|------------------|------------------|
+| character | `is.character()` | `as.character()` |
+| numeric   | `is.numeric()`   | `as.numeric()`   |
+| integer   | `is.integer()`   | `as.integer()`   |
+| double    | `is.double()`    | `as.double()`    |
+| factor    | `is.factor()`    | `as.factor()`    |
+| logical   | `is.logical()`   | `as.logical()`   |
+| NA        | `is.na()`        | `as.na()`        |
+
+
+## Skimr
+
+![](images/03/skimr.png){fig-align="center" width=10%}
+
+Existen diversas herramientas y funciones que facilitan la etapa de diagnóstico de datos, es el caso de skimr.
+
+Este paquete tiene funciones diseñadas para obtener un resumen rápido de la estructura de tablas de datos y son compatibles con el ecosistema tidyverse. 
+
+La función principal del paquete es `skim` y puede ser aplicada a todo el dataframe o bien a una variable o a un grupo de ellas.
+
+- Proporciona un conjunto más amplio de estadísticas que `summary()`, incluyendo valores faltantes, completos, número total (n) y desvío estándar (sd).
+
+- Informa de cada tipo de dato por separado.
+
+- Maneja fechas, valores lógicos y  otros tipos.
+
+Trabajemos con **skimr** sobre un conjunto de datos provenientes de la vigilancia del SNVS.
+
+```{r}
+#| echo: false
+#| message: false
+#| warning: false
+
+library(tidyverse)
+library(readxl)
+
+datos <- read_excel("datos/base2023r.xlsx")
+
+datos <- datos |> 
+  mutate(across(.cols = c(starts_with("FECHA"), FIS), .fns = as_date))
+```
+
+```{r}
+#| message: false
+#| warning: false
+library(skimr)
+
+skim(datos)
+```
+
+La salida completa de `skim()` separa los resultados por partes. Un resumen de datos inicial, donde vemos la cantidad de filas y columnas con la frecuencia de tipo de variable. Luego le siguen tablas con información descriptiva univariada, donde podemos ver que dependiendo del tipo de variable nos muestra diferentes estadísticos y hasta un mini histograma en el caso de las numéricas.
+
+
+## dlookr
+
+![](images/03/dlookr.PNG){fig-align="center" width=20%}
+
+El paquete se define como una *"colección de herramientas que permiten el diagnóstico, la exploración y la transformación de datos"*. 
+
+El diagnóstico de datos proporciona información y visualización de valores faltantes, valores atípicos y valores únicos y negativos para ayudarle a comprender la distribución y la calidad de sus datos.
+
+Contiene funciones, compatibles con tidyverse, que nos facilitan ver la calidad de nuestros datos, además de otras que tienen por objetivo la exploración y su transformación. 
+
+Entre estas funciones encontramos:
+
+### diagnose()
+
+Permite diagnosticar variables del dataframe y devuelve como resultado: el tipo de dato de la variable, la cantidad de valores faltantes, su porcentaje, la cantidad de valores únicos y su tasa (valores únicos/observaciones). Lo observamos en forma de tabla interactiva:
+
+```{r}
+#| message: false
+#| warning: false
+#| eval: false
+library(dlookr)
+
+diagnose(datos)
+```
+
+```{r}
+#| echo: false
+#| message: false
+#| warning: false
+library(dlookr)
+
+diagnose(datos) |> 
+  mutate(across(where(is.double),~round(.x, digits = 2))) |> 
+DT::datatable(
+  fillContainer = F, options = list(pageLength = 10), filter = "none", 
+  style = "bootstrap4", autoHideNavigation = T)
+```
+
+Al ser compatible con tidyverse se puede editar antes o después de la función, por ejemplo si quisiéramos filtrar variables con valores faltantes (de mayor a menor):
+
+```{r}
+diagnose(datos) |> 
+  select(!starts_with("unique")) |> 
+  filter(missing_count > 0) |> 
+  arrange(desc(missing_count))
+```
+
+### diagnose_category()
+
+Así como existe `diagnose()` como una función general, también hay funciones que sirven para el diagnóstico específico por tipo de dato.
+
+`diagnose_category()` lo hace con las variables categóricas, es decir de caracter, de factor y de factor ordenado, mostrando información de cada categoría de cada variable (N, frecuencia, proporción y ranking).
+
+```{r}
+#| eval: false
+
+datos|> 
+ diagnose_category()
+```
+
+```{r, warning=F, message=F, echo=F}
+datos|> 
+  select(-starts_with("FECHA"), -FIS) |> 
+ diagnose_category() |> 
+  mutate(across(where(is.double),~round(.x, digits = 2))) |> 
+DT::datatable(
+  fillContainer = T, options = list(pageLength = 10), filter = "none", 
+  style = "bootstrap4")
+```
+
+### diagnose_numeric()
+
+Para variables numéricas tenemos a `diagnose_numeric()` que nos brinda estadísticos resumen descriptivos univariados.
+
+```{r}
+#| eval: false
+
+datos|> 
+ diagnose_numeric()
+```
+
+```{r, warning=F, message=F, echo=F}
+datos|> 
+ diagnose_numeric() |> 
+  mutate(across(where(is.double),~round(.x, digits = 2))) |> 
+DT::datatable(
+  fillContainer = F, options = list(pageLength = 10), filter = "none", 
+  style = "bootstrap4", autoHideNavigation = T)
+```
+
+Observamos que sobre la única variable numérica de datos nos calcula el mínimo, primer cuartil, media, mediana, tercer cuartil, máximo, la cantidad de ceros, la cantidad de números negativos y la cantidad de datos atípicos.
+
+## diagnose_outlier()
+
+Sobre los datos atípicos `diagnose_outlier()` nos amplía la información:
+
+```{r}
+#| eval: false
+
+datos|> 
+ diagnose_outlier()
+```
+
+```{r, warning=F, message=F, echo=F}
+datos|> 
+ diagnose_outlier() |> 
+  mutate(across(where(is.double),~round(.x, digits = 2))) |> 
+DT::datatable(
+  fillContainer = F, options = list(pageLength = 10), filter = "none", 
+  style = "bootstrap4", autoHideNavigation = T)
+```
+
+Aquí la variable EDAD_DIAGNOSTICO no tiene datos atípicos por lo que el conteo y proporción es de cero, la media de los outlier no existe y la media contando y no contando estos outlier da lo mismo (37,02)
+
+
+## plot_outlier()
+
+Agreguemos algún dato atípico a EDAD_DIAGNOSTICO para poder mostrar este gráfico.
+
+```{r}
+datos[10, "EDAD_DIAGNOSTICO"] <- 105  # cambiamos la edad de la observación 10 
+```
+
+
+```{r}
+#| out-width: 120%
+datos |> 
+  plot_outlier(EDAD_DIAGNOSTICO) 
+```
+
+El gráfico siempre se va a producir si al menos tenemos un dato atípico en la variable. Grafica un boxplot e histograma contando los valores outlier que la variable tenga y otro quitándolos.
+
+
+### Otras funciones del paquete
+
+**dlookr** tiene muchas otras funciones, para la conversión de datos y/o la imputación de datos ausentes, que no trabajaremos en el curso pero pueden encontrarse en el sitio del desarrollador <https://choonghyunryu.github.io/dlookr/index.html>
+
+## Depuración de datos
+
+![](images/03/datacleaning.jpg){fig-align="center" width=40%}
+
+Una vez finalizado el diagnóstico de datos, se procede a la etapa de depuración, donde se corrigen los errores identificados y se prepara el conjunto de datos para su análisis. La depuración involucra técnicas como la eliminación de valores faltantes, la corrección de errores de entrada, la transformación de variables y el manejo de valores atípicos.
+
+Un flujo de trabajo modelo partiendo de datos crudos y terminando en datos limpios es el siguiente:
+
+![](images/03/flujo.png){fig-align="center" width=60%}
+
+Durante este proceso puede haber múltiples situaciones dependiendo de la calidad original de los datos crudos, desde carecer de encabezados o contener tipos de datos incorrectos, pasando por tener que corregir etiquetas de categorías incorrectas, etc.
+
+Las herramientas de **dplyr** en tidyverse nos van a facilitar esta tarea que suele ocupar entre un 70 y 80% del tiempo de trabajo cuando analizamos datos.
+
+
+## Gestión de duplicados
+
+Un caso habitual con el que debemos lidiar es el tener observaciones duplicadas, total o parcialmente. Por este motivo, debemos conocer las características de la o las tablas con las que estamos trabajando, es decir, si las observaciones tiene claves unívocas, si estas observaciones se pueden repetir, si la relación es uno a uno o uno a varios cuando hay más de una tabla relacionada, etc.
+
+Entonces, el primer paso será asegurarnos que los datos cumplen con el criterio que conocemos haciendo una detección de observaciones y/o partes de observaciones (variables clave) que se encuentran duplicadas.
+
+Luego, hay diferentes tareas que se pueden realizar para gestionar estos datos duplicados, cuando su existencia no es la esperada:
+
+- Eliminación de duplicados a partir de observaciones únicas.
+
+- Recortar tabla de datos para eliminar duplicados
+
+- Marcar duplicados (conservando duplicados en la tabla)
+
+La función `get_dupes()` del paquete **janitor** es muy útil porque identifica estas repeticiones.
+
+```{r}
+#| message: false
+#| warning: false
+library(janitor)
+
+datos |> 
+  get_dupes(everything())
+```
+
+Aplicada sobre el dataframe entero detecta aquellas observaciones que sean iguales en todas sus observaciones. Esto es difícil que pase pero puede suceder cuando por alguna falla técnica el sistema desde donde se obtienen los datos duplica registros completos. 
+
+Otra posibilidad es utilizar la variable que es clave en la tabla de datos o las variables que constituyen una clave combinada.
+
+Por ejemplo, en este caso, usemos una serie de variables como SEXO, FECHA_NACIMIENTO, ID_PROV_INDEC_RESIDENCIA e ID_DEPTO_INDEC_RESIDENCIA para ver si hay observaciones donde estos datos se repitan.
+
+```{r}
+datos |> 
+  get_dupes(SEXO, FECHA_NACIMIENTO, 
+            ID_PROV_INDEC_RESIDENCIA, ID_DEPTO_INDEC_RESIDENCIA)
+```
+
+Encontramos dos observaciones que tienen los mismo valores en esta combinación de variables. Un hombre nacido el 29/06/1947 en la provincia de Tucumán, en el departamento Lules.
+
+Supongamos que no puede existir dos veces la misma persona en la tabla (sería deseable confirmar esto teniendo alguna variable univoca cómo el DNI, por ejemplo), procederíamos a solucionar este duplicado.
+
+### Eliminación de duplicados por observaciones únicas
+
+Para eliminar filas duplicadas en una tabla de datos podemos utilizar la función `distinct()` de **dplyr**.
+
+La función tiene un argumento denominado `.keep_all` que permite valores *TRUE* o *FALSE*. Si se iguala a *TRUE* se mantienen en el resultado todas las variables que son parte de la tabla, aunque estas no estén declaradas dentro del `distinct()`.
+
+Por defecto, este argumento se encuentra igualado a *FALSE*.
+
+```{r}
+nrow(datos)
+
+datos |> 
+  distinct(SEXO, FECHA_NACIMIENTO, ID_PROV_INDEC_RESIDENCIA, 
+           ID_DEPTO_INDEC_RESIDENCIA, 
+           .keep_all = T)
+```
+
+Observamos que las 200 observaciones `distinct()` nos devuelve 199. Eliminó una de las dos que tenían duplicadas esa serie de variables definidas (no podemos controlar cuál de ellas elimina).
+
+### Eliminación de duplicados por recorte de observaciones
+
+Recortar es similar a filtrar, la diferencia está en que se filtra por condiciones y recortamos por posiciones.
+
+La familia de funciones de **dplyr** que se puede utilizar para recortar es `slice_*()`.
+
+Estas funciones pueden ser muy útiles si se aplican a un dataframe agrupado porque la operación de recorte se realiza en cada grupo por separado.
+
+Por ejemplo, podemos usar la FECHA_NOTIFICACION para seleccionar la mas vieja. Esto se hace  combinado `group_by()` y `slice_min()` (observación con el valor mínimo)
+
+```{r}
+datos |> 
+  get_dupes(SEXO, FECHA_NACIMIENTO, 
+             ID_PROV_INDEC_RESIDENCIA, ID_DEPTO_INDEC_RESIDENCIA) |> 
+  select(SEXO, FECHA_NACIMIENTO, FECHA_NOTIFICACION)
+
+datos |> 
+  group_by(SEXO, FECHA_NACIMIENTO, 
+           ID_PROV_INDEC_RESIDENCIA, ID_DEPTO_INDEC_RESIDENCIA) |> 
+  slice_min(FECHA_NOTIFICACION) |> 
+  filter(SEXO == "M", FECHA_NACIMIENTO == dmy("29/06/1947")) |> 
+  select(SEXO, FECHA_NACIMIENTO, FECHA_NOTIFICACION) |> 
+  ungroup()
+```
+
+### Marcar duplicados
+
+Si, en cambio, lo que buscamos es mantener a todas las observaciones de la tabla pero marcar aquellos que consideramos duplicados podemos hacer:
+
+1. Recortar el dataframe original a sólo las filas para el análisis. Guardar los ID de este dataframe reducido en un vector.
+
+2. En el dataframe original, creamos una variable de marca usando una función condicional, basándonos si el ID está presente en el dataframe reducido (vector de ID anterior).
+
+Primer paso, en esta tabla no existe un ID único por lo que vamos a crear una clave subrogada.
+
+```{r}
+datos <- datos |> 
+  mutate(ID = row_number())
+```
+
+Ahora usaremos este ID para crear un vector con los números de las dos observaciones anteriores que están duplicadas.
+
+```{r}
+ID_duplicados <- datos |> 
+  get_dupes(SEXO, FECHA_NACIMIENTO, 
+             ID_PROV_INDEC_RESIDENCIA, ID_DEPTO_INDEC_RESIDENCIA) |> 
+  pull(ID)
+
+ID_duplicados
+```
+Finalmente aplicamos este vector con una función como `if_else()` para marcar con una **X** en la variable duplicado.
+
+```{r}
+datos <- datos |> 
+  mutate(duplicado = if_else(ID %in% ID_duplicados, "X", NA))
+```
+
+Luego podriamos filtrar los duplicados directamente
+
+```{r}
+datos |> 
+  filter(duplicado == "X")
+```
+
+## Datos faltantes o perdidos
+
+Cuando trabajamos con datos los valores perdidos o faltantes (conocidos en inglés como *missing*) pueden constituir un serio problema en nuestras variables por lo que deben explorarse y manejarse cuidadosamente en las etapas iniciales del análisis.
+
+Estos datos pueden faltar por muchas razones, pero generalmente se suelen agrupar en dos categorías: valores faltantes informativos y valores faltantes aleatorios. Los informativos implican una causa estructural, ya sea por deficiencias en la forma en que se recopilaron los datos o por anomalías en el entorno de observación. Los aleatorios son aquellos que tienen lugar independientemente del proceso de recopilación de datos.
+
+Dependiendo de si los valores faltantes son de uno u otro tipo, se procederá de una u otra manera. A los informativos, en general, se les puede asignar un valor concreto (por ejemplo, “Ninguno” o "Sin dato"), ya que este valor puede convenir tenerlo como una categoría más de la variable. Los aleatorios, en cambio, pueden manejarse mediante la eliminación o la imputación.
+
+Resumiendo, las tareas habituales respecto a estos valores consisten en:
+
+-   Evaluar la existencia de valores perdidos (exploración y conteo).
+-   Excluir los valores ausentes (si es posible y conveniente).
+-   Etiquetar o recodificar los valores ausentes (imputación de datos).
+
+Respecto a la imputación existen numerosa bibliografía sobre diversos algoritmos que no vamos a incluir en este curso.
+
+## Detectar observaciones incompletas (valores missing)
+
+El lenguaje R gestiona a los datos perdidos mediante el valor especial reservado `NA` de **Not Available** (No disponible),
+
+En principio, sólo vamos a enfocarnos en como podemos utilizar algunas funciones del lenguaje para detectarlos y contabilizarlos. A partir de su identificación decidiremos que hacer con ellos, dependiendo de su cantidad y extensión, es decir, si los valores faltantes son la mayoría de una variable o la mayoría de una observación o bien si representan la falta de respuesta de una pregunta, con lo cual convenga etiquetarlos.
+
+Una manera de abordar esta tarea con R base para una variables es hacer la sumatoria de valores `NA`, usando la función de identificación `is.na()`.
+
+Para ejemplificar, tomamos una tabla de datos de vigilancia con 200 observaciones y 56 variables.
+
+```{r}
+datos |> 
+  summarise(Cantidad_NA = sum(is.na(FECHA_FIN_TRAT)))
+```
+La consulta dice que hay 142 observaciones vacías en la variable FECHA_FIN_TRAT. Lo malo es que debemos hacer esta tarea variable por variable, lo que resulta muy trabajoso.
+
+También la función `summary()` aplicada sobre el dataframe completo informa la cantidad de `NA` de variables cuantitativas, lógicas y fecha, pero no lo hace con las de tipo caracter.
+
+```{r}
+summary(datos)
+```
+
+Más completo y en una sola línea la función `find_na()` del paquete **dlookr** muestra el porcentaje de valores perdidos en todas las variables de una tabla de datos y se complementa con el gráfico de barras de pareto `plot_na_pareto()`.
+
+```{r}
+#| message: false
+#| warning: false
+library(dlookr)
+
+find_na(datos, rate = T) # argumento rate = T muestra % de valores NA
+
+```
+
+```{r}
+#| out-width: 120%
+plot_na_pareto(datos, 
+               only_na = T) # argumento only_na = T muestra variables solo con algún valor NA 
+                                   
+```
+
+## Gestión de NA's con naniar
+
+![](images/03/naniar.PNG){fig-align="center" width=15%}
+
+El paquete **naniar** es un paquete que reúne funciones diseñadas para el manejo de valores faltantes pensado para una gestión completa.
+
+```{r}
+library(naniar)
+```
+
+Sus caracteristicas generales son:
+
+-   Proporciona funciones analíticas y visuales de detección y gestión
+
+-   Es compatible con el mundo "tidy" de tidyverse
+
+-   Aborda las relaciones o estructura de la falta de datos.
+
+-   Posibilita el trabajo de imputación (no tratado en este curso)
+
+De las muchas funciones que tiene el paquete seleccionamos algunas para mostrar que son muy útiles para una tarea básica.
+
+La función `miss_var_summary()` proporciona un resumen sobre los valores NA en cada variable del dataframe similar a `find_na()` que vimos anterioremente pero con una salida en forma de tabla y un recento absoluto, además de porcentual.
+
+```{r}
+miss_var_summary(datos)
+```
+
+Por el lado gráfico, ofrece la función `gg_miss_var()` que representa la información de la tabla anterior pero a través de un gráfico *lollipop* horizontal de tipo **ggplot2**.
+
+```{r}
+#| out-width: 120%
+gg_miss_var(datos, 
+            show_pct = T) # muestra valores en porcentajes
+```
+
+Hay otra viaulización muy interesante porque muestra las relaciones de los valores ausentes de las variables cuya función se llama `gg_miss_upset()` y genera un gráfico **Upset** en función de la existencia de valores NA.
+
+```{r}
+#| eval: false
+
+gg_miss_upset(datos) 
+```
+
+![](images/03/upset1.png)
+Por defecto, construye el gráfico tomando las primeras 10 variables de la tabla de datos con valores NA de forma decreciente. Esto se puede modificar cambiando el argumentos `nset =`.
+
+Tiene dos entradas para su lectura. En la parte inferior izquierda nos muestra los nombres de las variables con valores NA ordenadas de menor a mayor medida en una escala absoluta. El gráfico de barras principal, ordenado de forma predeterminada de mayor a menor, informa sobre las cantidades absolutas de valores NA de las combinaciones que aperecen debajo del eje x del gráfico.
+
+Por ejemplo, la variable ETNIA tiene todos sus observaciones como NA y la variable COVID casi lo mismo, mientras que la variable FIS cerca de 50.
+
+Podemos eliminar del gráfico a esas dos variables con casi todos los valores NA, usando formas de tidyverse previas dado que las funciones de naniar son compatibles.
+
+```{r}
+#| eval: false
+datos |> 
+  select(-ETNIA, -COVID) |> 
+  gg_miss_upset() 
+```
+
+![](images/03/upset2.png)
+
+Al quitar esas dos variables, aparecen dos nuevas con cantidades menores de NA que FIS (FECHA_INICIO_TRAT y FECHA_INICIO_SINTOMA), es decir siguen siendo 10 por defecto.
+
+Si miramos los datos faltantes con estructura notamos que la combinación más frecuente de NA combinados es FECHA_FIN_TRAT, MOTIVO_CONSULTA y TRATAMIENTO_ANTIRETROVIRAL con 39 observaciones a las que le faltan valores en las tres variables simultáneamente.
+
+
+## Reemplazo de valores 
+
+El paquete tiene además dos funciones de reemplazo que funcionan como herramientas antagónicas.
+
+`replace_with_na()` reemplaza valores o etiquetas específicas con valores NA y `replace_na_with()` hace lo contrario, reemplaza valores NA con valores específicos, como "Sin dato" por ejemplo.
+
+
+La primera función trabaja sobre el dataframe completo adignando valores NA en la categoría o valor que le indiquemos.
+
+Por ejemplo, la variable ID_PROV_INDEC_RESIDENCIA no tiene valores perdidos pero si hay una categoría/código desconocido ("00"), entonces podemos decirle que ese código sea NA.
+
+```{r}
+datos |> 
+  summarise(Cantidad_NA = sum(is.na(ID_PROV_INDEC_RESIDENCIA)))
+
+datos |> 
+   replace_with_na(replace = list(ID_PROV_INDEC_RESIDENCIA = "00")) |>     
+  summarise(Cantidad_NA = sum(is.na(ID_PROV_INDEC_RESIDENCIA)))
+```
+`replace_na_with()`  etiqueta valores faltantes con categorías definidas que serán tenidas en cuenta a la hora de hacer tablas u otras operaciones. Esta función se utiliza dentro de `mutate()` del tidyverse.
+
+La variable MOTIVO_CONSULTA tiene 181 valores NA que serán etiquetados como "Sin dato" de esta forma:
+
+```{r}
+datos |> 
+  count(MOTIVO_CONSULTA)
+
+datos |> 
+  mutate(MOTIVO_CONSULTA = replace_na_with(MOTIVO_CONSULTA, 
+                                           "Sin dato")) |> 
+  count(MOTIVO_CONSULTA)
+```
+
+## Eliminación de valores NA
+
+Cuando decidimos eliminar valores NA de alguna variable, salvo que se quite la variable entera, tenemos que tener en cuenta que perdemos la observación completa, incluso valores válidos que se encuentran en otras variables.
+
+R base tiene una función llamada `na.omit()` que omite toda observación donde al menos haya un solo NA en alguna variable.
+
+```{r}
+na.omit(datos)
+```
+Aplicar esta función sobre el dataframe datos produce que no quede ninguna observación, dado que vimos que la variable ETNIA tenía sus doscientos valores vacíos.
+
+Una función superadora es `drop_na()` de tidyr que pertenece a tidyverse, porque omite observaciones que tengan variables que definamos, por ejemplo:
+
+```{r}
+datos |> 
+  drop_na(ETNIA)
+
+datos |> 
+  drop_na(FIS)
+```
+En el ejemplo anterior aplicamos la función sobre la variable ETNIA y FIS, en el primer caso omite todas las observaciones y en el segundo caso 48 observaciones, mostrando las 152 restantes sin NA en la variable.  
+
+Por último, debemos saber que eliminar observaciones por valores faltantes reduce la potencia de cualquier test de hipotesis o modelo que hagamos porque se reduce el tamaño de la muestra.
+

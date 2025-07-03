@@ -384,23 +384,23 @@ El valor de i es: 5 </code></pre>
 <span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>datos</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 10 × 5
-   grupo       a      b       c       d
-   &lt;chr&gt;   &lt;dbl&gt;  &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;
- 1 A      0.615  -0.238 -1.14   -0.582 
- 2 A      0.691  -2.35  -0.806  -1.06  
- 3 B     -0.498  -0.690  0.678   0.0823
- 4 A     -0.153   1.55  -0.459   2.13  
- 5 B     -0.461  -2.04   0.966   1.51  
- 6 A     -1.95    0.522 -0.355   0.390 
- 7 B      1.26    2.14   1.15    0.106 
- 8 A      0.0314  0.116 -0.691   0.407 
- 9 A     -0.614   1.07  -0.0330 -0.839 
-10 A     -3.22    0.406  2.77   -0.185 </code></pre>
+   grupo       a       b      c       d
+   &lt;chr&gt;   &lt;dbl&gt;   &lt;dbl&gt;  &lt;dbl&gt;   &lt;dbl&gt;
+ 1 B      0.801  -2.09   -0.317  0.0223
+ 2 A      0.462   1.16   -0.831  0.979 
+ 3 B     -0.0283  0.659   1.38  -0.513 
+ 4 B      0.115  -0.597   0.177 -0.834 
+ 5 A      0.826  -0.281   0.423  0.707 
+ 6 A      1.42   -0.0830  0.178 -0.340 
+ 7 A      0.755   0.534  -0.397 -0.348 
+ 8 A      0.298   1.59    0.323 -2.03  
+ 9 B     -0.526   0.219  -2.30  -0.606 
+10 A      0.542  -0.573   0.473  0.513 </code></pre>
 </div>
 <div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="fu">map_dbl</span>(<span class="at">.x =</span> datos, <span class="at">.f =</span> mean)</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>      grupo           a           b           c           d 
-         NA -0.42964498  0.04930363  0.20859366  0.19655163 </code></pre>
+         NA  0.46629615  0.05430253 -0.08879504 -0.24493499 </code></pre>
 </div>
 </div>
 <p>Calcula la media por cada una de las variables numéricas. Como la variable grupo no lo es me devuelve una advertencia y un NA como resultado.</p>
@@ -410,7 +410,7 @@ El valor de i es: 5 </code></pre>
 <span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>        <span class="at">.f =</span> mean)</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>          a           b           c           d 
--0.42964498  0.04930363  0.20859366  0.19655163 </code></pre>
+ 0.46629615  0.05430253 -0.08879504 -0.24493499 </code></pre>
 </div>
 </div>
 <p>Observen que dentro del argumento <code>.x</code> construimos una estructura con tuberías donde seleccionamos a todas las variables menos a <strong>grupo</strong> (esto se puede hacer en los argumentos de muchas funciones).</p>
