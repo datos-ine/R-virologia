@@ -1433,26 +1433,6 @@ Una vez que comprobamos que existen diferencias significativas entre grupos, nos
 
 Si las varianzas son homocedásticas pero los grupos difieren en tamaño, podemos usar el test de Tukey si tenemos que comparar entre varios grupos, o la **corrección de Bonferroni** para grupos más reducidos.
 
-```{r}
-#| echo: false
-# Datos
-tibble(
-  "Código" = c("***",
-               "**",
-               "*",
-               ".",
-               ""),
-  Rango = c("0 a 0,001",
-            "0,001 a 0,01",
-            "0,01 a 0,05",
-            "	0,05 a 0,1",
-            "0,1 a 1")
-) |> 
-  
-  # Tabla
-  kbl_format()
-```
-
 El paquete `emmeans` es una herramienta muy versátil y poderosa para realizar comparaciones múltiples. Comenzaremos utilizando la función `emmeans()` con el argumento `specs =` a la variable de grupo/factor para crear un objeto que contenga las medias marginales por grupo:
 
 ```{r, eval=F}
