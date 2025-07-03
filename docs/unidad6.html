@@ -270,6 +270,12 @@ window.Quarto = {
   <li><a href="#errores" id="toc-errores" class="nav-link" data-scroll-target="#errores">Errores</a></li>
   <li><a href="#qué-test-se-debe-aplicar-en-cada-caso" id="toc-qué-test-se-debe-aplicar-en-cada-caso" class="nav-link" data-scroll-target="#qué-test-se-debe-aplicar-en-cada-caso">¿Qué test se debe aplicar en cada caso?</a></li>
   </ul></li>
+  <li><a href="#anova" id="toc-anova" class="nav-link" data-scroll-target="#anova">ANOVA</a></li>
+  <li><a href="#anova-de-un-factor-o-de-una-vía" id="toc-anova-de-un-factor-o-de-una-vía" class="nav-link" data-scroll-target="#anova-de-un-factor-o-de-una-vía">ANOVA de un factor o de una vía</a>
+  <ul class="collapse">
+  <li><a href="#funciones-de-r" id="toc-funciones-de-r" class="nav-link" data-scroll-target="#funciones-de-r">Funciones de R</a></li>
+  <li><a href="#comparaciones-múltiples" id="toc-comparaciones-múltiples" class="nav-link" data-scroll-target="#comparaciones-múltiples">Comparaciones múltiples</a></li>
+  </ul></li>
   </ul>
 </nav>
     </div>
@@ -1447,9 +1453,101 @@ Esto se traduce en evaluar el tipo de experimento: ¿se comparan dos grupos o m�
 </div>
 </div>
 </div>
-
-
 </section>
+</section>
+</section>
+<section id="anova" class="level2">
+<h2 class="anchored" data-anchor-id="anova">ANOVA</h2>
+<p>El análisis de varianza (ANOVA) es una extensión del modelo lineal general que se utiliza para comparar las medias de una variable dependiente continua (<span class="math inline">\(Y\)</span>) entre diferentes niveles de una variable explicativa categórica (<span class="math inline">\(X\)</span>), que debe tener al menos tres niveles.</p>
+<p>La hipótesis nula (<span class="math inline">\(H_0\)</span>) del test estadístico establece que las medias de la variable dependiente son iguales en todos los grupos, mientras que la hipótesis alternativa (<span class="math inline">\(H_1\)</span>) plantea que al menos dos medias difieren significativamente:</p>
+<ul>
+<li><p><span class="math inline">\(H_0: \mu_1 = \mu_2 = ... = \mu_i\)</span></p></li>
+<li><p><span class="math inline">\(H_1\)</span>: al menos una <span class="math inline">\(\mu_i \not= \mu_j\)</span></p></li>
+</ul>
+<p>Por lo tanto, el ANOVA permite comparar múltiples medias, pero lo hace analizando la variabilidad entre y dentro de los grupos.</p>
+<p>La variabilidad total se descompone en dos componentes:</p>
+<ul>
+<li><p><strong>Intervarianza (SSB):</strong> Variabilidad entre los grupos.</p></li>
+<li><p><strong>Intravarianza (SSE):</strong> Variabilidad dentro de los grupos.</p></li>
+</ul>
+<p>El estadístico <span class="math inline">\(F\)</span> del ANOVA, que sigue una distribución F de Fisher-Snedecor, compara estas dos fuentes de variabilidad:</p>
+<p><span class="math display">\[
+F = \frac{SSB/(k-1)}{SSE/(n-k)}
+\]</span></p>
+<p>donde:</p>
+<ul>
+<li><p><span class="math inline">\(k\)</span>: el número de grupos.</p></li>
+<li><p><span class="math inline">\(n\)</span>: número total de observaciones.</p></li>
+</ul>
+<p>Si se cumple <span class="math inline">\(H_0\)</span>, el estadístico <span class="math inline">\(F\)</span> tiende a 1, ya que las varianzas entre y dentro de los grupos son similares. Si las medias difieren significativamente, la intervarianza será mayor que la intravarianza, resultando en valores de <span class="math inline">\(F\)</span> superiores a 1.</p>
+</section>
+<section id="anova-de-un-factor-o-de-una-vía" class="level2">
+<h2 class="anchored" data-anchor-id="anova-de-un-factor-o-de-una-vía">ANOVA de un factor o de una vía</h2>
+<p>El ANOVA de una vía puede considerare como una extensión de los <em>t-test</em> independientes para comparar más de dos grupos de un factor. En este contexto, factor se refiere a la variable categórica que define los grupos.</p>
+<p>Para que los resultados del ANOVA sean válidos, deben cumplirse los siguientes supuestos:</p>
+<ul>
+<li><p><strong>Aleatoriedad:</strong> Las observaciones deben ser aleatorias.</p></li>
+<li><p><strong>Independencia:</strong> Las observaciones entre grupos deben ser independientes.</p></li>
+<li><p><strong>Variable dependiente:</strong> Cuantitativa continua.</p></li>
+<li><p><strong>Variable explicativa:</strong> Categórica con más de dos niveles.</p></li>
+<li><p><strong>Normalidad:</strong> La distribución de la variable dependiente dentro de cada grupo debe ser normal.</p></li>
+<li><p><strong>Homocedasticidad:</strong> Las varianzas de los grupos deben ser homogéneas.</p></li>
+</ul>
+<section id="funciones-de-r" class="level3">
+<h3 class="anchored" data-anchor-id="funciones-de-r">Funciones de R</h3>
+<p>Podemos realizar un test ANOVA de 1 factor o 1 vía mediante la función <code>aov()</code> de R <code>base</code>. Utiliza sintaxis fórmula del tipo <span class="math inline">\(var_cuanti∼factor\)</span> y su resultado es un objeto lista (modelo “aov-lm”).</p>
+<p>Siempre conviene que asignemos los resultados a objetos que luego nos servirán para aplicar otras funciones como <code>summary()</code> para obtener los resultados completos, incluido el p-valor.</p>
+<p>También podemos usar la función <code>lm()</code> del paquete <code>stats</code> que ajusta modelos lineales y luego la función <code>anova()</code> sobre el objeto para obtener la significancia del test F.</p>
+<p>Si los resultados del test F nos muestra un <span class="math inline">\(p-valor\)</span> menor a 0,05 el análisis sugiriere que al menos dos grupos son diferentes entre sí.</p>
+</section>
+<section id="comparaciones-múltiples" class="level3">
+<h3 class="anchored" data-anchor-id="comparaciones-múltiples">Comparaciones múltiples</h3>
+<p>Una vez que comprobamos que existen diferencias significativas entre grupos, nos interesa saber cuáles grupos son diferentes entre sí. Para ello, existen distintos algoritmos de comparaciones múltiples con sus respectivas correcciones, como el test de <em>Diferencia Honestamente Significativa de Tukey,</em> también llamado Tukey HSD o <strong>test de Tukey</strong>. Esta prueba se aplica para grupos equilibrados (mismo tamaño) y varianzas similares (homocedásticas). Es una prueba conservadora, dado que mantiene bajo el error de tipo I, sacrificando la capacidad de detectar diferencias existentes.</p>
+<p>Si las varianzas son homocedásticas pero los grupos difieren en tamaño, podemos usar el test de Tukey si tenemos que comparar entre varios grupos, o la <strong>corrección de Bonferroni</strong> para grupos más reducidos.</p>
+<div class="cell" data-layout-align="center">
+<div class="cell-output-display">
+<table class="table table-condensed table-hover caption-top table-sm table-striped small" data-quarto-postprocess="true">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th" style="text-align: left; position: sticky; top: 0; background-color: #FFFFFF; color: white !important; background-color: rgba(47, 46, 78, 255) !important;">Código</th>
+<th data-quarto-table-cell-role="th" style="text-align: left; position: sticky; top: 0; background-color: #FFFFFF; color: white !important; background-color: rgba(47, 46, 78, 255) !important;">Rango</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">***</td>
+<td style="text-align: left;">0 a 0,001</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">**</td>
+<td style="text-align: left;">0,001 a 0,01</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">*</td>
+<td style="text-align: left;">0,01 a 0,05</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">.</td>
+<td style="text-align: left;">0,05 a 0,1</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"></td>
+<td style="text-align: left;">0,1 a 1</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p>El paquete <code>emmeans</code> es una herramienta muy versátil y poderosa para realizar comparaciones múltiples. Comenzaremos utilizando la función <code>emmeans()</code> con el argumento <code>specs =</code> a la variable de grupo/factor para crear un objeto que contenga las medias marginales por grupo:</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb41"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a>comp <span class="ot">&lt;-</span> <span class="fu">emmeans</span>(anova, <span class="at">specs =</span> <span class="st">"grupo"</span>)</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Para realizar las comparaciones múltiples mediante test de Tukey usamos el comando <code>contrast()</code> con el argumento <code>method = "pairwise"</code>:</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb42"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true" tabindex="-1"></a><span class="fu">contrast</span>(comp, <span class="at">method =</span> <span class="st">"pairwise"</span>)</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+
+
 </section>
 </section>
 

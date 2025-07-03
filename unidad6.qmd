@@ -1366,3 +1366,104 @@ digraph G {
 }
 ```
 
+## ANOVA
+
+El análisis de varianza (ANOVA) es una extensión del modelo lineal general que se utiliza para comparar las medias de una variable dependiente continua ($Y$) entre diferentes niveles de una variable explicativa categórica ($X$), que debe tener al menos tres niveles.
+
+La hipótesis nula ($H_0$) del test estadístico establece que las medias de la variable dependiente son iguales en todos los grupos, mientras que la hipótesis alternativa ($H_1$) plantea que al menos dos medias difieren significativamente:
+
+-   $H_0: \mu_1 = \mu_2 = ... = \mu_i$
+
+-   $H_1$: al menos una $\mu_i \not= \mu_j$
+
+Por lo tanto, el ANOVA permite comparar múltiples medias, pero lo hace analizando la variabilidad entre y dentro de los grupos.
+
+La variabilidad total se descompone en dos componentes:
+
+-   **Intervarianza (SSB):** Variabilidad entre los grupos.
+
+-   **Intravarianza (SSE):** Variabilidad dentro de los grupos.
+
+El estadístico $F$ del ANOVA, que sigue una distribución F de Fisher-Snedecor, compara estas dos fuentes de variabilidad:
+
+$$
+F = \frac{SSB/(k-1)}{SSE/(n-k)}
+$$
+
+donde:
+
+-   $k$: el número de grupos.
+
+-   $n$: número total de observaciones.
+
+Si se cumple $H_0$, el estadístico $F$ tiende a 1, ya que las varianzas entre y dentro de los grupos son similares. Si las medias difieren significativamente, la intervarianza será mayor que la intravarianza, resultando en valores de $F$ superiores a 1.
+
+## ANOVA de un factor o de una vía
+
+El ANOVA de una vía puede considerare como una extensión de los *t-test* independientes para comparar más de dos grupos de un factor. En este contexto, factor se refiere a la variable categórica que define los grupos.
+
+Para que los resultados del ANOVA sean válidos, deben cumplirse los siguientes supuestos:
+
+-   **Aleatoriedad:** Las observaciones deben ser aleatorias.
+
+-   **Independencia:** Las observaciones entre grupos deben ser independientes.
+
+-   **Variable dependiente:** Cuantitativa continua.
+
+-   **Variable explicativa:** Categórica con más de dos niveles.
+
+-   **Normalidad:** La distribución de la variable dependiente dentro de cada grupo debe ser normal.
+
+-   **Homocedasticidad:** Las varianzas de los grupos deben ser homogéneas.
+
+### Funciones de R 
+
+Podemos realizar un test ANOVA de 1 factor o 1 vía mediante la función `aov()` de R `base`. Utiliza sintaxis fórmula del tipo $var_cuanti∼factor$ y su resultado es un objeto lista (modelo “aov-lm”).
+
+Siempre conviene que asignemos los resultados a objetos que luego nos servirán para aplicar otras funciones como `summary()` para obtener los resultados completos, incluido el p-valor.
+
+También podemos usar la función `lm()` del paquete `stats` que ajusta modelos lineales y luego la función `anova()` sobre el objeto para obtener la significancia del test F.
+
+Si los resultados del test F nos muestra un $p-valor$ menor a 0,05 el análisis sugiriere que al menos dos grupos son diferentes entre sí.
+
+
+### Comparaciones múltiples
+
+Una vez que comprobamos que existen diferencias significativas entre grupos, nos interesa saber cuáles grupos son diferentes entre sí. Para ello, existen distintos algoritmos de comparaciones múltiples con sus respectivas correcciones, como el test de *Diferencia Honestamente Significativa de Tukey,* también llamado Tukey HSD o **test de Tukey**. Esta prueba se aplica para grupos equilibrados (mismo tamaño) y varianzas similares (homocedásticas). Es una prueba conservadora, dado que mantiene bajo el error de tipo I, sacrificando la capacidad de detectar diferencias existentes.
+
+Si las varianzas son homocedásticas pero los grupos difieren en tamaño, podemos usar el test de Tukey si tenemos que comparar entre varios grupos, o la **corrección de Bonferroni** para grupos más reducidos.
+
+```{r}
+#| echo: false
+# Datos
+tibble(
+  "Código" = c("***",
+               "**",
+               "*",
+               ".",
+               ""),
+  Rango = c("0 a 0,001",
+            "0,001 a 0,01",
+            "0,01 a 0,05",
+            "	0,05 a 0,1",
+            "0,1 a 1")
+) |> 
+  
+  # Tabla
+  kbl_format()
+```
+
+El paquete `emmeans` es una herramienta muy versátil y poderosa para realizar comparaciones múltiples. Comenzaremos utilizando la función `emmeans()` con el argumento `specs =` a la variable de grupo/factor para crear un objeto que contenga las medias marginales por grupo:
+
+```{r, eval=F}
+comp <- emmeans(anova, specs = "grupo")
+```
+
+Para realizar las comparaciones múltiples mediante test de Tukey usamos el comando `contrast()` con el argumento `method = "pairwise"`:
+
+```{r, eval=F}
+contrast(comp, method = "pairwise")
+```
+
+
+
