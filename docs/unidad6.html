@@ -1,0 +1,1861 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="es" xml:lang="es"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.7.31">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="Christian Ballejo">
+
+<title>Unidad 6: Inferencia estadística – Introducción al lenguaje R + RStudio</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<script src="site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-e1a5c8363afafaef2c763b6775fbf3ca.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap-dfb324f25d9b1687192fa8be62ac8f9c.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "Sin resultados",
+    "search-matching-documents-text": "documentos encontrados",
+    "search-copy-link-title": "Copiar el enlace en la búsqueda",
+    "search-hide-matches-text": "Ocultar resultados adicionales",
+    "search-more-match-text": "resultado adicional en este documento",
+    "search-more-matches-text": "resultados adicionales en este documento",
+    "search-clear-button-title": "Borrar",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancelar",
+    "search-submit-button-title": "Enviar",
+    "search-label": "Buscar"
+  }
+}</script>
+<script src="site_libs/kePrint-0.0.1/kePrint.js"></script>
+
+<link href="site_libs/lightable-0.0.1/lightable.css" rel="stylesheet">
+
+
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN") {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+<link rel="stylesheet" href="styles.css">
+</head>
+
+<body class="nav-sidebar floating quarto-light">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Alternar barra lateral" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./unidad6.html">Unidad 6: Inferencia estadística</a></li></ol></nav>
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Alternar barra lateral" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+      <button type="button" class="btn quarto-search-button" aria-label="Buscar" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header">
+      <a href="./index.html" class="sidebar-logo-link">
+      <img src="./images/logos_ine.svg" alt="" class="sidebar-logo py-0 d-lg-inline d-none">
+      </a>
+      </div>
+        <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Buscar"></div>
+        </div>
+        </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Fundamentos</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./unidad1.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Unidad 1: Introducción al lenguaje R</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./unidad2.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Unidad 2: Procesamiento de datos</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./unidad3.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Unidad 3: Exploración, diagnóstico y limpieza de datos</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./unidad4.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Unidad 4: Tratamiento de datos específicos</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./unidad5.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Unidad 5: Estadísticos, operaciones múltiples y resúmenes</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./unidad6.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text">Unidad 6: Inferencia estadística</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./unidad7.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Unidad 7: Visualización de datos</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./unidad8.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Unidad 8: Comunicar con Quarto</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./extra.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Extra: Control de flujo y funciones</span></a>
+  </div>
+</li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Contenidos</h2>
+   
+  <ul>
+  <li><a href="#introducción" id="toc-introducción" class="nav-link active" data-scroll-target="#introducción">Introducción</a></li>
+  <li><a href="#intervalos-de-confianza-ic" id="toc-intervalos-de-confianza-ic" class="nav-link" data-scroll-target="#intervalos-de-confianza-ic">Intervalos de Confianza (IC)</a>
+  <ul class="collapse">
+  <li><a href="#cómo-se-interpreta-un-ic" id="toc-cómo-se-interpreta-un-ic" class="nav-link" data-scroll-target="#cómo-se-interpreta-un-ic">¿Cómo se interpreta un IC?</a></li>
+  </ul></li>
+  <li><a href="#normalidad-y-homocedasticidad" id="toc-normalidad-y-homocedasticidad" class="nav-link" data-scroll-target="#normalidad-y-homocedasticidad">Normalidad y homocedasticidad</a></li>
+  <li><a href="#normalidad" id="toc-normalidad" class="nav-link" data-scroll-target="#normalidad">Normalidad</a>
+  <ul class="collapse">
+  <li><a href="#métodos-gráficos" id="toc-métodos-gráficos" class="nav-link" data-scroll-target="#métodos-gráficos">Métodos gráficos</a></li>
+  <li><a href="#métodos-analíticos" id="toc-métodos-analíticos" class="nav-link" data-scroll-target="#métodos-analíticos">Métodos analíticos</a></li>
+  <li><a href="#pruebas-de-bondad-de-ajuste" id="toc-pruebas-de-bondad-de-ajuste" class="nav-link" data-scroll-target="#pruebas-de-bondad-de-ajuste">Pruebas de bondad de ajuste</a></li>
+  </ul></li>
+  <li><a href="#homocedasticidad" id="toc-homocedasticidad" class="nav-link" data-scroll-target="#homocedasticidad">Homocedasticidad</a>
+  <ul class="collapse">
+  <li><a href="#f-test" id="toc-f-test" class="nav-link" data-scroll-target="#f-test">F-test</a></li>
+  <li><a href="#test-de-bartlett" id="toc-test-de-bartlett" class="nav-link" data-scroll-target="#test-de-bartlett">Test de Bartlett</a></li>
+  <li><a href="#test-de-levene" id="toc-test-de-levene" class="nav-link" data-scroll-target="#test-de-levene">Test de Levene</a></li>
+  </ul></li>
+  <li><a href="#test-de-hipótesis" id="toc-test-de-hipótesis" class="nav-link" data-scroll-target="#test-de-hipótesis">Test de hipótesis</a>
+  <ul class="collapse">
+  <li><a href="#estructura-del-test-de-hipótesis" id="toc-estructura-del-test-de-hipótesis" class="nav-link" data-scroll-target="#estructura-del-test-de-hipótesis">Estructura del test de hipótesis</a></li>
+  <li><a href="#tipos-de-contrastes" id="toc-tipos-de-contrastes" class="nav-link" data-scroll-target="#tipos-de-contrastes">Tipos de contrastes</a></li>
+  <li><a href="#errores" id="toc-errores" class="nav-link" data-scroll-target="#errores">Errores</a></li>
+  <li><a href="#qué-test-se-debe-aplicar-en-cada-caso" id="toc-qué-test-se-debe-aplicar-en-cada-caso" class="nav-link" data-scroll-target="#qué-test-se-debe-aplicar-en-cada-caso">¿Qué test se debe aplicar en cada caso?</a></li>
+  </ul></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">Unidad 6: Inferencia estadística</h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    <div>
+    <div class="quarto-title-meta-heading">Autor/a</div>
+    <div class="quarto-title-meta-contents">
+             <p>Christian Ballejo </p>
+          </div>
+  </div>
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<section id="introducción" class="level2">
+<h2 class="anchored" data-anchor-id="introducción">Introducción</h2>
+<p>La <strong>estadística inferencial</strong> es la rama de la estadística que permite formular conclusiones sobre una población a partir del análisis de una muestra. Se apoya en el cálculo de probabilidades, que proporciona el marco teórico para modelar fenómenos aleatorios y generalizar los resultados muestrales a toda la población. Dado que las inferencias basadas en muestras están sujetas a incertidumbre, es fundamental expresarlas siempre en términos <strong>probabilísticos</strong>.</p>
+<p>Las dos actividades principales en este proceso son:</p>
+<ul>
+<li><p><strong>Estimación de parámetros</strong>: consiste en calcular, a partir de los datos muestrales, valores que aproximen parámetros desconocidos de la población.</p>
+<ul>
+<li><em>Ejemplo: Estimar la prevalencia de una enfermedad X en la población.</em></li>
+</ul></li>
+<li><p><strong>Pruebas de hipótesis</strong>: implica evaluar con base estadística afirmaciones acerca de uno o más parámetros.<br>
+<em>Ejemplos:</em></p>
+<ul>
+<li><p><em>¿La prevalencia de la enfermedad X en Argentina es menor que en Uruguay?</em></p></li>
+<li><p><em>¿La prevalencia de la enfermedad X en Argentina en 2010 fue menor que en el año 2000?</em></p></li>
+</ul></li>
+</ul>
+<p>Al trabajar con muestras, entra en juego el concepto de <strong>teoría del muestreo</strong>, que, si bien no abordaremos en profundidad aquí, es clave para comprender cómo se relacionan los valores observados en la muestra con los de la población.</p>
+<p>Esta teoría estudia la relación entre la distribución de una variable en la población y el comportamiento de dicha variable en muestras aleatorias extraídas de ella. A las medidas obtenidas a partir de la muestra se las denomina <strong>estadísticos muestrales</strong> o simplemente <em>estadísticos</em>, mientras que sus contrapartes en la población se denominan <strong>parámetros</strong>.</p>
+<p>Por ejemplo, supongamos que queremos conocer el valor medio de colesterol total de la población de Mar del Plata y tomamos una muestra de tamaño <span class="math inline">\(n\)</span>.</p>
+<ul>
+<li><p>La media poblacional del colesterol total se representa con la letra griega <span class="math inline">\(\mu\)</span> y corresponde al <strong>parámetro</strong>.</p></li>
+<li><p>La media muestral, que se obtiene a partir de los datos de la muestra, se representa como <span class="math inline">\(\bar{x}\)</span> y es un <strong>estimador</strong> o estadístico muestral.</p></li>
+</ul>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="images/06/poblacion_muestra.svg" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:75.0%"></p>
+</figure>
+</div>
+<p>La <strong>distribución muestral de un estadístico</strong> es la distribución de todos los valores posibles que ese estadístico puede tomar al calcularse en muestras aleatorias del mismo tamaño extraídas de una misma población. Este concepto es central en la inferencia estadística, ya que permite cuantificar la incertidumbre asociada a las estimaciones.</p>
+<p>Como construir una distribución muestral puede resultar muy laborioso cuando la población es grande, y directamente imposible si es infinita, se suelen utilizar aproximaciones basadas en la toma de un gran número de muestras aleatorias del mismo tamaño.</p>
+</section>
+<section id="intervalos-de-confianza-ic" class="level2">
+<h2 class="anchored" data-anchor-id="intervalos-de-confianza-ic">Intervalos de Confianza (IC)</h2>
+<p>Una forma eficaz de abordar la inferencia estadística es a través de los <strong>intervalos de confianza (IC)</strong>, ya que, aunque son procedimientos inferenciales, están estrechamente vinculados con la estadística descriptiva.</p>
+<p>Supongamos que queremos estimar la <strong>media de colesterol</strong> de la población de Mar del Plata. Sería inviable medir el colesterol de cada habitante, por lo que optamos por tomar una muestra de, por ejemplo, 100, 200 o 300 individuos (más adelante veremos cómo determinar el tamaño adecuado de la muestra). Debemos recordar que diferentes muestras producirán en general medias diferentes. Existe, por tanto, un grado de incertidumbre asociado. Si hiciéramos una estimación puntual, obtendríamos un solo valor, pero sin información sobre su variabilidad. No sabríamos qué tan cerca o lejos está nuestra estimación (<span class="math inline">\(\bar{x}\)</span>) de la verdadera media poblacional (<span class="math inline">\(\mu\)</span>).</p>
+<p>El <strong>intervalo de confianza</strong> proporciona un rango de valores dentro del cual se espera que se encuentre el valor verdadero del parámetro poblacional, con un cierto nivel de confianza. A diferencia de la estimación puntual que proporciona un único valor numérico, el intervalo consta de dos valores entre los cuales se supone está contenido el parámetro estimado. Entonces, el intervalo de confianza puede expresarse como:</p>
+<p><span class="math display">\[ IC = estimador~puntual \pm (coeficiente~de~confiabilidad) * (error~ estandar) \]</span></p>
+<p>donde:</p>
+<ul>
+<li><p><strong>Estimador puntual</strong>:</p>
+<ul>
+<li><p>Para la media poblacional (<span class="math inline">\(\mu\)</span>), se toma la media muestral(<span class="math inline">\(\bar{x}\)</span>).</p></li>
+<li><p>Para una proporción de la población (<span class="math inline">\(p\)</span>), se toma la proporción muestral (<span class="math inline">\(\hat{p}\)</span>).</p></li>
+</ul></li>
+<li><p><strong>Coeficiente de confiabilidad:</strong> Se relaciona con el nivel de confianza deseado (por ejemplo, 90%, 95% o 99%), y se expresa como <span class="math inline">\(1 - \alpha\)</span>, es decir la probabilidad de que el parámetro se encuentre dentro del IC. Recordemos que el nivel de significancia (<span class="math inline">\(\alpha\)</span>) es la probabilidad de que el parámetro no se halle dentro del IC y es un valor generalmente pequeño (por ejemplo, 0.1, 0.05 o 0.01) expresado como probabilidad o porcentaje (por ejemplo, 10%, 5% o 1%).</p></li>
+<li><p><strong>Error estándar (SE):</strong> Representa la variabilidad de la distribución muestral. Por ejemplo, para la media el error estándar se calcula como la raíz cuadrada de la varianza de la distribución muestral:</p>
+<p><span class="math display">\[
+SE = \frac{\sigma}{\sqrt{n}}
+\]</span></p>
+<p>Donde <span class="math inline">\(\sigma\)</span> es la desviación estándar poblacional y <span class="math inline">\(n\)</span> el tamaño de la muestra. Si se estima un IC para una proporción, el error estándar es:</p>
+<p><span class="math display">\[
+SE = \sqrt{\frac{\hat{p}(1 - \hat{p})}{n}}
+\]</span></p></li>
+</ul>
+<p>El proceso se fundamenta en el Teorema del Límite Central (TCL), que establece que, para muestras suficientemente grandes, la distribución de <span class="math inline">\(\bar{x}\)</span> es aproximadamente normal, con media <span class="math inline">\(\mu\)</span> y varianza <span class="math inline">\(\sigma^2/n\)</span>. Así, la variable tipificada:</p>
+<p><span class="math display">\[
+Z = \frac{\bar{x}-\mu}{\sigma}
+\]</span></p>
+<p>sigue una distribución normal estándar (media 0 y desviación estándar 1), lo que permite calcular probabilidades y construir el IC.</p>
+<p>En cualquier distribución normal:</p>
+<ul>
+<li><p>Entre <span class="math inline">\(\mu \pm \sigma\)</span> se encuentra el 68% de los datos.</p></li>
+<li><p>Entre <span class="math inline">\(\mu \pm 2\sigma\)</span> se encuentra el 95%.</p></li>
+<li><p>Entre <span class="math inline">\(\mu \pm 3\sigma\)</span> se encuentra el 99%.</p></li>
+</ul>
+<p>El siguiente gráfico ilustra lo explicado anteriormente:</p>
+<div class="cell" data-layout-align="center">
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="unidad6_files/figure-html/unnamed-chunk-2-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Sabemos que, independientemente de la localización de los valores, aproximadamente el <strong>95%</strong> de los valores posibles de <span class="math inline">\(\bar{x}\)</span> en la distribución muestral estarán a menos de dos desviaciones estándar de la media <span class="math inline">\(\mu\)</span>. Es decir, el intervalo <span class="math inline">\(\mu \pm 2\sigma\)</span> contendrá el <strong>95%</strong> de los valores posibles de <span class="math inline">\(\bar{x}\)</span>.</p>
+<p>Supongamos que formamos intervalos a partir de todos los posibles valores de <span class="math inline">\(\bar{x}\)</span>, calculados a partir de todas las muestras posibles de tamaño <span class="math inline">\(n\)</span> tomadas de la población de interés. Esto generará una gran cantidad de intervalos de la forma <span class="math inline">\(\mu \pm  2\sigma\)</span>, todos con la misma amplitud, centrados en torno a una <span class="math inline">\(\mu\)</span> desconocida.</p>
+<p>Aproximadamente el <strong>95%</strong> de estos intervalos tendrán sus centros dentro del intervalo <span class="math inline">\(\mu \pm  2\sigma\)</span>. Cada uno de estos intervalos, que se encuentran dentro de <span class="math inline">\(\mu \pm  2\sigma\)</span>, puede contener el valor verdadero de <span class="math inline">\(\mu\)</span>.</p>
+<div class="cell" data-layout-align="center">
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="unidad6_files/figure-html/unnamed-chunk-3-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Finalmente, y basándonos en las propiedades de la distribución Normal, se puede deducir la expresión del IC:</p>
+<p><span class="math display">\[
+P(Z_{\alpha/2} &lt; Z_{1-\alpha/2)} = 1 - \alpha
+\]</span> Reemplazando <span class="math inline">\(Z\)</span>:</p>
+<p><span class="math display">\[
+P(Z_{\alpha/2} &lt; \frac{\bar{x} - \mu}{\frac{\sigma}{\sqrt{n}}} &lt; Z_{(1-\alpha/2)}) = 1-\alpha   
+\]</span></p>
+<p>Reordenando, la expresión del IC para la media queda:</p>
+<p><span class="math display">\[
+\bar{x} - Z_{\alpha/2}\sqrt{\frac{\sigma^2}{n}} &lt; \mu &lt; \bar{x} + Z_{\alpha/2}\frac{\sigma^2}{n}   
+\]</span></p>
+<section id="cómo-se-interpreta-un-ic" class="level3">
+<h3 class="anchored" data-anchor-id="cómo-se-interpreta-un-ic">¿Cómo se interpreta un IC?</h3>
+<p>Si hubiésemos tomado múltiples muestras del mismo tamaño de la población, en al menos <span class="math inline">\(100 * (1 − \alpha)\%\)</span> de las ocasiones el intervalo calculado contendría el parámetro poblacional real. Es decir, un IC al 95% implica que, a largo plazo, el 95% de los intervalos obtenidos a partir de muestras repetidas incluirán el valor verdadero del parámetro.</p>
+<p>El producto del coeficiente de confiabilidad y el error estándar se denomina <strong>precisión de la estimación</strong> y es el componente responsable de la amplitud del IC. Recordemos que la fórmula general para construir un intervalo de confianza era:</p>
+<p><span class="math display">\[ IC = estimador~puntual \pm (coeficiente~de~confiabilidad) * (error~ estandar) \]</span></p>
+<p>Para el caso de la media:</p>
+<ul>
+<li><p><strong>Aumento de la confiabilidad:</strong> Si se incrementa el nivel de confianza, el coeficiente (por ejemplo, pasando de 1.96 a un valor mayor) aumenta, lo que a su vez incrementa la amplitud del IC.</p></li>
+<li><p><strong>Reducción del error estándar:</strong> Si se fija la confiabilidad (por ejemplo, al 95%), para disminuir la amplitud del IC es necesario reducir el error estándar. Dado que el error estándar de la media es:</p>
+<p><span class="math display">\[ SE = \frac{\sigma}{\sqrt{n}} \]</span></p>
+<p>y considerando que <span class="math inline">\(\sigma\)</span> es constante, la única forma de disminuir el error estándar es aumentando el tamaño muestral (<span class="math inline">\(n\)</span>).</p></li>
+</ul>
+<p>Surge entonces la pregunta: <strong>¿qué tan grande debe ser</strong> <span class="math inline">\(n\)</span>?<br>
+La respuesta dependerá de <span class="math inline">\(\sigma\)</span>, del nivel de significación (<span class="math inline">\(\alpha\)</span>) y de la amplitud deseada para el IC. La relación es:</p>
+<p><span class="math display">\[ Amplitud = Z \frac{\sigma}{\sqrt{n}} \Longrightarrow n = \frac{Z^2\sigma^2}{Amplitud^2} \quad (Z = 1.96~si~\alpha = 0.05) \]</span></p>
+<p>(En la práctica, <span class="math inline">\(\sigma\)</span> generalmente no se conoce, así que se usa su estimación muestral).</p>
+<p>La expresión del error estándar varía según el parámetro a estimar. Hemos visto el caso de la media; si lo que se desea es calcular un IC para una proporción, recordemos que, para muestras grandes, la distribución de las proporciones de la muestra es aproximadamente normal de acuerdo con el TCL. En este caso:</p>
+<ul>
+<li><p>La media de la distribución es la proporción real <span class="math inline">\(p\)</span></p></li>
+<li><p>La varianza es <span class="math inline">\(p(1-p)/n\)</span>, lo que nos lleva a que el error estándar es:</p></li>
+</ul>
+<p><span class="math display">\[
+SE = \sqrt{\frac{\hat{p}(1-\hat{p})}{n}}      
+\]</span></p>
+<p>y el IC para la proporción se expresa como:</p>
+<p><span class="math display">\[ \hat{p} - Z_{1-\alpha/2}\sqrt{\frac{\hat{p}(1-\hat{p})}{n}} &lt; p &lt; \hat{p} + Z_{1-\alpha/2}\sqrt{\frac{\hat{p}(1-\hat{p})}{n}}  \]</span></p>
+<p>Dado que un intervalo de confianza implica una declaración probabilística, su cálculo se fundamenta en las distribuciones muestrales de los estimadores y en el correspondiente error estándar. Aunque las fórmulas pueden parecer complejas, los paquetes estadísticos (como R) realizan estos cálculos automáticamente. Lo fundamental es comprender en qué depende la amplitud del IC (nivel de confianza, error estándar y tamaño muestral) y cómo cada uno de estos componentes influye en la precisión de la estimación.</p>
+<p>Para profundizar y visualizar simulaciones sobre estos conceptos, pueden explorar recursos interactivos como:</p>
+<p>➡️ <a href="https://seeing-theory.brown.edu/frequentist-inference/es.html#section2"><strong>Viendo la teoría: Una introducción visual a probabilidad y estadística</strong></a></p>
+</section>
+</section>
+<section id="normalidad-y-homocedasticidad" class="level2">
+<h2 class="anchored" data-anchor-id="normalidad-y-homocedasticidad">Normalidad y homocedasticidad</h2>
+<p>Las características fundamentales a la hora de decidir si utilizaremos métodos paramétricos o no paramétricos para la inferencia estadística, es que los datos se ajusten a una distribución normal y conocer si tienen una dispersión homogénea o heterogénea.</p>
+</section>
+<section id="normalidad" class="level2">
+<h2 class="anchored" data-anchor-id="normalidad">Normalidad</h2>
+<p>Determinar que una distribución es aproximadamente normal nos permite decidirnos por test de comparaciones paramétricos.</p>
+<p>Existen tres enfoques que debemos analizar simultáneamente:</p>
+<ul>
+<li>Métodos gráficos</li>
+<li>Métodos analíticos</li>
+<li>Pruebas de bondad de ajuste</li>
+</ul>
+<section id="métodos-gráficos" class="level3">
+<h3 class="anchored" data-anchor-id="métodos-gráficos">Métodos gráficos</h3>
+<p>El gráfico por excelencia para evaluar normalidad es el Q-Q Plot que consiste en comparar los cuantiles de la distribución observada con los cuantiles teóricos de una distribución normal con la misma media y desviación estándar que los datos.</p>
+<p>Cuanto más se aproximen los datos a una normal, más alineados están los puntos entorno a la recta.</p>
+<p>En el lenguaje R hay varios paquetes que tienen funciones para construirlos:</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(dlookr)</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggpubr)</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(moments)</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(nortest)</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(car)</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Cargamos datos de ejemplo:</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>datos <span class="ot">&lt;-</span> <span class="fu">read_csv2</span>(<span class="st">"datos/datos_normalidad.csv"</span>)</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Evaluación gráfica de normalidad usando la función <code>plot_normality()</code> del paquete <code>dlookr</code>:</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>datos <span class="sc">|&gt;</span> </span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">plot_normality</span>(peso) </span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="unidad6_files/figure-html/unnamed-chunk-6-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>A simple vista observamos que los puntos de la variable <code>peso</code> <em>se ajustan bastante bien a la recta</em>.</p>
+<p>También podemos generar el qqplot usando las funciones <code>geom_qq_line()</code> y <code>geom_qq()</code> de <code>ggplot2</code>:</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>datos <span class="sc">|&gt;</span> </span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="at">mapping =</span> <span class="fu">aes</span>(<span class="at">sample =</span> peso)) <span class="sc">+</span></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_qq_line</span>() <span class="sc">+</span></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_qq</span>() <span class="sc">+</span></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>()</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="unidad6_files/figure-html/unnamed-chunk-7-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>La función <code>ggqqplot()</code> del paquete <code>ggpubr</code> <span class="citation" data-cites="ggpubr">[@ggpubr]</span> nos permite agregar intervalos de confianza (zona gris alrededor de la recta) que nos orienta mejor sobre “donde caen” los puntos de la variable analizada:</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>datos<span class="sc">$</span>peso <span class="sc">|&gt;</span> </span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggqqplot</span>()</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="unidad6_files/figure-html/unnamed-chunk-8-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Un ejemplo donde la variable parece no cumplir con el supuesto de normalidad en estos datos de prueba es <code>edad</code>:</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>datos<span class="sc">$</span>edad <span class="sc">|&gt;</span> </span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggqqplot</span>()</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="unidad6_files/figure-html/unnamed-chunk-9-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="métodos-analíticos" class="level3">
+<h3 class="anchored" data-anchor-id="métodos-analíticos">Métodos analíticos</h3>
+<section id="medidas-de-forma" class="level4">
+<h4 class="anchored" data-anchor-id="medidas-de-forma">Medidas de forma</h4>
+<p>Existen dos medidas de forma útiles que podemos calcular mediante funciones de R.</p>
+<ul>
+<li>La curtosis (kurtosis)</li>
+<li>La asimetría (skewness)</li>
+</ul>
+<p>La curtosis mide el grado de agudeza o achatamiento de una distribución con relación a la distribución normal.</p>
+<ul>
+<li>&lt; 0 Distribución platicúrtica (apuntamiento negativo): baja concentración de valores</li>
+<li>&gt; 0 Distribución leptocúrtica (apuntamiento positivo): gran concentración de valores</li>
+<li>= 0 Distribución mesocúrtica (apuntamiento normal): concentración como en la distribución normal.</li>
+</ul>
+<p>El paquete <code>moments</code> <span class="citation" data-cites="moments">[@moments]</span> posee algunas funciones interesantes para analizar medidas de forma, como el estimador de Pearson para curtosis:</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>datos <span class="sc">|&gt;</span> </span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">kurtosis_edad =</span> <span class="fu">kurtosis</span>(edad, <span class="at">na.rm =</span> T),</span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>            <span class="at">kurtosis_peso =</span> <span class="fu">kurtosis</span>(peso, <span class="at">na.rm =</span> T))</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 1 × 2
+  kurtosis_edad kurtosis_peso
+          &lt;dbl&gt;         &lt;dbl&gt;
+1          8.05          2.72</code></pre>
+</div>
+</div>
+<p>En los dos casos estamos frente a una <em>distribución leptocúrtica</em> pero de magnitudes bien diferentes. Muy alta en el caso de la variable <code>edad</code> (8,0) y mucho menor para la variable <code>peso</code> (2,7).</p>
+<p>El índice de asimetría es un indicador que permite establecer el <em>grado de asimetría</em> que presenta una distribución. Los valores menores que 0 indican distribución asimétrica negativa; los mayores a 0: distribución asimetrica positiva y cuando sea 0, o muy próximo a 0, distribución simétrica:</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>datos <span class="sc">|&gt;</span>  </span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">asimetria_edad =</span> <span class="fu">skewness</span>(edad, <span class="at">na.rm =</span> T),</span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>            <span class="at">asimetria_peso =</span> <span class="fu">skewness</span>(peso, <span class="at">na.rm =</span> T))</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 1 × 2
+  asimetria_edad asimetria_peso
+           &lt;dbl&gt;          &lt;dbl&gt;
+1           2.19          0.122</code></pre>
+</div>
+</div>
+<p>Los valores obtenidos con la función <code>skewness()</code> del paquete <code>moments</code> nos informan que la distribución de la edad tienen una asimetría positiva (2,2) y que los valores de peso se distribuyen bastante simétricos (0,1).</p>
+<p>Estas características de las distribuciones también se pueden ver mediante histogramas o gráficos de densidad:</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>datos  <span class="sc">|&gt;</span>  </span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">plot_normality</span>(edad, <span class="at">col =</span> <span class="st">"forestgreen"</span>) </span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="unidad6_files/figure-html/unnamed-chunk-12-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>datos <span class="sc">|&gt;</span> </span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">plot_normality</span>(peso, <span class="at">col =</span> <span class="st">"royalblue"</span>) </span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="unidad6_files/figure-html/unnamed-chunk-12-2.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Los histogramas que se acerquen a la clásica “campana de Gauss” tendrán curtosis y asimetrías alrededor del valor cero.</p>
+</section>
+</section>
+<section id="pruebas-de-bondad-de-ajuste" class="level3">
+<h3 class="anchored" data-anchor-id="pruebas-de-bondad-de-ajuste">Pruebas de bondad de ajuste</h3>
+<p>Una prueba de bondad de ajuste permite testear la hipótesis de que una variable aleatoria sigue cierta distribución de probabilidad y se utiliza en situaciones donde se requiere comparar una distribución observada con una teórica o hipotética.</p>
+<p>El mecanismo es idéntico a cualquier test de hipótesis salvo que aquí esperamos no descartar la hipótesis nula de igualdad, por lo que obtener valores <em>p</em> de probabilidad mayores a 0,05 es signo de que la distribución de la variable analizada se ajusta.</p>
+<p>A continuación, presentaremos los test de hipótesis más utilizados para analizar normalidad.</p>
+<section id="test-de-shapiro-wilk" class="level4">
+<h4 class="anchored" data-anchor-id="test-de-shapiro-wilk">Test de Shapiro-Wilk</h4>
+<p>Lleva el nombre de sus <a href="https://es.wikipedia.org/wiki/Test_de_Shapiro%E2%80%93Wilk">autores</a> (Samuel Shapiro y Martin Wilk) y es usado preferentemente para muestras de hasta 50 observaciones.</p>
+<p>La función se encuentra desarrollada en el paquete <code>stats</code> y se llama <code>shapiro.test()</code>:</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="fu">shapiro.test</span>(datos<span class="sc">$</span>edad)</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+    Shapiro-Wilk normality test
+
+data:  datos$edad
+W = 0.69517, p-value = 4.912e-13</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="fu">shapiro.test</span>(datos<span class="sc">$</span>peso)</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+    Shapiro-Wilk normality test
+
+data:  datos$peso
+W = 0.98615, p-value = 0.383</code></pre>
+</div>
+</div>
+<p><strong>Interpretación</strong>: Siendo la hipótesis nula que la población está distribuida normalmente, si el p-valor es menor a <span class="math inline">\(\alpha\)</span> (nivel de significancia, convencionalmente un 0,05) entonces la hipótesis nula es rechazada (se concluye que los datos no provienen de una distribución normal). Si el p-valor es mayor a <span class="math inline">\(\alpha\)</span>, se concluye que no se puede rechazar dicha hipótesis.</p>
+<p>En función de esta interpretación (que es común a todos los test de hipótesis de normalidad), podemos decir que la distribución de la variable <strong>edad</strong> <em>no se ajusta a la normal</em> y no podemos rechazar que la distribución de la variable <strong>peso</strong> se ajuste.</p>
+</section>
+<section id="test-de-kolmogorov-smirnov" class="level4">
+<h4 class="anchored" data-anchor-id="test-de-kolmogorov-smirnov">Test de Kolmogorov-Smirnov</h4>
+<p>El test de <a href="https://es.wikipedia.org/wiki/Prueba_de_Kolmogorov-Smirnov"><strong>Kolmogorov-Smirnov</strong></a> permite estudiar si una muestra procede de una población con una determinada distribución que no está limitado únicamente a la distribución normal.</p>
+<p>El test asume que se conoce la media y varianza poblacional, lo que en la mayoría de los casos no es posible. Para resolver este problema, se realizó una modificación conocida como test Lilliefors.</p>
+</section>
+<section id="test-de-lilliefors" class="level4">
+<h4 class="anchored" data-anchor-id="test-de-lilliefors">Test de Lilliefors</h4>
+<p>El test de <a href="https://es.wikipedia.org/wiki/Prueba_de_Lilliefors"><strong>Lilliefors</strong></a> asume que la media y varianza son desconocidas y está especialmente desarrollado para contrastar la normalidad.</p>
+<p>Es la alternativa al test de Shapiro-Wilk cuando el número de observaciones es mayor de 50.</p>
+<p>La función <code>lillie.test()</code> del paquete <code>nortest</code> <span class="citation" data-cites="nortest">[@nortest]</span> permite aplicarlo:</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="fu">lillie.test</span>(datos<span class="sc">$</span>edad)</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+    Lilliefors (Kolmogorov-Smirnov) normality test
+
+data:  datos$edad
+D = 0.24892, p-value &lt; 2.2e-16</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="fu">lillie.test</span>(datos<span class="sc">$</span>peso)</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+    Lilliefors (Kolmogorov-Smirnov) normality test
+
+data:  datos$peso
+D = 0.049534, p-value = 0.7905</code></pre>
+</div>
+</div>
+<p>Los resultados son coincidentes con los obtenidos anteriormente.</p>
+</section>
+<section id="test-de-dagostino" class="level4">
+<h4 class="anchored" data-anchor-id="test-de-dagostino">Test de D’agostino</h4>
+<p>Esta prueba se basa en las transformaciones de la curtosis y la asimetría de la muestra, y solo tiene poder frente a las alternativas de que la distribución sea sesgada.</p>
+<p>El paquete <code>moments</code> la tiene implementada en <code>agostino.test()</code>:</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="fu">agostino.test</span>(datos<span class="sc">$</span>edad)</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+    D'Agostino skewness test
+
+data:  datos$edad
+skew = 2.1947, z = 6.3465, p-value = 2.203e-10
+alternative hypothesis: data have a skewness</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="fu">agostino.test</span>(datos<span class="sc">$</span>peso)</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+    D'Agostino skewness test
+
+data:  datos$peso
+skew = 0.12160, z = 0.52683, p-value = 0.5983
+alternative hypothesis: data have a skewness</code></pre>
+</div>
+</div>
+<p>Los resultados coinciden con la observación de asimetría que efectuamos con los métodos analíticos, confirmando que la variable <code>edad</code> <em>no se ajusta</em> a una curva simétrica y la variable <code>peso</code> si lo hace.</p>
+<p>Cuando estos test se emplean con la finalidad de verificar las condiciones de métodos paramétricos es importante tener en cuenta que, al tratarse de valores probabilidad, cuanto mayor sea el tamaño de la muestra más poder estadístico tienen y más fácil es encontrar evidencias en contra de la hipótesis nula de normalidad.</p>
+<p>Por otra parte, cuanto mayor sea el tamaño de la muestra, menos sensibles son los métodos paramétricos a la falta de normalidad. Por esta razón, es importante no basar las conclusiones únicamente en los resultados de los test, sino también considerar los otros métodos (gráfico y analítico) y no olvidar el tamaño de la muestra.</p>
+</section>
+</section>
+</section>
+<section id="homocedasticidad" class="level2">
+<h2 class="anchored" data-anchor-id="homocedasticidad">Homocedasticidad</h2>
+<p>La homogeneidad de varianzas es un supuesto que considera constante la varianza en los distintos grupos que queremos comparar.</p>
+<p>Esta homogeneidad es condición necesaria antes de aplicar algunos test de hipótesis de comparaciones o bien para aplicar correcciones mediante los argumentos de las funciones de R.</p>
+<p>Existen diferentes test de bondad de ajuste que permiten evaluar la distribución de la varianza. Todos ellos consideran como <span class="math inline">\(H_0\)</span> que la varianza es igual entre los grupos y como <span class="math inline">\(H_1\)</span> que no lo es.</p>
+<p>La diferencia entre ellos es el estadístico de centralidad que utilizan:</p>
+<ul>
+<li><p>Media de la varianza: son los más potentes pero se aplican en distribuciones que se aproximan a la normal.</p></li>
+<li><p>Mediana de la varianza: son menos potentes pero consiguen mejores resultados en distribuciones asimétricas.</p></li>
+</ul>
+<section id="f-test" class="level3">
+<h3 class="anchored" data-anchor-id="f-test">F-test</h3>
+<p>Este test es un contraste de la razón de varianzas, mediante el estadístico F que sigue una distribución F-Snedecor.</p>
+<p>Se utiliza cuando las distribuciones se aproximan a la “normal” y en R base se la encuentra en la función <code>var.test()</code> que permite utilizar la sintaxis de fórmula:</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a>variable_cuantitativa <span class="sc">~</span> variable_categórica_grupos</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Por ejemplo:</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="fu">var.test</span>(<span class="at">formula =</span> peso <span class="sc">~</span> sexo, <span class="at">data =</span> datos)</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+    F test to compare two variances
+
+data:  peso by sexo
+F = 0.67914, num df = 50, denom df = 48, p-value = 0.1781
+alternative hypothesis: true ratio of variances is not equal to 1
+95 percent confidence interval:
+ 0.384712 1.194943
+sample estimates:
+ratio of variances 
+         0.6791414 </code></pre>
+</div>
+</div>
+<p>Comparamos las varianzas de la variable peso entre el grupo de mujeres y hombres. El valor <span class="math inline">\(p\)</span> del test indica que no podemos descartar la igualdad de varianzas entre los grupos (<span class="math inline">\(H_0\)</span>) o lo que es lo mismo el test no encuentra diferencias significativas entre las varianzas de los dos grupos.</p>
+</section>
+<section id="test-de-bartlett" class="level3">
+<h3 class="anchored" data-anchor-id="test-de-bartlett">Test de Bartlett</h3>
+<p>Este test se puede utilizar como alternativa al F-test, sobre todo porque nos permite aplicarlo cuando tenemos más de 2 grupos de comparación. Al igual que el anterior es sensible a las desviaciones de la normalidad.</p>
+<p>La función en R <code>base</code> es <code>bartlett.test()</code> y también se pueden usar argumentos tipo fórmula:</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="fu">bartlett.test</span>(<span class="at">formula =</span> peso <span class="sc">~</span> sexo, <span class="at">data =</span> datos)</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+    Bartlett test of homogeneity of variances
+
+data:  peso by sexo
+Bartlett's K-squared = 1.8082, df = 1, p-value = 0.1787</code></pre>
+</div>
+</div>
+<p>El resultado es coincidente con el mostrado por <code>var.test()</code>. No se encuentran diferencias significativas entres las varianzas de los pesos en los dos grupos (Mujer - Varon)</p>
+</section>
+<section id="test-de-levene" class="level3">
+<h3 class="anchored" data-anchor-id="test-de-levene">Test de Levene</h3>
+<p>El test de Levene sirve para comparar la varianza de 2 o más grupos pero además permite elegir distintos estadísticos de tendencia central. Por lo tanto, la podemos adaptar a distribuciones alejadas de la normalidad seleccionando por ejemplo la mediana.</p>
+<p>La función <code>leveneTest()</code> se encuentra disponible en el paquete <code>car</code>. La vemos aplicada sobre <code>peso</code> para los diferentes grupos de <code>sexo</code> y utilizando la <strong>media</strong> como estadístico de centralidad, dado que la distribución de <code>peso</code> se aproxima a la normal.</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a><span class="fu">leveneTest</span>(<span class="at">y =</span> peso <span class="sc">~</span> sexo, <span class="at">data =</span> datos, <span class="at">center =</span> <span class="st">"mean"</span>)</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Levene's Test for Homogeneity of Variance (center = "mean")
+      Df F value Pr(&gt;F)
+group  1       2 0.1605
+      98               </code></pre>
+</div>
+</div>
+<p>La conclusión es la misma que la encontrada anteriormente.</p>
+<p>Ahora vamos aplicarla sobre la variable <code>edad</code>, de la que habíamos descartado “normalidad”. Lo hacemos usando el argumento <code>center</code> con <code>"mean"</code> (media) y con <code>"median"</code> (mediana).</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb32"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a><span class="fu">leveneTest</span>(<span class="at">y =</span> edad <span class="sc">~</span> sexo, <span class="at">data =</span> datos, <span class="at">center =</span> <span class="st">"mean"</span>)</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Levene's Test for Homogeneity of Variance (center = "mean")
+      Df F value Pr(&gt;F)  
+group  1  4.6784  0.033 *
+      97                 
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb34"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a><span class="fu">leveneTest</span>(<span class="at">y =</span> edad <span class="sc">~</span> sexo, <span class="at">data =</span> datos, <span class="at">center =</span> <span class="st">"median"</span>)</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Levene's Test for Homogeneity of Variance (center = "median")
+      Df F value Pr(&gt;F)
+group  1  2.4413 0.1214
+      97               </code></pre>
+</div>
+</div>
+<p>Los resultados son diferentes. Mientras con el centrado en la media nos da un <em>p</em> valor significativo menor a 0,05 con el centrado en la mediana no nos permite descartar homocedasticidad.</p>
+<p>Observamos aquí las distorsiones sobre la media y las formas paramétricas que devienen de distribuciones asimétricas y alejadas de la curva normal. El código correcto para este caso (variable <code>edad</code>) es usar el centrado en la mediana (<code>center = "median"</code>).</p>
+</section>
+</section>
+<section id="test-de-hipótesis" class="level2">
+<h2 class="anchored" data-anchor-id="test-de-hipótesis">Test de hipótesis</h2>
+<p>Aunque los estudios de corte transversal no se diseñan originalmente con grupos de comparación, en aquellos de carácter más analítico es frecuente establecer comparaciones. Por ejemplo, pueden surgir preguntas como:</p>
+<blockquote class="blockquote">
+<p><em>¿La prevalencia de la enfermedad es mayor en mujeres, en determinados grupos etarios o en una provincia específica?</em></p>
+</blockquote>
+<p>Con esto en mente, revisaremos las herramientas que permiten comparar grupos mediante test o contrastes de hipótesis. El propósito de estos test es ofrecer al investigador una herramienta para tomar decisiones sobre la población a partir de la información obtenida en una muestra.</p>
+<p>Antes de adentrarnos en la parte estadística, es importante distinguir entre dos tipos de hipótesis:</p>
+<ul>
+<li><p><strong>Hipótesis de investigación:</strong> Es la conjetura o suposición que motiva la investigación.</p></li>
+<li><p><strong>Hipótesis estadística:</strong> Es aquella que puede ser evaluada mediante técnicas estadísticas apropiadas.</p></li>
+</ul>
+<p>En este texto nos centraremos en aclarar aspectos relativos a las hipótesis estadísticas, asumiendo que las hipótesis de investigación ya han sido discutidas previamente por los investigadores. Describiremos brevemente el razonamiento subyacente a estos test.</p>
+<p>Los contrastes de hipótesis parten de una <strong>hipótesis nula</strong>, la cual afirma que los dos grupos comparados son iguales o, en otras palabras, que las diferencias observadas se deben únicamente al azar. Como ya se ha mencionado, la variabilidad intrínseca de cualquier muestra impide que la diferencia entre grupos sea exactamente cero.</p>
+<p>El método estadístico nos permite cuantificar la diferencia entre grupos asumiendo que, si repitiésemos el experimento infinitas veces obtenemos todas las posibles muestras del tamaño indicado a partir de nuestras poblaciones (<em>distribución muestral</em>), las diferencias entre grupos “iguales” se distribuirían conforme a una curva teórica. Basándonos en las propiedades de esta distribución, podemos determinar un valor límite que comprende, por ejemplo, el 95% o el 99% de las diferencias esperadas. Si la diferencia observada entre las muestras supera este valor límite, se considera excesiva para ser atribuible al azar y, por tanto, se rechaza la hipótesis nula. Por el contrario, si la diferencia cae dentro del área del 95%, se concluye que la diferencia encontrada podría atribuirse al azar, y no habría evidencia que nos permita rechazar la hipótesis nula. En estos casos decimos que los grupos “no son diferentes” pero no “son iguales”, ya que la variabilidad inherente impide probar una igualdad exacta.</p>
+<p>Los contrastes de hipótesis se realizan generalmente bajo las siguientes condiciones:</p>
+<ul>
+<li><p>Se asume a priori que la ley de distribución de la población es conocida.</p></li>
+<li><p>Se extrae una muestra aleatoria de dicha población.</p></li>
+</ul>
+<p>El conjunto de estas técnicas de inferencia se denomina <strong>técnicas paramétricas</strong>. Sin embargo, existen otros métodos, denominados <strong>técnicas no paramétricas</strong> o contrastes de distribuciones libres, que no requieren estimar parámetros ni suponer una ley de probabilidad específica para la población. Algunos de estos métodos serán desarrollados más adelante en este módulo.</p>
+<p>Es importante señalar que los contrastes de hipótesis se utilizan no solo en estudios transversales, sino con mayor frecuencia en diseños en los que <em>a priori</em> existen grupos de comparación, como en estudios de casos y controles, cohortes, ensayos clínicos, entre otros. Desarrollaremos aquí la teoría que los sustenta y los utilizaremos a lo largo de todo el curso.</p>
+<section id="estructura-del-test-de-hipótesis" class="level3">
+<h3 class="anchored" data-anchor-id="estructura-del-test-de-hipótesis">Estructura del test de hipótesis</h3>
+<p>Los componentes básicos de cualquier test de contraste de hipótesis son:</p>
+<ul>
+<li><p><strong>Hipótesis nula</strong> (<span class="math inline">\(H_0\)</span>): Afirma que no existe diferencia entre los grupos que se comparan, es decir, que las variaciones observadas se deben únicamente al azar.</p></li>
+<li><p><strong>Hipótesis alternativa</strong> (<span class="math inline">\(H_1\)</span>): Es la conjetura o suposición que plantea el investigador, estableciendo que sí existe una diferencia entre los grupos. Generalmente es complementaria de la <span class="math inline">\(H_0\)</span>.</p></li>
+<li><p><strong>Estadístico de prueba</strong>: Es el valor calculado a partir de los datos muestrales que se utiliza para tomar la decisión sobre la <span class="math inline">\(H_0\)</span>. Cada tipo de problema tiene un estadístico adecuado, cuya magnitud, al compararse con su distribución muestral (por ejemplo, la distribución normal estándar en el caso del estadístico <span class="math inline">\(Z\)</span>), permite determinar si las diferencias observadas son atribuibles al azar.</p></li>
+<li><p><strong>Valor crítico o Región crítica</strong>: La región crítica se establece en función del nivel de significación (<span class="math inline">\(\alpha\)</span>) y consiste en el conjunto de valores extremos del estadístico de prueba que, de ser alcanzados, llevarían a rechazar la <span class="math inline">\(H_0\)</span>. Todos los posibles valores del estadístico se ubican en el eje horizontal de la gráfica de su distribución, y la región crítica delimita aquellos valores que son muy poco probables bajo la hipótesis nula.</p>
+<div class="cell" data-layout-align="center">
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="unidad6_files/figure-html/unnamed-chunk-21-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>La regla de decisión es la siguiente:</p>
+<ul>
+<li>Si el valor del estadístico de prueba calculado a partir de la muestra cae en la región crítica, se rechaza la <span class="math inline">\(H_0\)</span>​ y se concluye que las diferencias observadas son <strong>estadísticamente significativas</strong>.</li>
+<li>Si el valor no cae en la región crítica, no se rechaza la <span class="math inline">\(H_0\)</span>​; esto indica que las diferencias entre lo observado y lo esperado pueden explicarse por el azar. Es decir, <strong>no son estadísticamente significativas</strong>.</li>
+</ul></li>
+<li><p><strong>Nivel de significación</strong> (<span class="math inline">\(\alpha\)</span>): Es la probabilidad de cometer un error tipo I, es decir, rechazar <span class="math inline">\(H_0\)</span> cuando es verdadera. Este valor, elegido por el investigador (comúnmente 5% o 1%), determina el límite entre la región de no rechazo y la región crítica.</p></li>
+<li><p><strong>Valor <em>p</em></strong>: Es una medida de qué tan probable son los resultados de la muestra, considerando que <span class="math inline">\(H_0\)</span> sea verdadera.</p>
+<ul>
+<li><p>Un valor <span class="math inline">\(p\)</span> muy pequeño indica que es muy poco probable obtener los resultados observados para el estadístico muestral si <span class="math inline">\(H_0\)</span> fuese cierta, por lo que debemos rechazarla.</p></li>
+<li><p>Esto significa que si el valor <span class="math inline">\(p \leq \alpha\)</span>, es posible rechazar <span class="math inline">\(H_0\)</span>; mientras que si <span class="math inline">\(p &gt; \alpha\)</span>, no es posible rechazar la hipótesis nula.</p></li>
+</ul>
+<p>Por ejemplo, si en un test de contraste de dos proporciones se obtiene un estadístico <span class="math inline">\(Z= 3,034\)</span> y un valor <span class="math inline">\(p = 0.0024\)</span>, esto significa que la probabilidad de obtener un valor de <span class="math inline">\(Z\)</span> de 3.034 o mayor, suponiendo que <span class="math inline">\(H_0\)</span> es cierta, es del 0.24%. Dado que este valor es mucho menor que un nivel de significación del 5% (o incluso del 1%), se rechaza <span class="math inline">\(H_0\)</span> y se concluye que la diferencia observada es estadísticamente significativa. En otras palabras, si bajo un supuesto dado, la probabilidad de un suceso observado particular es excepcionalmente pequeña, concluimos que el supuesto probablemente es incorrecto (<em>regla del suceso infrecuente</em>).</p></li>
+</ul>
+</section>
+<section id="tipos-de-contrastes" class="level3">
+<h3 class="anchored" data-anchor-id="tipos-de-contrastes">Tipos de contrastes</h3>
+<p>Los contrastes de hipótesis se clasifican según la forma de la hipótesis alternativa (<span class="math inline">\(H_1\)</span>). Esta clasificación determina si la prueba es <strong>unilateral</strong> de cola izquierda o derecha) o <strong>bilateral</strong> (de dos colas). Siendo las colas de la distribución las regiones extremas limitadas por los valores críticos.</p>
+<section id="test-de-cola-izquierda" class="level4">
+<h4 class="anchored" data-anchor-id="test-de-cola-izquierda">Test de cola izquierda</h4>
+<p>La hipótesis alternativa plantea que la media del primer grupo es significativamente <strong>menor</strong> que la del segundo:</p>
+<p><span class="math display">\[
+H_1: \mu_1 &lt; \mu_2
+\]</span></p>
+<p>La región crítica se encuentra en el extremo izquierdo de la distribución. Todo el área crítica tiene un tamaño <span class="math inline">\(\alpha\)</span> con un valor crítico de <span class="math inline">\(-1,645\)</span>.</p>
+<div class="cell" data-layout-align="center">
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="unidad6_files/figure-html/unnamed-chunk-22-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="test-de-cola-derecha" class="level4">
+<h4 class="anchored" data-anchor-id="test-de-cola-derecha">Test de cola derecha</h4>
+<p>La hipótesis alternativa establece que la media del primer grupo es significativamente <strong>mayor</strong> que la del segundo:</p>
+<p><span class="math display">\[ H_1: \mu_1 &gt; \mu_2 \]</span></p>
+<p>La región crítica se concentra en el extremo derecho de la distribución y toda el área crítica tiene un tamaño <span class="math inline">\(\alpha\)</span> con un valor crítico de <span class="math inline">\(1,645\)</span>.</p>
+<div class="cell" data-layout-align="center">
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="unidad6_files/figure-html/unnamed-chunk-23-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="pruebas-bilaterales" class="level4">
+<h4 class="anchored" data-anchor-id="pruebas-bilaterales">Pruebas bilaterales</h4>
+<p>La hipótesis alternativa afirma que existen diferencias entre los grupos, <strong>sin especificar la dirección</strong>:</p>
+<p><span class="math display">\[
+H_1: \mu_1 \neq \mu_2
+\]</span></p>
+<p>La región crítica se divide entre ambos extremos de la distribución, con valores críticos de <span class="math inline">\(\pm 1,96\)</span>. El nivel de significación total (<span class="math inline">\(\alpha\)</span>) se reparte en partes iguales entre las dos colas (<span class="math inline">\(\alpha/2\)</span> en cada una), lo que implica un 2,5% de probabilidad en cada cola si <span class="math inline">\(H_0\)</span> es verdadera.</p>
+<div class="cell" data-layout-align="center">
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="unidad6_files/figure-html/unnamed-chunk-24-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+</section>
+<section id="errores" class="level3">
+<h3 class="anchored" data-anchor-id="errores">Errores</h3>
+<p>Al utilizar el razonamiento de los contrastes de hipótesis, existen dos tipos principales de errores que podemos cometer:</p>
+<ul>
+<li><p><strong>Error tipo I</strong> (<span class="math inline">\(\alpha\)</span>): Ocurre cuando el investigador rechaza la hipótesis nula (<span class="math inline">\(H_0\)</span>) siendo esta verdadera en la población y se concluye erróneamente que existe una diferencia cuando en realidad no la hay. Se suele eligir un valor pequeño de <span class="math inline">\(\alpha\)</span> (0.01, 0.05 y 0.10) para hacer que la probabilidad de rechazo de <span class="math inline">\(H_0\)</span> sea pequeña.</p></li>
+<li><p><strong>Error tipo II (</strong><span class="math inline">\(\beta\)</span>): Ocurre cuando el investigador no rechaza la <span class="math inline">\(H_0\)</span> siendo esta falsa en la población, es decir, se falla en detectar una diferencia real. Generalmente <span class="math inline">\(\beta\)</span> es mayor que <span class="math inline">\(\alpha\)</span>, pero su valor real se desconoce en la práctica.</p></li>
+</ul>
+<p>Es importante notar que, una vez que se realiza el procedimiento de prueba, no es posible saber con certeza si se ha cometido alguno de estos errores, ya que se desconoce el verdadero estado de la realidad. Sin embargo, al fijar un <span class="math inline">\(\alpha\)</span> pequeño, se busca asegurar que, en caso de rechazar la <span class="math inline">\(H_0\)</span>, la probabilidad de haber cometido un error Tipo I sea baja.</p>
+<p>En resumen, al interpretar los resultados de un test de hipótesis:</p>
+<ul>
+<li><p><strong>Si se rechaza la</strong> <span class="math inline">\(H_0\)</span>: se asume que la probabilidad de haber cometido un error Tipo I es baja (debido al valor pequeño de <span class="math inline">\(\alpha\)</span>).</p></li>
+<li><p><strong>Si no se rechaza la</strong> <span class="math inline">\(H_0\)</span>: se desconoce el riesgo real de un error Tipo II, pero es importante tener en cuenta que, en muchas situaciones, este riesgo es mayor que el de un error Tipo I.</p></li>
+</ul>
+<p>La tabla que se presenta a continuación resume las posibles situaciones a las que nos enfrentamos con los test de hipótesis:</p>
+<div class="cell" data-layout-align="center">
+<div class="cell-output-display">
+<table class="table table-condensed table-hover caption-top table-sm table-striped small" data-quarto-postprocess="true">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th" style="text-align: left; position: sticky; top: 0; background-color: #FFFFFF; color: white !important; background-color: rgba(47, 46, 78, 255) !important;"></th>
+<th data-quarto-table-cell-role="th" style="text-align: left; position: sticky; top: 0; background-color: #FFFFFF; color: white !important; background-color: rgba(47, 46, 78, 255) !important;">No rechazar H0</th>
+<th data-quarto-table-cell-role="th" style="text-align: left; position: sticky; top: 0; background-color: #FFFFFF; color: white !important; background-color: rgba(47, 46, 78, 255) !important;">Rechazar H0</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left; font-weight: bold; color: white !important; background-color: rgba(47, 46, 78, 255) !important;">H0 es cierta</td>
+<td style="text-align: left;">Correcto (1-α)</td>
+<td style="text-align: left;">Error tipo I (α)</td>
+</tr>
+<tr class="even">
+<td style="text-align: left; font-weight: bold; color: white !important; background-color: rgba(47, 46, 78, 255) !important;">H0 es falsa</td>
+<td style="text-align: left;">Error tipo II (β)</td>
+<td style="text-align: left;">Correcto (1-β)</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p>Para quienes están familiarizados con el ámbito del diagnóstico, existe una clara analogía entre los falsos positivos y falsos negativos en las pruebas diagnósticas y, respectivamente, el error Tipo I y el error Tipo II en los contrastes de hipótesis.</p>
+<p>Hemos discutido el significado de <span class="math inline">\(\alpha\)</span> (error Tipo I); ahora veamos qué implica <span class="math inline">\(\beta\)</span>. Recordemos que el error Tipo II es análogo a los falsos negativos de las pruebas diagnósticas: es la probabilidad de no detectar una diferencia cuando, en realidad, ésta existe. En otras palabras, <span class="math inline">\(\beta\)</span> es la probabilidad de no rechazar la hipótesis nula (<span class="math inline">\(H_0\)</span>​) siendo esta falsa.</p>
+<p>A diferencia de <span class="math inline">\(\alpha\)</span> que se fija en un único valor y es determinado por el investigador, <span class="math inline">\(\beta\)</span> varía según el valor real del parámetro en estudio. Por ejemplo, si consideramos la hipótesis nula <span class="math inline">\(H_0: \mu_1 - \mu_2 = 0\)</span>, habrá un valor de <span class="math inline">\(\beta\)</span> para cada posible diferencia entre <span class="math inline">\(\mu_1\)</span>​ y <span class="math inline">\(\mu_2\)</span> cuando el valor real no sea cero. La probabilidad de detectar correctamente una diferencia real - es decir, de obtener un resultado estadísticamente significativo cuando la diferencia existe- se denomina <strong>potencia estadística</strong> y se expresa como <span class="math inline">\(1-\beta\)</span>.</p>
+<p>Los contrastes de hipótesis no son exclusivos de los estudios transversales; por el contrario, su uso es más común en estudios analíticos que involucran grupos de comparación, tales como estudios de casos y controles, cohortes o ensayos clínicos. Por ejemplo, en un ensayo clínico que evalúa dos tratamientos, la potencia estadística refleja la capacidad del estudio para identificar un efecto real del tratamiento.</p>
+<p>Es deseable que la potencia del estudio sea lo mayor posible, ya que esto incrementa la probabilidad de detectar diferencias verdaderas. Sin embargo, no es posible minimizar ambos errores simultáneamente ya que al disminuir <span class="math inline">\(\alpha\)</span> (es decir, al ser más exigentes para rechazar la <span class="math inline">\(H_0\)</span>​), <span class="math inline">\(\beta\)</span> tiende a aumentar, y viceversa. En los contrastes, la hipótesis privilegiada es <span class="math inline">\(H_0\)</span> que solo será rechazada cuando la evidencia de su falsedad supere el umbral del <span class="math inline">\(1-\alpha\)</span>. Esto significa que, a menos que la evidencia en contra de <span class="math inline">\(H_0\)</span> sea muy significativa, se opta por no rechazarla. Lo ideal a la hora de definir un test es encontrar un compromiso entre <span class="math inline">\(\beta\)</span> y <span class="math inline">\(\alpha\)</span>.</p>
+<div class="cell" data-layout-align="center">
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="unidad6_files/figure-html/unnamed-chunk-26-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Mientras que para tests bilaterales:</p>
+<div class="cell" data-layout-align="center">
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="unidad6_files/figure-html/unnamed-chunk-27-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Finalmente, podemos decir que la potencia estadística ofrece un segundo mecanismo de seguridad en un contraste de hipótesis. Es como contar con una protección adicional en la toma de decisiones: si solo dispusiéramos del nivel de significación (<span class="math inline">\(\alpha\)</span>), tendríamos menos garantías. Al incorporar la potencia (<span class="math inline">\(1-\beta\)</span>) agregamos un segundo control. Por ello, en un contraste no basta con tener un valor <em>p</em> pequeño; también se necesita una potencia alta, que en la práctica suele fijarse en un 80% (es decir, <span class="math inline">\(1 - \beta = 0.8\)</span>).<br>
+Por otro lado, cuando existe una diferencia real —o un efecto real de una terapia, o una verdadera diferencia entre dos fármacos—, la <strong>magnitud</strong> de ese efecto influye en la facilidad para detectarlo. Los efectos grandes son más fáciles de identificar que los pequeños. Para estimar la potencia de una prueba, debemos especificar el <strong>efecto mínimo</strong> que valga la pena identificar.</p>
+<p>La potencia de un test estadístico depende de tres factores que actúan de manera interrelacionada:</p>
+<ul>
+<li><p>El <strong>riesgo de error</strong> que se tolerará al rechazar la hipótesis de ausencia de efecto o diferencia (<span class="math inline">\(\alpha\)</span>).</p></li>
+<li><p>La <strong>dimensión de la diferencia</strong> que se desea identificar en relación con la variabilidad en las poblaciones.</p></li>
+<li><p>El <strong>tamaño de la muestra</strong>.</p></li>
+</ul>
+<p>Del mismo modo que en un problema de estimación se necesita una idea de la magnitud a estimar y del error aceptable para definir el tamaño de la muestra, en un contraste de hipótesis se requiere conocer el <strong>tamaño del efecto</strong> que se quiere detectar. Así, el tamaño muestral se determina en función del nivel de confianza y de la potencia de la prueba, además de otros aspectos relacionados con el diseño y la prueba estadística elegida.</p>
+<p>En epidemiología, una de las situaciones más frecuentes al diseñar un estudio es el cálculo del tamaño muestral para un <strong>nivel de confianza del 95%</strong> y una <strong>potencia del 80%</strong>, que, como se mencionó, es un nivel de potencia alto y que además permite manejar un <span class="math inline">\(\alpha\)</span> relativamente bajo. El lenguaje <strong>R</strong> cuenta con diversas funciones para <strong>calcular y visualizar</strong> la relación entre tamaño muestral, potencia, tamaño del efecto y nivel de confianza, facilitando el diseño de estudios con un adecuado balance entre la probabilidad de detectar diferencias reales y la de controlar errores estadísticos.</p>
+<p>Por ejemplo, la función <code>pwr.t.test()</code> del paquete <code>pwr</code> <span class="citation" data-cites="pwr">[@pwr]</span>, calcula la potencia para pruebas <span class="math inline">\(t\)</span> de Student de medias (para una muestra, dos muestras y muestras pareadas), basado en el tamaño de la muestra, el nivel de confianza y el tamaño de efecto:</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb36"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a><span class="fu">pwr.t.test</span>(n, d, <span class="at">sig.level =</span> <span class="fl">0.05</span>, power, type, alternative)</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Donde:</p>
+<ul>
+<li><p><code>n</code>: Número de observaciones para cada grupo.</p></li>
+<li><p><code>d</code>: tamaño de efecto (<span class="math inline">\(d\)</span> de Cohen) - diferencia (estandarizada) entre grupos.</p>
+<blockquote class="blockquote">
+<p><em>Nota:</em> La <span class="math inline">\(d\)</span> de Cohen representa las desviaciones estándar que separan dos o más grupos. Por ejemplo: <span class="math inline">\(d_{Cohen} = 0.5\)</span> representa que la diferencia entre grupo experimental y muestral es de media desviación estándar. Cohen sugirió (provisoriamente) que 0.2 es un tamaño de efecto pequeño, 0.5 es mediano y 0.8 es grande,</p>
+</blockquote></li>
+<li><p><code>sig.level</code>: nivel de significación (probabilidad del error de tipo I).</p></li>
+<li><p><code>power</code>: potencia del test (1 menos la probabilidad del error tipo II).</p></li>
+<li><p><code>type</code>: tipo de test (<code>"two.sample"</code>, <code>"one.sample"</code>, <code>"paired"</code>).</p></li>
+<li><p><code>alternative</code>: palabra que especifica la hipotesis alternativa, debe ser <code>"two.sided"</code> (predeterminado), <code>"greater"</code> or <code>"less"</code>.</p></li>
+</ul>
+<p>La función se ejecuta incorporando todos los argumentos obligatorios (<code>d</code>,<code>n</code>, <code>power</code> y <code>sig.level</code>) menos el que se quiere calcular. En ese caso se iguala a <code>NULL</code> o se omite.</p>
+<p>Supongamos que queremos conocer el tamaño de la muestra para detectar diferencias en la media de la hemoglobina glicosilada entre dos grupos de pacientes con tratamientos de control de la diabetes distintos. Aceptamos un nivel de efecto convencional de una pequeña desviación (<span class="math inline">\(d_{Cohen} = 0.2\)</span>), una potencia del 80% y una significación habitual de 0,05.</p>
+<p>Cargamos el paquete requerido:</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb37"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(pwr)</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Calculamos el tamaño de muestra:</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb38"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a><span class="fu">pwr.t.test</span>(<span class="at">d =</span> <span class="fl">0.2</span>, </span>
+<span id="cb38-2"><a href="#cb38-2" aria-hidden="true" tabindex="-1"></a>           <span class="at">power =</span> <span class="fl">0.8</span>,</span>
+<span id="cb38-3"><a href="#cb38-3" aria-hidden="true" tabindex="-1"></a>           <span class="at">sig.level =</span> <span class="fl">0.05</span>, </span>
+<span id="cb38-4"><a href="#cb38-4" aria-hidden="true" tabindex="-1"></a>           <span class="at">type =</span> <span class="st">"two.sample"</span>, </span>
+<span id="cb38-5"><a href="#cb38-5" aria-hidden="true" tabindex="-1"></a>           <span class="at">alternative =</span> <span class="st">"two.sided"</span>)</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+     Two-sample t test power calculation 
+
+              n = 393.4057
+              d = 0.2
+      sig.level = 0.05
+          power = 0.8
+    alternative = two.sided
+
+NOTE: n is number in *each* group</code></pre>
+</div>
+</div>
+<p>También podemos graficar la salida:</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb40"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a><span class="fu">pwr.t.test</span>(<span class="at">d =</span> <span class="fl">0.2</span>, </span>
+<span id="cb40-2"><a href="#cb40-2" aria-hidden="true" tabindex="-1"></a>           <span class="at">power =</span> <span class="fl">0.8</span>,</span>
+<span id="cb40-3"><a href="#cb40-3" aria-hidden="true" tabindex="-1"></a>           <span class="at">sig.level =</span> <span class="fl">0.05</span>, </span>
+<span id="cb40-4"><a href="#cb40-4" aria-hidden="true" tabindex="-1"></a>           <span class="at">type =</span> <span class="st">"two.sample"</span>, </span>
+<span id="cb40-5"><a href="#cb40-5" aria-hidden="true" tabindex="-1"></a>           <span class="at">alternative =</span> <span class="st">"two.sided"</span>) <span class="sc">|&gt;</span> </span>
+<span id="cb40-6"><a href="#cb40-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">plot</span>()</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="unidad6_files/figure-html/unnamed-chunk-31-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Observamos que, si por ejemplo tomásemos una muestra de 300 individuos por grupo, la potencia del estudio con ese tamaño de efecto y nivel de significación del 0,05 sería aproximadamente de 68%.</p>
+</section>
+<section id="qué-test-se-debe-aplicar-en-cada-caso" class="level3">
+<h3 class="anchored" data-anchor-id="qué-test-se-debe-aplicar-en-cada-caso">¿Qué test se debe aplicar en cada caso?</h3>
+<p>Hemos discutido la mecánica general de los test de hipótesis. Ahora, nos centraremos en orientarnos sobre qué test aplicar en cada situación. Aunque existe un desarrollo teórico detrás de cada caso, aquí nos quedaremos con ciertas reglas prácticas.</p>
+<p>Para sistematizar los contrastes de hipótesis, es útil responder dos preguntas fundamentales:</p>
+<ul>
+<li><p><strong>¿Qué tipo de variable dependiente tengo?</strong><br>
+La variable resultado puede ser cuantitativa, cualitativa, de tiempo hasta un evento, etc.</p></li>
+<li><p><strong>¿Qué se está comparando?</strong><br>
+Esto se traduce en evaluar el tipo de experimento: ¿se comparan dos grupos o más? ¿Son muestras independientes o relacionadas (por ejemplo, medidas en el mismo grupo antes y después de una intervención)?</p></li>
+</ul>
+<section id="variable-resultado-cuantitativa" class="level4">
+<h4 class="anchored" data-anchor-id="variable-resultado-cuantitativa">Variable resultado cuantitativa</h4>
+<p>Cuando la variable de interés es cuantitativa, la comparación de grupos generalmente se traduce en comparar las medias de dichos grupos. En este contexto, se deben responder una tercera pregunta y es si dicha variable se <em>distribuye normalmente</em>, porque si no fuera así, debemos recurrir a los contrastes <em>no paramétricos</em>.</p>
+<p>Por ejemplo, para comparar dos grupos se plantearía:</p>
+<ul>
+<li><span class="math inline">\(H_0: \mu_1 = \mu_2\)</span> (o su equivalente <span class="math inline">\(\mu_1 - \mu_2 = 0\)</span>)</li>
+<li><span class="math inline">\(H_1: \mu_1 \neq \mu_2\)</span> (contraste bilateral) o bien <span class="math inline">\(\mu_1 &lt; \mu_2\)</span> o <span class="math inline">\(\mu_1 &gt; \mu_2\)</span> (contrastes unilaterales).</li>
+</ul>
+<p>Se calcula el estadístico de prueba (por ejemplo, <span class="math inline">\(t\)</span> de Student o <span class="math inline">\(Z\)</span>, según el tamaño de la muestra y si se conoce la varianza poblacional), se determina la región de rechazo y, finalmente, si <span class="math inline">\(p &lt; \alpha\)</span> rechazo <span class="math inline">\(H_0\)</span> y si <span class="math inline">\(p &gt;  \alpha\)</span> no rechazo <span class="math inline">\(H_0\)</span>.</p>
+<p>A continuación presentamos un esquema que sirve de guía para potenciales situaciones:</p>
+<div class="cell" data-layout-align="default">
+<div class="cell-output-display">
+<div>
+<p></p><figure class="figure"><p></p>
+<div>
+<svg width="672" height="480" viewbox="0.00 0.00 794.58 434.00" xmlns="http://www.w3.org/2000/svg" xlink="http://www.w3.org/1999/xlink" style="; max-width: none; max-height: none">
+<g id="graph0" class="graph" transform="scale(1 1) rotate(0) translate(4 430)">
+<title>G</title>
+<polygon fill="white" stroke="transparent" points="-4,4 -4,-430 790.58,-430 790.58,4 -4,4"></polygon>
+<!-- n1 -->
+<g id="node1" class="node">
+<title>n1</title>
+<polygon fill="#1b0d33" stroke="transparent" points="125.28,-263.6 -0.09,-263.6 -0.09,-222.4 125.28,-222.4 125.28,-263.6"></polygon>
+<text text-anchor="middle" x="62.59" y="-247.2" font-family="Calibri" font-size="14.00" fill="white">Variable respuesta </text>
+<text text-anchor="middle" x="62.59" y="-230.4" font-family="Calibri" font-size="14.00" fill="white"> cuantitativa</text>
+</g>
+<!-- A -->
+<g id="node2" class="node">
+<title>A</title>
+<polygon fill="#65394c" stroke="transparent" points="330.87,-304 180.49,-304 180.49,-268 330.87,-268 330.87,-304"></polygon>
+<text text-anchor="middle" x="255.68" y="-281.8" font-family="Calibri" font-size="14.00" fill="white">Comparación de grupos</text>
+</g>
+<!-- n1&#45;&gt;A -->
+<g id="edge1" class="edge">
+<title>n1-&gt;A</title>
+<path fill="none" stroke="black" d="M125.37,-256.9C139.77,-260.14 155.35,-263.65 170.53,-267.06"></path>
+<polygon fill="black" stroke="black" points="169.92,-270.51 180.44,-269.29 171.45,-263.68 169.92,-270.51"></polygon>
+</g>
+<!-- C -->
+<g id="node4" class="node">
+<title>C</title>
+<polygon fill="#94cb78" stroke="transparent" points="349.19,-235.6 162.18,-235.6 162.18,-194.4 349.19,-194.4 349.19,-235.6"></polygon>
+<text text-anchor="middle" x="255.68" y="-219.2" font-family="Calibri" font-size="14.00">Comparación antes y después </text>
+<text text-anchor="middle" x="255.68" y="-202.4" font-family="Calibri" font-size="14.00"> de un tratamiento</text>
+</g>
+<!-- n1&#45;&gt;C -->
+<g id="edge3" class="edge">
+<title>n1-&gt;C</title>
+<path fill="none" stroke="black" d="M125.37,-233.95C133.85,-232.71 142.73,-231.4 151.7,-230.09"></path>
+<polygon fill="black" stroke="black" points="152.47,-233.51 161.85,-228.6 151.45,-226.59 152.47,-233.51"></polygon>
+</g>
+<!-- B -->
+<g id="node3" class="node">
+<title>B</title>
+<polygon fill="#65394c" stroke="transparent" points="513.44,-318 386.43,-318 386.43,-282 513.44,-282 513.44,-318"></polygon>
+<text text-anchor="middle" x="449.94" y="-295.8" font-family="Calibri" font-size="14.00" fill="white">Distribución normal</text>
+</g>
+<!-- A&#45;&gt;B -->
+<g id="edge2" class="edge">
+<title>A-&gt;B</title>
+<path fill="none" stroke="black" d="M331.01,-291.41C345.87,-292.49 361.45,-293.63 376.25,-294.71"></path>
+<polygon fill="black" stroke="black" points="376.12,-298.21 386.35,-295.44 376.63,-291.22 376.12,-298.21"></polygon>
+</g>
+<!-- b1 -->
+<g id="node6" class="node">
+<title>b1</title>
+<polygon fill="grey" stroke="transparent" points="763.43,-426 677.06,-426 677.06,-390 763.43,-390 763.43,-426"></polygon>
+<text text-anchor="middle" x="720.24" y="-403.8" font-family="Calibri" font-size="14.00" fill="white">t de Student</text>
+</g>
+<!-- B&#45;&gt;b1 -->
+<g id="edge5" class="edge">
+<title>B-&gt;b1</title>
+<path fill="none" stroke="black" d="M470.35,-318.26C485.85,-331.9 508.7,-350.01 531.69,-361 574.91,-381.68 628.24,-393.91 666.97,-400.69"></path>
+<polygon fill="black" stroke="black" points="666.55,-404.16 676.99,-402.37 667.71,-397.26 666.55,-404.16"></polygon>
+<text text-anchor="middle" x="583.79" y="-397.2" font-family="Times,serif" font-size="14.00">Si (2 grupos)</text>
+</g>
+<!-- b2 -->
+<g id="node7" class="node">
+<title>b2</title>
+<polygon fill="grey" stroke="transparent" points="771.28,-372 669.2,-372 669.2,-336 771.28,-336 771.28,-372"></polygon>
+<text text-anchor="middle" x="720.24" y="-349.8" font-family="Calibri" font-size="14.00" fill="white">Mann-Whitney</text>
+</g>
+<!-- B&#45;&gt;b2 -->
+<g id="edge6" class="edge">
+<title>B-&gt;b2</title>
+<path fill="none" stroke="black" d="M513.86,-316.88C519.87,-318.34 525.88,-319.74 531.69,-321 573.91,-330.19 621.91,-338.6 658.78,-344.63"></path>
+<polygon fill="black" stroke="black" points="658.44,-348.12 668.88,-346.26 659.56,-341.21 658.44,-348.12"></polygon>
+<text text-anchor="middle" x="583.79" y="-344.2" font-family="Times,serif" font-size="14.00">No (2 grupos)</text>
+</g>
+<!-- b3 -->
+<g id="node8" class="node">
+<title>b3</title>
+<polygon fill="grey" stroke="transparent" points="749.69,-318 690.79,-318 690.79,-282 749.69,-282 749.69,-318"></polygon>
+<text text-anchor="middle" x="720.24" y="-295.8" font-family="Calibri" font-size="14.00" fill="white">ANOVA</text>
+</g>
+<!-- B&#45;&gt;b3 -->
+<g id="edge7" class="edge">
+<title>B-&gt;b3</title>
+<path fill="none" stroke="black" d="M513.5,-300C565.14,-300 636.8,-300 680.49,-300"></path>
+<polygon fill="black" stroke="black" points="680.7,-303.5 690.7,-300 680.7,-296.5 680.7,-303.5"></polygon>
+<text text-anchor="middle" x="583.79" y="-304.2" font-family="Times,serif" font-size="14.00">Si (3+ grupos)</text>
+</g>
+<!-- b4 -->
+<g id="node9" class="node">
+<title>b4</title>
+<polygon fill="grey" stroke="transparent" points="768.07,-264 672.41,-264 672.41,-228 768.07,-228 768.07,-264"></polygon>
+<text text-anchor="middle" x="720.24" y="-241.8" font-family="Calibri" font-size="14.00" fill="white">Kruskal-Wallis</text>
+</g>
+<!-- B&#45;&gt;b4 -->
+<g id="edge8" class="edge">
+<title>B-&gt;b4</title>
+<path fill="none" stroke="black" d="M513.86,-283.29C519.87,-281.85 525.89,-280.46 531.69,-279.2 575.11,-269.78 624.62,-261.1 661.86,-254.98"></path>
+<polygon fill="black" stroke="black" points="662.72,-258.39 672.03,-253.33 661.59,-251.48 662.72,-258.39"></polygon>
+<text text-anchor="middle" x="583.79" y="-283.2" font-family="Times,serif" font-size="14.00">No (3+ grupos)</text>
+</g>
+<!-- D -->
+<g id="node5" class="node">
+<title>D</title>
+<polygon fill="#94cb78" stroke="transparent" points="513.44,-150 386.43,-150 386.43,-114 513.44,-114 513.44,-150"></polygon>
+<text text-anchor="middle" x="449.94" y="-127.8" font-family="Calibri" font-size="14.00">Distribución normal</text>
+</g>
+<!-- C&#45;&gt;D -->
+<g id="edge4" class="edge">
+<title>C-&gt;D</title>
+<path fill="none" stroke="black" d="M304.7,-194.27C332.98,-182.06 368.74,-166.62 397.58,-154.17"></path>
+<polygon fill="black" stroke="black" points="399.28,-157.25 407.07,-150.07 396.51,-150.82 399.28,-157.25"></polygon>
+</g>
+<!-- d1 -->
+<g id="node10" class="node">
+<title>d1</title>
+<polygon fill="grey" stroke="transparent" points="781.2,-209.6 659.28,-209.6 659.28,-168.4 781.2,-168.4 781.2,-209.6"></polygon>
+<text text-anchor="middle" x="720.24" y="-193.2" font-family="Calibri" font-size="14.00" fill="white">t de Student </text>
+<text text-anchor="middle" x="720.24" y="-176.4" font-family="Calibri" font-size="14.00" fill="white"> (datos apareados)</text>
+</g>
+<!-- D&#45;&gt;d1 -->
+<g id="edge9" class="edge">
+<title>D-&gt;d1</title>
+<path fill="none" stroke="black" d="M513.44,-148.68C519.59,-150.19 525.75,-151.66 531.69,-153 570.25,-161.71 613.57,-170.11 648.86,-176.61"></path>
+<polygon fill="black" stroke="black" points="648.6,-180.12 659.06,-178.47 649.86,-173.23 648.6,-180.12"></polygon>
+<text text-anchor="middle" x="583.79" y="-177.2" font-family="Times,serif" font-size="14.00">Si (mismo grupo)</text>
+</g>
+<!-- d2 -->
+<g id="node11" class="node">
+<title>d2</title>
+<polygon fill="grey" stroke="transparent" points="754.73,-150 685.76,-150 685.76,-114 754.73,-114 754.73,-150"></polygon>
+<text text-anchor="middle" x="720.24" y="-127.8" font-family="Calibri" font-size="14.00" fill="white">Wilcoxon</text>
+</g>
+<!-- D&#45;&gt;d2 -->
+<g id="edge10" class="edge">
+<title>D-&gt;d2</title>
+<path fill="none" stroke="black" d="M513.5,-132C563.25,-132 631.56,-132 675.56,-132"></path>
+<polygon fill="black" stroke="black" points="675.65,-135.5 685.65,-132 675.65,-128.5 675.65,-135.5"></polygon>
+<text text-anchor="middle" x="583.79" y="-136.2" font-family="Times,serif" font-size="14.00">No (mismo grupo)</text>
+</g>
+<!-- d3 -->
+<g id="node12" class="node">
+<title>d3</title>
+<polygon fill="grey" stroke="transparent" points="786.42,-95.6 654.06,-95.6 654.06,-54.4 786.42,-54.4 786.42,-95.6"></polygon>
+<text text-anchor="middle" x="720.24" y="-79.2" font-family="Calibri" font-size="14.00" fill="white">ANOVA </text>
+<text text-anchor="middle" x="720.24" y="-62.4" font-family="Calibri" font-size="14.00" fill="white"> (medidas repetidas)</text>
+</g>
+<!-- D&#45;&gt;d3 -->
+<g id="edge11" class="edge">
+<title>D-&gt;d3</title>
+<path fill="none" stroke="black" d="M513.44,-115.49C519.59,-113.99 525.75,-112.54 531.69,-111.2 568.49,-102.92 609.63,-94.84 643.97,-88.43"></path>
+<polygon fill="black" stroke="black" points="644.74,-91.85 653.94,-86.59 643.47,-84.97 644.74,-91.85"></polygon>
+<text text-anchor="middle" x="583.79" y="-115.2" font-family="Times,serif" font-size="14.00">Si (2+ grupos)</text>
+</g>
+<!-- d4 -->
+<g id="node13" class="node">
+<title>d4</title>
+<polygon fill="grey" stroke="transparent" points="755.33,-36 685.15,-36 685.15,0 755.33,0 755.33,-36"></polygon>
+<text text-anchor="middle" x="720.24" y="-13.8" font-family="Calibri" font-size="14.00" fill="white">Friedman</text>
+</g>
+<!-- D&#45;&gt;d4 -->
+<g id="edge12" class="edge">
+<title>D-&gt;d4</title>
+<path fill="none" stroke="black" d="M469.69,-113.89C485.18,-99.85 508.34,-80.88 531.69,-69.2 577.83,-46.12 635.73,-32.35 674.9,-25"></path>
+<polygon fill="black" stroke="black" points="675.71,-28.41 684.93,-23.18 674.46,-21.52 675.71,-28.41"></polygon>
+<text text-anchor="middle" x="583.79" y="-73.2" font-family="Times,serif" font-size="14.00">No (2+ grupos)</text>
+</g>
+</g>
+</svg>
+</div>
+<p></p></figure><p></p>
+</div>
+</div>
+</div>
+<p>Hay algo más que los estadísticos nos “obligan” a considerar en el caso que compare medias independientes y se haya verificado la normalidad de la distribución, y se trata de considerar si las varianzas de las poblaciones que comparo son iguales o diferentes. El algoritmo de resolución es el siguiente:</p>
+<div class="cell" data-layout-align="default">
+<div class="cell-output-display">
+<div>
+<p></p><figure class="figure"><p></p>
+<div>
+<svg width="672" height="480" viewbox="0.00 0.00 385.94 278.80" xmlns="http://www.w3.org/2000/svg" xlink="http://www.w3.org/1999/xlink" style="; max-width: none; max-height: none">
+<g id="graph0" class="graph" transform="scale(1 1) rotate(0) translate(4 274.8)">
+<title>G</title>
+<polygon fill="white" stroke="transparent" points="-4,4 -4,-274.8 381.94,-274.8 381.94,4 -4,4"></polygon>
+<!-- A -->
+<g id="node1" class="node">
+<title>A</title>
+<polygon fill="#1b0d33" stroke="transparent" points="266.72,-270.8 153.88,-270.8 153.88,-234.8 266.72,-234.8 266.72,-270.8"></polygon>
+<text text-anchor="middle" x="210.3" y="-248.6" font-family="Calibri" font-size="14.00" fill="white">Comparo medias</text>
+</g>
+<!-- B -->
+<g id="node2" class="node">
+<title>B</title>
+<polygon fill="#65394c" stroke="transparent" points="211.07,-197.8 49.53,-197.8 49.53,-161.8 211.07,-161.8 211.07,-197.8"></polygon>
+<text text-anchor="middle" x="130.3" y="-175.6" font-family="Calibri" font-size="14.00" fill="white">Muestras independientes</text>
+</g>
+<!-- A&#45;&gt;B -->
+<g id="edge1" class="edge">
+<title>A-&gt;B</title>
+<path fill="none" stroke="black" d="M190.93,-234.61C180.81,-225.63 168.26,-214.49 157.21,-204.69"></path>
+<polygon fill="black" stroke="black" points="159.29,-201.85 149.48,-197.83 154.64,-207.08 159.29,-201.85"></polygon>
+</g>
+<!-- C -->
+<g id="node3" class="node">
+<title>C</title>
+<polygon fill="#94cb78" stroke="transparent" points="354.63,-197.8 229.96,-197.8 229.96,-161.8 354.63,-161.8 354.63,-197.8"></polygon>
+<text text-anchor="middle" x="292.3" y="-175.6" font-family="Calibri" font-size="14.00">Muestras pareadas</text>
+</g>
+<!-- A&#45;&gt;C -->
+<g id="edge2" class="edge">
+<title>A-&gt;C</title>
+<path fill="none" stroke="black" d="M230.15,-234.61C240.62,-225.54 253.63,-214.28 265.04,-204.4"></path>
+<polygon fill="black" stroke="black" points="267.36,-207.02 272.63,-197.83 262.78,-201.73 267.36,-207.02"></polygon>
+</g>
+<!-- b1 -->
+<g id="node4" class="node">
+<title>b1</title>
+<polygon fill="#65394c" stroke="transparent" points="190.69,-124.8 59.9,-124.8 59.9,-88.8 190.69,-88.8 190.69,-124.8"></polygon>
+<text text-anchor="middle" x="125.3" y="-102.6" font-family="Calibri" font-size="14.00" fill="white">Varianzas conocidas</text>
+</g>
+<!-- B&#45;&gt;b1 -->
+<g id="edge3" class="edge">
+<title>B-&gt;b1</title>
+<path fill="none" stroke="black" d="M129.09,-161.61C128.52,-153.59 127.84,-143.85 127.2,-134.87"></path>
+<polygon fill="black" stroke="black" points="130.69,-134.56 126.5,-124.83 123.71,-135.05 130.69,-134.56"></polygon>
+</g>
+<!-- c1 -->
+<g id="node7" class="node">
+<title>c1</title>
+<polygon fill="#94cb78" stroke="transparent" points="378.09,-124.8 208.5,-124.8 208.5,-88.8 378.09,-88.8 378.09,-124.8"></polygon>
+<text text-anchor="middle" x="293.3" y="-102.6" font-family="Calibri" font-size="14.00">Mismo tamaño de muestra</text>
+</g>
+<!-- C&#45;&gt;c1 -->
+<g id="edge6" class="edge">
+<title>C-&gt;c1</title>
+<path fill="none" stroke="black" d="M292.54,-161.61C292.65,-153.59 292.79,-143.85 292.92,-134.87"></path>
+<polygon fill="black" stroke="black" points="296.42,-134.88 293.06,-124.83 289.42,-134.78 296.42,-134.88"></polygon>
+</g>
+<!-- b2 -->
+<g id="node5" class="node">
+<title>b2</title>
+<polygon fill="#65394c" stroke="transparent" points="118.39,-36 0.2,-36 0.2,0 118.39,0 118.39,-36"></polygon>
+<text text-anchor="middle" x="59.3" y="-13.8" font-family="Calibri" font-size="14.00" fill="white">Prueba Z (normal)</text>
+</g>
+<!-- b1&#45;&gt;b2 -->
+<g id="edge4" class="edge">
+<title>b1-&gt;b2</title>
+<path fill="none" stroke="black" d="M112.26,-88.65C102.59,-75.93 89.25,-58.39 78.38,-44.09"></path>
+<polygon fill="black" stroke="black" points="81.15,-41.96 72.31,-36.11 75.58,-46.19 81.15,-41.96"></polygon>
+<text text-anchor="middle" x="105.69" y="-58.2" font-family="Times,serif" font-size="14.00">Sí</text>
+</g>
+<!-- b3 -->
+<g id="node6" class="node">
+<title>b3</title>
+<polygon fill="#65394c" stroke="transparent" points="200.65,-36 135.95,-36 135.95,0 200.65,0 200.65,-36"></polygon>
+<text text-anchor="middle" x="168.3" y="-13.8" font-family="Calibri" font-size="14.00" fill="white">Prueba t</text>
+</g>
+<!-- b1&#45;&gt;b3 -->
+<g id="edge5" class="edge">
+<title>b1-&gt;b3</title>
+<path fill="none" stroke="black" d="M133.79,-88.65C139.92,-76.29 148.3,-59.37 155.27,-45.3"></path>
+<polygon fill="black" stroke="black" points="158.52,-46.63 159.82,-36.11 152.24,-43.52 158.52,-46.63"></polygon>
+<text text-anchor="middle" x="159.85" y="-58.2" font-family="Times,serif" font-size="14.00">No</text>
+</g>
+<!-- c2 -->
+<g id="node8" class="node">
+<title>c2</title>
+<polygon fill="#94cb78" stroke="transparent" points="325.65,-36 260.95,-36 260.95,0 325.65,0 325.65,-36"></polygon>
+<text text-anchor="middle" x="293.3" y="-13.8" font-family="Calibri" font-size="14.00">Prueba t</text>
+</g>
+<!-- c1&#45;&gt;c2 -->
+<g id="edge7" class="edge">
+<title>c1-&gt;c2</title>
+<path fill="none" stroke="black" d="M293.3,-88.65C293.3,-76.52 293.3,-60.02 293.3,-46.12"></path>
+<polygon fill="black" stroke="black" points="296.8,-46.11 293.3,-36.11 289.8,-46.11 296.8,-46.11"></polygon>
+</g>
+</g>
+</svg>
+</div>
+<p></p></figure><p></p>
+</div>
+</div>
+</div>
+<p>Cuando trabajamos con muestras independientes, a menudo nos encontramos en el escenario de <em>varianzas desconocidas</em>. Esto nos obliga a realizar, de manera previa, un test de homogeneidad de varianzas para determinar si se puede asumir que son iguales o si, por el contrario, difieren. La razón es que, aunque se utiliza el estadístico <span class="math inline">\(t\)</span> de Student para comparar las medias, su cálculo y la forma en que se distribuye varían en función de si las varianzas de los grupos son iguales o no.</p>
+</section>
+<section id="variable-resultado-cualitativa" class="level4">
+<h4 class="anchored" data-anchor-id="variable-resultado-cualitativa">Variable resultado cualitativa</h4>
+<p>Cuando la variable dependiente es cualitativa (categórica), como por ejemplo Enfermo (Sí/No) o Expuesto (Sí/No), la comparación de grupos no se basa en medias, sino en <strong>proporciones</strong>. Para ello, se utilizan pruebas estadísticas específicas según el número de grupos y el diseño del estudio.</p>
+<p>A continuación, presentamos una guía análoga a la anterior:</p>
+<div class="cell" data-layout-align="default">
+<div class="cell-output-display">
+<div>
+<p></p><figure class="figure"><p></p>
+<div>
+<svg width="672" height="480" viewbox="0.00 0.00 561.24 301.20" xmlns="http://www.w3.org/2000/svg" xlink="http://www.w3.org/1999/xlink" style="; max-width: none; max-height: none">
+<g id="graph0" class="graph" transform="scale(1 1) rotate(0) translate(4 297.2)">
+<title>G</title>
+<polygon fill="white" stroke="transparent" points="-4,4 -4,-297.2 557.24,-297.2 557.24,4 -4,4"></polygon>
+<!-- n1 -->
+<g id="node1" class="node">
+<title>n1</title>
+<polygon fill="#1b0d33" stroke="transparent" points="369.98,-293 244.61,-293 244.61,-251.8 369.98,-251.8 369.98,-293"></polygon>
+<text text-anchor="middle" x="307.3" y="-276.6" font-family="Calibri" font-size="14.00" fill="white">Variable respuesta </text>
+<text text-anchor="middle" x="307.3" y="-259.8" font-family="Calibri" font-size="14.00" fill="white"> cualitativa</text>
+</g>
+<!-- A -->
+<g id="node2" class="node">
+<title>A</title>
+<polygon fill="#65394c" stroke="transparent" points="289.49,-211.8 139.11,-211.8 139.11,-175.8 289.49,-175.8 289.49,-211.8"></polygon>
+<text text-anchor="middle" x="214.3" y="-189.6" font-family="Calibri" font-size="14.00" fill="white">Comparación de grupos</text>
+</g>
+<!-- n1&#45;&gt;A -->
+<g id="edge1" class="edge">
+<title>n1-&gt;A</title>
+<path fill="none" stroke="black" d="M283.35,-251.67C270.96,-241.47 255.75,-228.94 242.76,-218.24"></path>
+<polygon fill="black" stroke="black" points="244.95,-215.51 235.01,-211.86 240.5,-220.92 244.95,-215.51"></polygon>
+</g>
+<!-- C -->
+<g id="node4" class="node">
+<title>C</title>
+<polygon fill="#94cb78" stroke="transparent" points="494.8,-214.4 307.8,-214.4 307.8,-173.2 494.8,-173.2 494.8,-214.4"></polygon>
+<text text-anchor="middle" x="401.3" y="-198" font-family="Calibri" font-size="14.00">Comparación antes y después </text>
+<text text-anchor="middle" x="401.3" y="-181.2" font-family="Calibri" font-size="14.00"> de un tratamiento</text>
+</g>
+<!-- n1&#45;&gt;C -->
+<g id="edge5" class="edge">
+<title>n1-&gt;C</title>
+<path fill="none" stroke="black" d="M331.5,-251.67C343.02,-242.29 356.94,-230.95 369.31,-220.87"></path>
+<polygon fill="black" stroke="black" points="371.63,-223.49 377.17,-214.46 367.21,-218.06 371.63,-223.49"></polygon>
+</g>
+<!-- B -->
+<g id="node3" class="node">
+<title>B</title>
+<polygon fill="#65394c" stroke="transparent" points="277.53,-135.8 151.06,-135.8 151.06,-94.6 277.53,-94.6 277.53,-135.8"></polygon>
+<text text-anchor="middle" x="214.3" y="-119.4" font-family="Calibri" font-size="14.00" fill="white">n &gt; 30 y frecuencia </text>
+<text text-anchor="middle" x="214.3" y="-102.6" font-family="Calibri" font-size="14.00" fill="white"> por grupo &gt;= 5</text>
+</g>
+<!-- A&#45;&gt;B -->
+<g id="edge2" class="edge">
+<title>A-&gt;B</title>
+<path fill="none" stroke="black" d="M214.3,-175.8C214.3,-167.03 214.3,-156.08 214.3,-145.97"></path>
+<polygon fill="black" stroke="black" points="217.8,-145.86 214.3,-135.86 210.8,-145.86 217.8,-145.86"></polygon>
+</g>
+<!-- b1 -->
+<g id="node7" class="node">
+<title>b1</title>
+<polygon fill="grey" stroke="transparent" points="142.39,-41.4 0.2,-41.4 0.2,-0.2 142.39,-0.2 142.39,-41.4"></polygon>
+<text text-anchor="middle" x="71.3" y="-25" font-family="Calibri" font-size="14.00" fill="white">test de proporciones/ </text>
+<text text-anchor="middle" x="71.3" y="-8.2" font-family="Calibri" font-size="14.00" fill="white"> Chi-cuadrado</text>
+</g>
+<!-- B&#45;&gt;b1 -->
+<g id="edge3" class="edge">
+<title>B-&gt;b1</title>
+<path fill="none" stroke="black" d="M168.08,-94.57C157.03,-89.21 145.49,-83.03 135.29,-76.4 122.68,-68.2 109.86,-57.76 99.03,-48.21"></path>
+<polygon fill="black" stroke="black" points="101.31,-45.55 91.54,-41.46 96.63,-50.75 101.31,-45.55"></polygon>
+<text text-anchor="middle" x="175.8" y="-63.8" font-family="Times,serif" font-size="14.00">Si (2+ grupos)</text>
+</g>
+<!-- b2 -->
+<g id="node8" class="node">
+<title>b2</title>
+<polygon fill="grey" stroke="transparent" points="293.99,-38.8 160.61,-38.8 160.61,-2.8 293.99,-2.8 293.99,-38.8"></polygon>
+<text text-anchor="middle" x="227.3" y="-16.6" font-family="Calibri" font-size="14.00" fill="white">test exacto de Fisher</text>
+</g>
+<!-- B&#45;&gt;b2 -->
+<g id="edge4" class="edge">
+<title>B-&gt;b2</title>
+<path fill="none" stroke="black" d="M217.12,-94.15C218.98,-80.91 221.44,-63.4 223.48,-48.92"></path>
+<polygon fill="black" stroke="black" points="226.95,-49.41 224.88,-39.02 220.02,-48.43 226.95,-49.41"></polygon>
+<text text-anchor="middle" x="265.52" y="-63.8" font-family="Times,serif" font-size="14.00">No (2+ grupos)</text>
+</g>
+<!-- D -->
+<g id="node5" class="node">
+<title>D</title>
+<polygon fill="#94cb78" stroke="transparent" points="419.48,-135.8 307.12,-135.8 307.12,-94.6 419.48,-94.6 419.48,-135.8"></polygon>
+<text text-anchor="middle" x="363.3" y="-119.4" font-family="Calibri" font-size="14.00">Mismo grupo </text>
+<text text-anchor="middle" x="363.3" y="-102.6" font-family="Calibri" font-size="14.00"> (dos categorías)</text>
+</g>
+<!-- C&#45;&gt;D -->
+<g id="edge6" class="edge">
+<title>C-&gt;D</title>
+<path fill="none" stroke="black" d="M391.51,-173.07C387.26,-164.5 382.19,-154.28 377.53,-144.89"></path>
+<polygon fill="black" stroke="black" points="380.63,-143.26 373.05,-135.86 374.36,-146.37 380.63,-143.26"></polygon>
+</g>
+<!-- E -->
+<g id="node6" class="node">
+<title>E</title>
+<polygon fill="#94cb78" stroke="transparent" points="553.18,-135.8 437.42,-135.8 437.42,-94.6 553.18,-94.6 553.18,-135.8"></polygon>
+<text text-anchor="middle" x="495.3" y="-119.4" font-family="Calibri" font-size="14.00">Varios grupos </text>
+<text text-anchor="middle" x="495.3" y="-102.6" font-family="Calibri" font-size="14.00"> (n &gt;= 4 y k &gt;= 24)</text>
+</g>
+<!-- C&#45;&gt;E -->
+<g id="edge8" class="edge">
+<title>C-&gt;E</title>
+<path fill="none" stroke="black" d="M425.5,-173.07C437.02,-163.69 450.94,-152.35 463.31,-142.27"></path>
+<polygon fill="black" stroke="black" points="465.63,-144.89 471.17,-135.86 461.21,-139.46 465.63,-144.89"></polygon>
+</g>
+<!-- d1 -->
+<g id="node9" class="node">
+<title>d1</title>
+<polygon fill="grey" stroke="transparent" points="401.13,-38.8 325.47,-38.8 325.47,-2.8 401.13,-2.8 401.13,-38.8"></polygon>
+<text text-anchor="middle" x="363.3" y="-16.6" font-family="Calibri" font-size="14.00" fill="white">Mc Nemar</text>
+</g>
+<!-- D&#45;&gt;d1 -->
+<g id="edge7" class="edge">
+<title>D-&gt;d1</title>
+<path fill="none" stroke="black" d="M363.3,-94.15C363.3,-81.04 363.3,-63.74 363.3,-49.34"></path>
+<polygon fill="black" stroke="black" points="366.8,-49.02 363.3,-39.02 359.8,-49.02 366.8,-49.02"></polygon>
+</g>
+<!-- e1 -->
+<g id="node10" class="node">
+<title>e1</title>
+<polygon fill="grey" stroke="transparent" points="536.41,-38.8 454.18,-38.8 454.18,-2.8 536.41,-2.8 536.41,-38.8"></polygon>
+<text text-anchor="middle" x="495.3" y="-16.6" font-family="Calibri" font-size="14.00" fill="white">Cochrane Q</text>
+</g>
+<!-- E&#45;&gt;e1 -->
+<g id="edge9" class="edge">
+<title>E-&gt;e1</title>
+<path fill="none" stroke="black" d="M495.3,-94.15C495.3,-81.04 495.3,-63.74 495.3,-49.34"></path>
+<polygon fill="black" stroke="black" points="498.8,-49.02 495.3,-39.02 491.8,-49.02 498.8,-49.02"></polygon>
+</g>
+</g>
+</svg>
+</div>
+<p></p></figure><p></p>
+</div>
+</div>
+</div>
+
+
+</section>
+</section>
+</section>
+
+<a onclick="window.scrollTo(0, 0); return false;" role="button" id="quarto-back-to-top"><i class="bi bi-arrow-up"></i> Volver arriba</a></main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copiado");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copiado");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+        const codeEl = trigger.previousElementSibling.cloneNode(true);
+        for (const childEl of codeEl.children) {
+          if (isCodeAnnotation(childEl)) {
+            childEl.remove();
+          }
+        }
+        return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp('/' + window.location.host + '/');
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+</div> <!-- /content -->
+
+
+
+
+</body></html>

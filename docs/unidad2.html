@@ -1,0 +1,2040 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="es" xml:lang="es"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.7.31">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="Christian Ballejo">
+
+<title>Unidad 2: Procesamiento de datos – Introducción al lenguaje R + RStudio</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<script src="site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-e1a5c8363afafaef2c763b6775fbf3ca.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap-dfb324f25d9b1687192fa8be62ac8f9c.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "Sin resultados",
+    "search-matching-documents-text": "documentos encontrados",
+    "search-copy-link-title": "Copiar el enlace en la búsqueda",
+    "search-hide-matches-text": "Ocultar resultados adicionales",
+    "search-more-match-text": "resultado adicional en este documento",
+    "search-more-matches-text": "resultados adicionales en este documento",
+    "search-clear-button-title": "Borrar",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancelar",
+    "search-submit-button-title": "Enviar",
+    "search-label": "Buscar"
+  }
+}</script>
+
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN") {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+<link rel="stylesheet" href="styles.css">
+</head>
+
+<body class="nav-sidebar floating quarto-light">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Alternar barra lateral" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./unidad2.html">Unidad 2: Procesamiento de datos</a></li></ol></nav>
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Alternar barra lateral" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+      <button type="button" class="btn quarto-search-button" aria-label="Buscar" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header">
+      <a href="./index.html" class="sidebar-logo-link">
+      <img src="./images/logos_ine.svg" alt="" class="sidebar-logo py-0 d-lg-inline d-none">
+      </a>
+      </div>
+        <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Buscar"></div>
+        </div>
+        </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Fundamentos</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./unidad1.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Unidad 1: Introducción al lenguaje R</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./unidad2.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text">Unidad 2: Procesamiento de datos</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./unidad3.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Unidad 3: Exploración, diagnóstico y limpieza de datos</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./unidad4.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Unidad 4: Tratamiento de datos específicos</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./unidad5.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Unidad 5: Estadísticos, operaciones múltiples y resúmenes</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./unidad6.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Unidad 6: Inferencia estadística</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./unidad7.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Unidad 7: Visualización de datos</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./unidad8.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Unidad 8: Comunicar con Quarto</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./extra.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Extra: Control de flujo y funciones</span></a>
+  </div>
+</li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Contenidos</h2>
+   
+  <ul>
+  <li><a href="#gestión-de-datos-con-el-paquete-dplyr" id="toc-gestión-de-datos-con-el-paquete-dplyr" class="nav-link active" data-scroll-target="#gestión-de-datos-con-el-paquete-dplyr">Gestión de datos con el Paquete <strong>dplyr</strong></a>
+  <ul class="collapse">
+  <li><a href="#argumentos-comúnes-en-las-funciones-dplyr" id="toc-argumentos-comúnes-en-las-funciones-dplyr" class="nav-link" data-scroll-target="#argumentos-comúnes-en-las-funciones-dplyr">Argumentos comúnes en las funciones dplyr</a></li>
+  <li><a href="#activación-del-paquete" id="toc-activación-del-paquete" class="nav-link" data-scroll-target="#activación-del-paquete">Activación del paquete</a></li>
+  <li><a href="#conjunto-de-datos-para-ejemplo" id="toc-conjunto-de-datos-para-ejemplo" class="nav-link" data-scroll-target="#conjunto-de-datos-para-ejemplo">Conjunto de datos para ejemplo</a></li>
+  <li><a href="#función-select" id="toc-función-select" class="nav-link" data-scroll-target="#función-select">Función <strong>select()</strong></a></li>
+  <li><a href="#función-rename" id="toc-función-rename" class="nav-link" data-scroll-target="#función-rename">Función <strong>rename()</strong></a></li>
+  <li><a href="#función-filter" id="toc-función-filter" class="nav-link" data-scroll-target="#función-filter">Función <strong>filter()</strong></a></li>
+  <li><a href="#función-arrange" id="toc-función-arrange" class="nav-link" data-scroll-target="#función-arrange">Función <strong>arrange()</strong></a></li>
+  <li><a href="#función-mutate" id="toc-función-mutate" class="nav-link" data-scroll-target="#función-mutate">Función <strong>mutate()</strong></a></li>
+  <li><a href="#funciones-condicionales" id="toc-funciones-condicionales" class="nav-link" data-scroll-target="#funciones-condicionales">Funciones condicionales</a></li>
+  <li><a href="#función-summarise" id="toc-función-summarise" class="nav-link" data-scroll-target="#función-summarise">Función <strong>summarise()</strong></a></li>
+  <li><a href="#función-group_by" id="toc-función-group_by" class="nav-link" data-scroll-target="#función-group_by">Función <strong>group_by()</strong></a></li>
+  <li><a href="#combinaciones" id="toc-combinaciones" class="nav-link" data-scroll-target="#combinaciones">Combinaciones</a></li>
+  <li><a href="#función-count" id="toc-función-count" class="nav-link" data-scroll-target="#función-count">Función <strong>count()</strong></a></li>
+  </ul></li>
+  <li><a href="#uniones-en-datos-relacionales" id="toc-uniones-en-datos-relacionales" class="nav-link" data-scroll-target="#uniones-en-datos-relacionales">Uniones en datos relacionales</a>
+  <ul class="collapse">
+  <li><a href="#tipos-de-operaciones" id="toc-tipos-de-operaciones" class="nav-link" data-scroll-target="#tipos-de-operaciones">Tipos de operaciones</a></li>
+  <li><a href="#claves" id="toc-claves" class="nav-link" data-scroll-target="#claves">Claves</a></li>
+  <li><a href="#uniones-de-transformación" id="toc-uniones-de-transformación" class="nav-link" data-scroll-target="#uniones-de-transformación">Uniones de transformación</a></li>
+  <li><a href="#claves-duplicadas" id="toc-claves-duplicadas" class="nav-link" data-scroll-target="#claves-duplicadas">Claves duplicadas</a></li>
+  <li><a href="#variables-claves" id="toc-variables-claves" class="nav-link" data-scroll-target="#variables-claves">Variables claves</a></li>
+  <li><a href="#uniones-de-filtro" id="toc-uniones-de-filtro" class="nav-link" data-scroll-target="#uniones-de-filtro">Uniones de filtro</a></li>
+  <li><a href="#unión-por-filas-y-por-columnas" id="toc-unión-por-filas-y-por-columnas" class="nav-link" data-scroll-target="#unión-por-filas-y-por-columnas">Unión por filas y por columnas</a></li>
+  </ul></li>
+  <li><a href="#datos-ordenados" id="toc-datos-ordenados" class="nav-link" data-scroll-target="#datos-ordenados">Datos ordenados</a></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">Unidad 2: Procesamiento de datos</h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    <div>
+    <div class="quarto-title-meta-heading">Autor/a</div>
+    <div class="quarto-title-meta-contents">
+             <p>Christian Ballejo </p>
+          </div>
+  </div>
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<section id="gestión-de-datos-con-el-paquete-dplyr" class="level2">
+<h2 class="anchored" data-anchor-id="gestión-de-datos-con-el-paquete-dplyr">Gestión de datos con el Paquete <strong>dplyr</strong></h2>
+<p>El paquete <strong>dplyr</strong> es parte del universo tidyverse que fue desarrollado por <em>Hadley Wickham</em> a partir de optimizar una versión del paquete plyr.</p>
+<p>La contribución significativa del paquete es proporcionar una “gramática” (funciones-verbos) para la manipulación y operaciones de datos que lo hace más fácil de entender.</p>
+<p>Las funciones clave del paquete, responden a las siguientes acciones (verbos):</p>
+<ul>
+<li><code>select()</code>: devuelve un conjunto de columnas (variables)</li>
+<li><code>rename()</code>: renombra variables en una conjunto de datos</li>
+<li><code>filter()</code>: devuelve un conjunto de filas (observaciones) según una o varias condiciones lógicas</li>
+<li><code>arrange()</code>: reordena filas de un conjunto de datos</li>
+<li><code>mutate()</code>: añade nuevas variables/columnas o transforma variables existentes</li>
+<li><code>summarise()</code>/<code>summarize()</code>: genera resúmenes estadísticos de diferentes variables en el conjunto de datos.</li>
+<li><code>group_by()</code>: agrupa un conjunto de filas seleccionado, en un conjunto de filas de resumen de acuerdo con los valores de una o más columnas o expresiones.</li>
+<li><code>count()</code>: contabiliza valores que se repiten, es decir genera tabla de frecuencias.</li>
+</ul>
+<section id="argumentos-comúnes-en-las-funciones-dplyr" class="level3">
+<h3 class="anchored" data-anchor-id="argumentos-comúnes-en-las-funciones-dplyr">Argumentos comúnes en las funciones dplyr</h3>
+<p>Todas las funciones, básicamente, tienen en común una serie de argumentos.</p>
+<ol type="1">
+<li><p>El primer argumento es el nombre del conjunto de datos (objeto donde esta nuestra tabla de datos)</p></li>
+<li><p>Los otros argumentos describen que hacer con el conjunto de datos especificado en el primer argumento, podemos referirnos a las columnas en el objeto directamente sin utilizar el operador $, es decir sólo con el nombre de la columna/variable.</p></li>
+<li><p>El valor de retorno es un nuevo conjunto de datos.</p></li>
+<li><p>Los conjunto de datos deben estar bien organizados/estructurados, es decir debe existir una observación por columna y, cada columna representar una variable, medida o característica de esa observación. Es decir, debe cumplir con <em>tidy data</em>.</p></li>
+</ol>
+</section>
+<section id="activación-del-paquete" class="level3">
+<h3 class="anchored" data-anchor-id="activación-del-paquete">Activación del paquete</h3>
+<p><strong>dplyr</strong> está incluído en el paquete <strong>tidyverse</strong>, por lo que se encuentra disponible si tenemos activado a este último.</p>
+<p>También se puede activar en forma independiente, aunque no es necesario si ya activamos tidyverse:</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(dplyr)</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="conjunto-de-datos-para-ejemplo" class="level3">
+<h3 class="anchored" data-anchor-id="conjunto-de-datos-para-ejemplo">Conjunto de datos para ejemplo</h3>
+<p>Visualizar y entender el funcionamiento de estos “verbos” de manipulación es posible si ejemplificamos su aplicación. Por este motivo vamos a leer un conjunto de datos que servirá para ejercitar las funciones del paquete.</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>datos <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"datos/noti-vih.csv"</span>) <span class="co"># asignamos la lectura a datos</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(datos) <span class="co"># mostramos las 6 primeras observaciones</span></span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 6 × 4
+  jurisdiccion   año casos      pob
+  &lt;chr&gt;        &lt;dbl&gt; &lt;dbl&gt;    &lt;dbl&gt;
+1 Buenos Aires  2015  1513 16626374
+2 Buenos Aires  2016   957 16789474
+3 CABA          2015   901  3054237
+4 CABA          2016   427  3050000
+5 Catamarca     2015    69   396552
+6 Catamarca     2016    51   401575</code></pre>
+</div>
+</div>
+<p>La tabla de datos “noti-vih.csv” contiene datos de notificación de vih por jurisdicción de Argentina para los años 2015 y 2016.</p>
+</section>
+<section id="función-select" class="level3">
+<h3 class="anchored" data-anchor-id="función-select">Función <strong>select()</strong></h3>
+<p>Esta función selecciona las variables que especificamos devolviendo un conjunto de datos “recortado por columna”.</p>
+<p><code>select()</code> utiliza un minilenguaje conciso que facilita hacer referencia a las variables según su nombre, ubicación, condición o tipo.</p>
+<p>Alguno de sus operadores son:</p>
+<ul>
+<li><p><code>:</code> para seleccionar un rango de variables consecutivas.</p></li>
+<li><p><code>-</code> para evitar seleccionar la variable que sigue al signo</p></li>
+<li><p><code>!</code> para tomar el complemento de un conjunto de variables.</p></li>
+</ul>
+<p>Veamos algunas aplicaciones de estas “ayudas” para hacer selecciones.</p>
+<p>Todas las variables menos <em>pob</em></p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>datos <span class="sc">|&gt;</span>  </span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="sc">-</span>pob)</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 48 × 3
+   jurisdiccion   año casos
+   &lt;chr&gt;        &lt;dbl&gt; &lt;dbl&gt;
+ 1 Buenos Aires  2015  1513
+ 2 Buenos Aires  2016   957
+ 3 CABA          2015   901
+ 4 CABA          2016   427
+ 5 Catamarca     2015    69
+ 6 Catamarca     2016    51
+ 7 Chaco         2015    15
+ 8 Chaco         2016     9
+ 9 Chubut        2015   110
+10 Chubut        2016    89
+# ℹ 38 more rows</code></pre>
+</div>
+</div>
+<p>Otra forma para el mismo resultado anterior (mediante el operador rango :)</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>datos <span class="sc">|&gt;</span>  </span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(jurisdiccion<span class="sc">:</span>casos)</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 48 × 3
+   jurisdiccion   año casos
+   &lt;chr&gt;        &lt;dbl&gt; &lt;dbl&gt;
+ 1 Buenos Aires  2015  1513
+ 2 Buenos Aires  2016   957
+ 3 CABA          2015   901
+ 4 CABA          2016   427
+ 5 Catamarca     2015    69
+ 6 Catamarca     2016    51
+ 7 Chaco         2015    15
+ 8 Chaco         2016     9
+ 9 Chubut        2015   110
+10 Chubut        2016    89
+# ℹ 38 more rows</code></pre>
+</div>
+</div>
+<p>Las variables <em>jurisdiccion</em> y <em>casos</em></p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>datos <span class="sc">|&gt;</span>  </span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(jurisdiccion, casos)</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 48 × 2
+   jurisdiccion casos
+   &lt;chr&gt;        &lt;dbl&gt;
+ 1 Buenos Aires  1513
+ 2 Buenos Aires   957
+ 3 CABA           901
+ 4 CABA           427
+ 5 Catamarca       69
+ 6 Catamarca       51
+ 7 Chaco           15
+ 8 Chaco            9
+ 9 Chubut         110
+10 Chubut          89
+# ℹ 38 more rows</code></pre>
+</div>
+</div>
+<p>Otra forma para el mismo resultado anterior (mediante números de columna):</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>datos <span class="sc">|&gt;</span>  </span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="dv">1</span>, <span class="dv">3</span>)</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 48 × 2
+   jurisdiccion casos
+   &lt;chr&gt;        &lt;dbl&gt;
+ 1 Buenos Aires  1513
+ 2 Buenos Aires   957
+ 3 CABA           901
+ 4 CABA           427
+ 5 Catamarca       69
+ 6 Catamarca       51
+ 7 Chaco           15
+ 8 Chaco            9
+ 9 Chubut         110
+10 Chubut          89
+# ℹ 38 more rows</code></pre>
+</div>
+</div>
+<p>Todas las variables pasando <em>año</em> a la primera columna</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>datos <span class="sc">|&gt;</span>  </span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="st">"año"</span>, <span class="fu">everything</span>())</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 48 × 4
+     año jurisdiccion casos      pob
+   &lt;dbl&gt; &lt;chr&gt;        &lt;dbl&gt;    &lt;dbl&gt;
+ 1  2015 Buenos Aires  1513 16626374
+ 2  2016 Buenos Aires   957 16789474
+ 3  2015 CABA           901  3054237
+ 4  2016 CABA           427  3050000
+ 5  2015 Catamarca       69   396552
+ 6  2016 Catamarca       51   401575
+ 7  2015 Chaco           15  1153846
+ 8  2016 Chaco            9  1125000
+ 9  2015 Chubut         110   567010
+10  2016 Chubut          89   577922
+# ℹ 38 more rows</code></pre>
+</div>
+</div>
+<p>Esta última función <code>everything()</code>, pasada como argumento, es una de las posibles funciones llamadas <strong>“ayudantes de selección”</strong>, entre las cuales se encuentra:</p>
+<ul>
+<li><p><code>starts_with()</code>: selecciona todas las columnas que comiencen con el patrón indicado.</p></li>
+<li><p><code>ends_with()</code>: selecciona todas las columnas que terminen con el patrón indicado.</p></li>
+<li><p><code>contains()</code>: selecciona las columnas que posean el patrón indicado.</p></li>
+<li><p><code>matches()</code>: similar a <code>contains()</code>, pero permite poner una expresión regular.</p></li>
+<li><p><code>all_of()</code>: selecciona las variables pasadas en un vector (todos los nombres deben estar presentes o devuelve un error)</p></li>
+<li><p><code>any_of()</code>: idem anterior excepto que no se genera ningún error para los nombres que no existen.</p></li>
+<li><p><code>num_range()</code>: selecciona variables con nombre combinados con caracteres y números (ejemplo: num_range(“x”, 1:3) selecciona las variables x1, x2 y x3.</p></li>
+<li><p><code>where()</code>: aplica una función a todas las variables y selecciona aquellas para las cuales la función regresa TRUE (por ejemplo: <code>is.numeric()</code> para seleccionar todas las variables numéricas)</p></li>
+<li><p><code>group_cols()</code>: selecciona todas las columnas de agrupación.</p></li>
+</ul>
+<p>Todas estas funciones son muy útiles a la hora de seleccionar el conjunto de variables necesarias no solo para un <code>select()</code> básico sino también cuando necesitemos aplicar operaciones simultáneas y/o pivotear tablas de datos que necesiten garantizar formato ordenado (tidy-data).</p>
+</section>
+<section id="función-rename" class="level3">
+<h3 class="anchored" data-anchor-id="función-rename">Función <strong>rename()</strong></h3>
+<p>Esta función es una extensión de <code>select()</code>, dado que esta última permite cambiar el nombre de variables pero no es muy útil porque descarta todas las variables que no se mencionan explícitamente. En cambio <code>rename()</code> renombra variables mientras que mantiene las demás no mencionadas.</p>
+<p>Por ejemplo, cambiamos el nombre de la variable <em>pob</em> por <em>población</em>.</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>datos <span class="sc">|&gt;</span> </span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rename</span>(<span class="st">"población"</span> <span class="ot">=</span> pob)</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 48 × 4
+   jurisdiccion   año casos población
+   &lt;chr&gt;        &lt;dbl&gt; &lt;dbl&gt;     &lt;dbl&gt;
+ 1 Buenos Aires  2015  1513  16626374
+ 2 Buenos Aires  2016   957  16789474
+ 3 CABA          2015   901   3054237
+ 4 CABA          2016   427   3050000
+ 5 Catamarca     2015    69    396552
+ 6 Catamarca     2016    51    401575
+ 7 Chaco         2015    15   1153846
+ 8 Chaco         2016     9   1125000
+ 9 Chubut        2015   110    567010
+10 Chubut        2016    89    577922
+# ℹ 38 more rows</code></pre>
+</div>
+</div>
+</section>
+<section id="función-filter" class="level3">
+<h3 class="anchored" data-anchor-id="función-filter">Función <strong>filter()</strong></h3>
+<p>Así como la función <code>select()</code> es utilizada para seleccionar columnas, la función <code>filter()</code> hace lo propio con las filas del conjunto de datos, produciendo un subconjunto de observaciones.</p>
+<p>Veamos un ejemplo sencillo sobre nuestros datos:</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>datos <span class="sc">|&gt;</span> </span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(jurisdiccion <span class="sc">==</span> <span class="st">"Tucuman"</span>)</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 2 × 4
+  jurisdiccion   año casos     pob
+  &lt;chr&gt;        &lt;dbl&gt; &lt;dbl&gt;   &lt;dbl&gt;
+1 Tucuman       2015   258 1592593
+2 Tucuman       2016   246 1618421</code></pre>
+</div>
+</div>
+<p>Utiliza los mismos operadores de comparación propios del lenguaje R</p>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th style="text-align: center;">Comparación</th>
+<th></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: center;">&lt;</td>
+<td>menor a</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">&gt;</td>
+<td>mayor a</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">==</td>
+<td>igual a</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">&lt;=</td>
+<td>menor o igual a</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">&gt;=</td>
+<td>mayor o igual a</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">!=</td>
+<td>no igual a</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">%in%</td>
+<td>es parte de</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">is.na</td>
+<td>es NA</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">!is.na</td>
+<td>no es NA</td>
+</tr>
+</tbody>
+</table>
+<p>Lo mismo con los operadores lógicos que se utilizan como conectores entre las expresiones.</p>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th style="text-align: center;">Lógicos</th>
+<th></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: center;">&amp;</td>
+<td>AND booleano</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">|</td>
+<td>OR booleano</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">xor</td>
+<td>OR exclusivo</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">!</td>
+<td>NOT</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">any</td>
+<td>cualquier TRUE</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">all</td>
+<td>todos TRUE</td>
+</tr>
+</tbody>
+</table>
+<p>Cuando usamos múltiples argumentos separados por coma dentro de <code>filter()</code> se combinan con un conector <strong>AND</strong>, es decir cada expresión debe ser verdadera para que una fila sea incluida en la salida.</p>
+<p>Por ejemplo:</p>
+<p>Filtramos a las observaciones que cumplan con la condición que casos sea mayor a 100 y población sea menor a 1000000</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>datos <span class="sc">|&gt;</span> </span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(casos <span class="sc">&gt;</span> <span class="dv">100</span>, pob <span class="sc">&lt;</span> <span class="dv">1000000</span>)</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 7 × 4
+  jurisdiccion   año casos    pob
+  &lt;chr&gt;        &lt;dbl&gt; &lt;dbl&gt;  &lt;dbl&gt;
+1 Chubut        2015   110 567010
+2 Jujuy         2015   160 727273
+3 Jujuy         2016   133 734807
+4 Neuquen       2015   109 619318
+5 Neuquen       2016   101 627329
+6 Rio Negro     2015   112 700000
+7 Rio Negro     2016   105 709459</code></pre>
+</div>
+</div>
+<p>Para combinaciones dentro de una misma variable debemos utilizar el conector OR (<code>|</code>) o más útil el operador <code>%in%</code>.</p>
+<p>Filtramos a las jurisdicciones “Buenos Aires” y “La Pampa”</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>datos <span class="sc">|&gt;</span> </span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(jurisdiccion <span class="sc">==</span> <span class="st">"Buenos Aires"</span> <span class="sc">|</span> jurisdiccion <span class="sc">==</span> <span class="st">"La Pampa"</span>)</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 4 × 4
+  jurisdiccion   año casos      pob
+  &lt;chr&gt;        &lt;dbl&gt; &lt;dbl&gt;    &lt;dbl&gt;
+1 Buenos Aires  2015  1513 16626374
+2 Buenos Aires  2016   957 16789474
+3 La Pampa      2015    57   343373
+4 La Pampa      2016    67   345361</code></pre>
+</div>
+</div>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a>datos <span class="sc">|&gt;</span> </span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(jurisdiccion <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">"Buenos Aires"</span>, <span class="st">"La Pampa"</span>))</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 4 × 4
+  jurisdiccion   año casos      pob
+  &lt;chr&gt;        &lt;dbl&gt; &lt;dbl&gt;    &lt;dbl&gt;
+1 Buenos Aires  2015  1513 16626374
+2 Buenos Aires  2016   957 16789474
+3 La Pampa      2015    57   343373
+4 La Pampa      2016    67   345361</code></pre>
+</div>
+</div>
+<p>Filtramos las observaciones de 2016 con casos mayores a 200 utilizando el conector AND (<code>&amp;</code>). Es el mismo resultado que si utilizamos una coma.</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a>datos <span class="sc">|&gt;</span> </span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(año <span class="sc">==</span> <span class="st">"2016"</span> <span class="sc">&amp;</span> casos <span class="sc">&gt;</span> <span class="dv">200</span>)</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 6 × 4
+  jurisdiccion   año casos      pob
+  &lt;chr&gt;        &lt;dbl&gt; &lt;dbl&gt;    &lt;dbl&gt;
+1 Buenos Aires  2016   957 16789474
+2 CABA          2016   427  3050000
+3 Cordoba       2016   368  3607843
+4 Mendoza       2016   254  1909774
+5 Salta         2016   230  1352941
+6 Tucuman       2016   246  1618421</code></pre>
+</div>
+</div>
+<p>Filtramos las observaciones inversas a la anterior mediante xor(), que selecciona los valores de año y casos exclusivos (es decir que no se den ambos en TRUE).</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a>datos <span class="sc">|&gt;</span> </span>
+<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="fu">xor</span>(año <span class="sc">==</span> <span class="st">"2016"</span>, casos <span class="sc">&gt;</span> <span class="dv">200</span>))</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 25 × 4
+   jurisdiccion   año casos      pob
+   &lt;chr&gt;        &lt;dbl&gt; &lt;dbl&gt;    &lt;dbl&gt;
+ 1 Buenos Aires  2015  1513 16626374
+ 2 CABA          2015   901  3054237
+ 3 Catamarca     2016    51   401575
+ 4 Chaco         2016     9  1125000
+ 5 Chubut        2016    89   577922
+ 6 Cordoba       2015   468  3572519
+ 7 Corrientes    2016    99  1076087
+ 8 Entre Rios    2016   109  1329268
+ 9 Formosa       2016    60   582524
+10 Jujuy         2016   133   734807
+# ℹ 15 more rows</code></pre>
+</div>
+</div>
+</section>
+<section id="función-arrange" class="level3">
+<h3 class="anchored" data-anchor-id="función-arrange">Función <strong>arrange()</strong></h3>
+<p>La función <code>arrange()</code> se utiliza para ordenar las filas de un conjunto de datos de acuerdo a una o varias columnas/variables. Por defecto, el ordenamiento es ascendente alfanumérico.</p>
+<p>Ordenamos la tabla <strong>datos</strong> por la variable <em>pob</em> (forma ascendente predeterminada):</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a>datos <span class="sc">|&gt;</span> </span>
+<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(pob)</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 48 × 4
+   jurisdiccion       año casos    pob
+   &lt;chr&gt;            &lt;dbl&gt; &lt;dbl&gt;  &lt;dbl&gt;
+ 1 Tierra del Fuego  2015    36 152542
+ 2 Tierra del Fuego  2016    34 156682
+ 3 Santa Cruz        2015    65 320197
+ 4 Santa Cruz        2016    59 329609
+ 5 La Pampa          2015    57 343373
+ 6 La Pampa          2016    67 345361
+ 7 La Rioja          2015    41 369369
+ 8 La Rioja          2016     6 375000
+ 9 Catamarca         2015    69 396552
+10 Catamarca         2016    51 401575
+# ℹ 38 more rows</code></pre>
+</div>
+</div>
+<p>Para ordenar en forma descendente podemos utilizar <code>desc()</code> dentro de los argumentos de <code>arrange()</code>:</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a>datos <span class="sc">|&gt;</span> </span>
+<span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(<span class="fu">desc</span>(pob))</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 48 × 4
+   jurisdiccion   año casos      pob
+   &lt;chr&gt;        &lt;dbl&gt; &lt;dbl&gt;    &lt;dbl&gt;
+ 1 Buenos Aires  2016   957 16789474
+ 2 Buenos Aires  2015  1513 16626374
+ 3 Cordoba       2016   368  3607843
+ 4 Cordoba       2015   468  3572519
+ 5 Santa Fe      2016   170  3400000
+ 6 Santa Fe      2015   301  3382022
+ 7 CABA          2015   901  3054237
+ 8 CABA          2016   427  3050000
+ 9 Mendoza       2016   254  1909774
+10 Mendoza       2015   316  1880952
+# ℹ 38 more rows</code></pre>
+</div>
+</div>
+<p>Podemos combinar ordenamientos. Por ejemplo, en forma alfabética ascendente para <em>jusrisdiccion</em> y luego numérica descendente para <em>casos</em>.</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb32"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a>datos <span class="sc">|&gt;</span> </span>
+<span id="cb32-2"><a href="#cb32-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(jurisdiccion, <span class="fu">desc</span>(casos))</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 48 × 4
+   jurisdiccion   año casos      pob
+   &lt;chr&gt;        &lt;dbl&gt; &lt;dbl&gt;    &lt;dbl&gt;
+ 1 Buenos Aires  2015  1513 16626374
+ 2 Buenos Aires  2016   957 16789474
+ 3 CABA          2015   901  3054237
+ 4 CABA          2016   427  3050000
+ 5 Catamarca     2015    69   396552
+ 6 Catamarca     2016    51   401575
+ 7 Chaco         2015    15  1153846
+ 8 Chaco         2016     9  1125000
+ 9 Chubut        2015   110   567010
+10 Chubut        2016    89   577922
+# ℹ 38 more rows</code></pre>
+</div>
+</div>
+</section>
+<section id="función-mutate" class="level3">
+<h3 class="anchored" data-anchor-id="función-mutate">Función <strong>mutate()</strong></h3>
+<p>Esta función nos proporciona computar tranformaciones de variables en un conjunto de datos. A menudo, tendremos la necesidad de modificar variables existentes o crear nuevas variables que se calculan a partir de las que tenemos, <code>mutate()</code> nos ofrece una interface clara para realizar este tipo de operaciones.</p>
+<p>Por ejemplo, nos puede interesar calcular tasas crudas para cada jurisdicción y año, en función de los casos y el total de población.</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb34"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a>datos <span class="sc">|&gt;</span> </span>
+<span id="cb34-2"><a href="#cb34-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">tasa =</span> casos<span class="sc">/</span>pob<span class="sc">*</span><span class="dv">100000</span>)</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 48 × 5
+   jurisdiccion   año casos      pob  tasa
+   &lt;chr&gt;        &lt;dbl&gt; &lt;dbl&gt;    &lt;dbl&gt; &lt;dbl&gt;
+ 1 Buenos Aires  2015  1513 16626374  9.10
+ 2 Buenos Aires  2016   957 16789474  5.70
+ 3 CABA          2015   901  3054237 29.5 
+ 4 CABA          2016   427  3050000 14   
+ 5 Catamarca     2015    69   396552 17.4 
+ 6 Catamarca     2016    51   401575 12.7 
+ 7 Chaco         2015    15  1153846  1.30
+ 8 Chaco         2016     9  1125000  0.8 
+ 9 Chubut        2015   110   567010 19.4 
+10 Chubut        2016    89   577922 15.4 
+# ℹ 38 more rows</code></pre>
+</div>
+</div>
+<p>Observemos que la función realiza el cálculo (en este caso tasas crudas por 100000 habitantes) e incorpora una nueva variable por cada observación con el resultado.</p>
+<p>También se pueden construir múltiples variables en la misma expresión, solamente separadas por comas.</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb36"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a>datos <span class="sc">|&gt;</span> </span>
+<span id="cb36-2"><a href="#cb36-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">tasaxcien_mil =</span> casos<span class="sc">/</span>pob<span class="sc">*</span><span class="dv">100000</span>, </span>
+<span id="cb36-3"><a href="#cb36-3" aria-hidden="true" tabindex="-1"></a>         <span class="at">tasaxdiez_mil =</span> casos<span class="sc">/</span>pob<span class="sc">*</span><span class="dv">10000</span>)</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 48 × 6
+   jurisdiccion   año casos      pob tasaxcien_mil tasaxdiez_mil
+   &lt;chr&gt;        &lt;dbl&gt; &lt;dbl&gt;    &lt;dbl&gt;         &lt;dbl&gt;         &lt;dbl&gt;
+ 1 Buenos Aires  2015  1513 16626374          9.10         0.910
+ 2 Buenos Aires  2016   957 16789474          5.70         0.570
+ 3 CABA          2015   901  3054237         29.5          2.95 
+ 4 CABA          2016   427  3050000         14            1.4  
+ 5 Catamarca     2015    69   396552         17.4          1.74 
+ 6 Catamarca     2016    51   401575         12.7          1.27 
+ 7 Chaco         2015    15  1153846          1.30         0.130
+ 8 Chaco         2016     9  1125000          0.8          0.08 
+ 9 Chubut        2015   110   567010         19.4          1.94 
+10 Chubut        2016    89   577922         15.4          1.54 
+# ℹ 38 more rows</code></pre>
+</div>
+</div>
+<p>Si necesitemos que estas dos nuevas variables queden dentro de la tabla de datos y no solo mostrarla en consola como hasta ahora, debemos utilizar el operador de asignación:</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb38"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a>datos <span class="ot">&lt;-</span> datos <span class="sc">|&gt;</span> </span>
+<span id="cb38-2"><a href="#cb38-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">tasaxcien_mil =</span> casos<span class="sc">/</span>pob<span class="sc">*</span><span class="dv">100000</span>, </span>
+<span id="cb38-3"><a href="#cb38-3" aria-hidden="true" tabindex="-1"></a>         <span class="at">tasaxdiez_mil =</span> casos<span class="sc">/</span>pob<span class="sc">*</span><span class="dv">10000</span>)</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>La propiedad imprescindible es que la función debe poder vectorizar: debe tomar un vector de valores como entrada, y devolver un vector con el mismo número de valores que la salida.</p>
+<p>No hay forma de enumerar todas las funciones posibles que se podría usar, pero mencionaremos algunas que pueden ser útiles:</p>
+<ul>
+<li><p>Operadores aritméticos: +, -, *, /, ^.</p></li>
+<li><p>Aritmética modular: %/% (división entera) y %% (resto), donde <span class="math inline">\(x == y * (x \ \%/\% \ y) + (x\ \%\% \ y)\)</span>. La aritmética modular es una herramienta útil porque te permite dividir números enteros en porciones.</p></li>
+<li><p>Funciones matemáticas: <code>log()</code>, <code>log2()</code>, <code>log10()</code>, <code>exp()</code>, <code>sqrt()</code>, <code>abs()</code>, etc</p></li>
+<li><p>Valores acumulados: R proporciona funciones para ejecutar sumas, productos, mínimos y máximos acumulados: <code>cumsum()</code>, <code>cumprod()</code>, <code>cummin()</code>, <code>cummax()</code>; y <strong>dplyr</strong> proporciona <code>cummean()</code> para promedios acumulados.</p></li>
+<li><p>Clasificaciones (ranking): hay una serie de funciones de clasificación, por ejemplo <code>min_rank()</code>. Genera el tipo de clasificación habitual (1º, 2º, etc). El valor predeterminado relaciona los valores más pequeños a rangos pequeños; podemos usar <code>desc(x)</code> para invertir la relación (valores más grandes a rangos más pequeños)</p></li>
+</ul>
+<p>Si utilizamos el mismo nombre de una variable incluída dentro de la tabla de datos, estaremos sobrescribiendola (se usa cuando transformamos una variable, por ejemplo: le cambiamos su tipo de <code>character</code> a <code>factor</code>). Para que la variable sea nueva debe nombrarse con un nombre que no exista previamente dentro de la tabla de datos.</p>
+</section>
+<section id="funciones-condicionales" class="level3">
+<h3 class="anchored" data-anchor-id="funciones-condicionales">Funciones condicionales</h3>
+<p>Dentro un <code>mutate()</code>, algunas veces vamos a necesitar agrupar, agregar o discretizar variables continuas donde generemos variables dicotómicas o politómicas.</p>
+<p>Estas funciones que llamaremos “condicionales”, dado que utilizan condiciones para decidir que valor tomar, no se limitan a la tarea de construir agrupamientos de variables cuantitativas sino que sirven para cualquier situación donde a partir de una o más condiciones se produzcan una o más valores como respuesta.</p>
+<section id="condicional-simple---función-if_else" class="level4">
+<h4 class="anchored" data-anchor-id="condicional-simple---función-if_else">Condicional simple - función <strong>if_else()</strong></h4>
+<p>Para salidas dicotómicas tenemos la función condicional <code>if_else()</code> derivada de la simplificación del <strong>IF condicional</strong> que existe en todos los lenguajes de programación.</p>
+<p>Supongamos que creamos una nueva variable dentro del dataframe <strong>datos</strong> que se llama <strong><em>variable_nueva</em></strong> de tipo cualitativa y queremos que la misma tome valores a partir del cumplimiento de una condición de una variable cuantitativa existente denominada <strong>var1</strong>.</p>
+<p>Si los valores de <strong>var1</strong> son mayores a 10, entonces <strong>variable_nueva</strong>, tomará el valor “mayor a 10”, en caso contrario, tomará el valor “menor o igual a 10”</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb39"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a>datos <span class="ot">&lt;-</span> datos <span class="sc">|&gt;</span> </span>
+<span id="cb39-2"><a href="#cb39-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">variable_nueva =</span> <span class="fu">if_else</span>(<span class="at">condition =</span> var1 <span class="sc">&gt;</span> <span class="dv">10</span>, </span>
+<span id="cb39-3"><a href="#cb39-3" aria-hidden="true" tabindex="-1"></a>                                  <span class="at">true =</span> <span class="st">"mayor a 10"</span>, </span>
+<span id="cb39-4"><a href="#cb39-4" aria-hidden="true" tabindex="-1"></a>                                  <span class="at">false =</span> <span class="st">"menor o igual a 10"</span>))</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p><code>if_else()</code> tiene tres argumentos obligatorios, el primero siempre es una condición, el segundo y el tercero son los valores que tomará la nueva variable si esa condición se cumple o no se cumple.</p>
+<p>Habitualmente decimos que en este proceso dicotomizamos una variable, dado que el resultado posible consta siempre de 2 valores.</p>
+<p>Los valores de salida de esta función pueden ser de variado tipo (caracter, numerico o logico) aunque si estamos discretizando una variable cuantitativa generalmente construimos una variable resultado cualitativa ordinal. Es común que esta variable salida sea tipo <code>character</code> (observar que las nuevas categorías van encerradas entre comillas).</p>
+<p>Ahora bien, al ser ordinal estas categorías de la variable_nueva deben “ordenarse” en la forma de los valores de la variable, pero el lenguaje R no sabe con que estamos trabajando y respeta siempre el ordenamiento alfanumérico. Por lo tanto, en este ejemplo las categorías se van a estar ordenando al reves del orden numérico natural (de menor a mayor).</p>
+<p><em>“mayor a 10”</em> se ordena alfabéticamente antes de <em>“menor o igual a 10”</em>, porque luego del empate de las letras <code>m</code>, le siguen la <code>a</code> en el primer caso y la <code>e</code> en el segundo.</p>
+<p>Para ordenar estas categorías debemos transformar la variable de caracter a factor. Esto se puede hacer en un solo paso dentro del mutate:</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb40"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a>datos <span class="ot">&lt;-</span> datos <span class="sc">|&gt;</span> </span>
+<span id="cb40-2"><a href="#cb40-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">variable_nueva =</span> <span class="fu">if_else</span>(<span class="at">condition =</span> var1 <span class="sc">&gt;</span> <span class="dv">10</span>, </span>
+<span id="cb40-3"><a href="#cb40-3" aria-hidden="true" tabindex="-1"></a>                                  <span class="at">true =</span> <span class="st">"mayor a 10"</span>, </span>
+<span id="cb40-4"><a href="#cb40-4" aria-hidden="true" tabindex="-1"></a>                                   <span class="at">false =</span> <span class="st">"menor o igual a 10"</span>),</span>
+<span id="cb40-5"><a href="#cb40-5" aria-hidden="true" tabindex="-1"></a>         <span class="at">variable_nueva =</span> <span class="fu">factor</span>(variable_nueva, </span>
+<span id="cb40-6"><a href="#cb40-6" aria-hidden="true" tabindex="-1"></a>                                 <span class="at">levels =</span> <span class="fu">c</span>(<span class="st">"menor o igual a 10"</span>,</span>
+<span id="cb40-7"><a href="#cb40-7" aria-hidden="true" tabindex="-1"></a>                                            <span class="st">"mayor a 10"</span>)))</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Otra forma más artesanal, igualmente válido, es “forzar” el ordenamiento con las categorías así:</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb41"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a>datos <span class="ot">&lt;-</span> datos <span class="sc">|&gt;</span> </span>
+<span id="cb41-2"><a href="#cb41-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">variable_nueva =</span> <span class="fu">if_else</span>(<span class="at">condition =</span> var1 <span class="sc">&gt;</span> <span class="dv">10</span>, </span>
+<span id="cb41-3"><a href="#cb41-3" aria-hidden="true" tabindex="-1"></a>                                  <span class="at">true =</span> <span class="st">"2.mayor a 10"</span>, </span>
+<span id="cb41-4"><a href="#cb41-4" aria-hidden="true" tabindex="-1"></a>                                  <span class="at">false =</span> <span class="st">"1.menor o igual a 10"</span>))</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Aquí agregamos números iniciales a las etiquetas de las categorías para darle el orden que deseamos, sin necesidad de convertir a factor.</p>
+</section>
+<section id="condicional-multiple" class="level4">
+<h4 class="anchored" data-anchor-id="condicional-multiple">Condicional multiple</h4>
+<p>En salidas politómicas a partir de variables cuantitativas tenemos varias opciones dependiendo de si los intervalos de clase a construir son regulares o irregulares.</p>
+</section>
+<section id="función-cut_interval" class="level4">
+<h4 class="anchored" data-anchor-id="función-cut_interval">Función <strong>cut_interval()</strong></h4>
+<p><strong>tidyverse</strong> ofrece la función <code>cut_interval()</code> para la creación de intervalos regulares.</p>
+<p>Es una adptación de la función <code>cut()</code> de R base para tidy data y sus argumentos son similares.</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb42"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true" tabindex="-1"></a>datos <span class="ot">&lt;-</span> datos <span class="sc">|&gt;</span> </span>
+<span id="cb42-2"><a href="#cb42-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">grupo_var =</span> <span class="fu">cut_interval</span>(<span class="at">x =</span> var1, </span>
+<span id="cb42-3"><a href="#cb42-3" aria-hidden="true" tabindex="-1"></a>                                  <span class="at">length =</span> <span class="dv">10</span>,</span>
+<span id="cb42-4"><a href="#cb42-4" aria-hidden="true" tabindex="-1"></a>                                  <span class="at">right =</span> T,</span>
+<span id="cb42-5"><a href="#cb42-5" aria-hidden="true" tabindex="-1"></a>                                  <span class="at">labels =</span> T,</span>
+<span id="cb42-6"><a href="#cb42-6" aria-hidden="true" tabindex="-1"></a>                                  <span class="at">ordered_result =</span> F))</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Los argumentos obligatorios y opcionales de la función <code>cut()</code> son:</p>
+<ul>
+<li><p><strong>x</strong>: [obligatorio] El conjunto de datos numéricos de entrada (variable cuantitativa continua)</p></li>
+<li><p><strong>length</strong>: [obligatorio] la longitud de cada intervalo regular</p></li>
+<li><p><strong>right</strong>: [opcional] Indica si los intervalos son cerrados a la derecha o viceversa. Por defecto vale TRUE (cerrados a derecha)</p></li>
+<li><p><strong>labels</strong>: [opcional] Etiquetas de los intervalos automáticas o numéricas. Valor predeterminado TRUE (intervalos matemáticos)</p></li>
+<li><p><strong>ordered_result</strong>: [opcional] - determina si el resultado es un factor ordenado. Por defecto vale FALSE (la salida es tipo caracter)</p></li>
+</ul>
+<p>Los argumentos opcionales no son necesarios definirlos siempre y cuando los valores por defecto son los que sirven para la tarea.</p>
+</section>
+<section id="función-case_when" class="level4">
+<h4 class="anchored" data-anchor-id="función-case_when">Función <strong>case_when()</strong></h4>
+<p>Cuando las condiciones no son simples, es decir, el resultado no es dicotómico y además los intervalos son irregulares, utilizamos la función <code>case_when()</code> que es una vectorización de la función <code>if_else()</code>.</p>
+<p>Supongamos que no queremos agrupar la variable en dos valores, sino en 3 grupos irregulares.</p>
+<p>Esquema básico de funcionamiento:</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb43"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a><span class="co"># var1 es una variable cuantitativa de números enteros </span></span>
+<span id="cb43-2"><a href="#cb43-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb43-3"><a href="#cb43-3" aria-hidden="true" tabindex="-1"></a>datos <span class="ot">&lt;-</span> datos <span class="sc">|&gt;</span> </span>
+<span id="cb43-4"><a href="#cb43-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">grupo_var =</span> <span class="fu">case_when</span>( </span>
+<span id="cb43-5"><a href="#cb43-5" aria-hidden="true" tabindex="-1"></a>    var1 <span class="sc">&gt;=</span> <span class="dv">0</span> <span class="sc">&amp;</span> var1 <span class="sc">&lt;</span> <span class="dv">25</span>  <span class="sc">~</span>  <span class="st">"Grupo1"</span>, </span>
+<span id="cb43-6"><a href="#cb43-6" aria-hidden="true" tabindex="-1"></a>    var1 <span class="sc">&gt;</span> <span class="dv">24</span> <span class="sc">&amp;</span> var1 <span class="sc">&lt;</span> <span class="dv">65</span>  <span class="sc">~</span>    <span class="st">"Grupo 2"</span>, </span>
+<span id="cb43-7"><a href="#cb43-7" aria-hidden="true" tabindex="-1"></a>    var1 <span class="sc">&gt;=</span> <span class="dv">65</span>             <span class="sc">~</span>    <span class="st">"Grupo 3"</span>))</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Existe una condición por cada grupo creado, como si fuese un <code>if_else()</code> donde el valor declarado siempre es el verdadero. Se utilizan operadores de comparación como mayor ( &gt; ), menor ( &lt; ) y/o igual ( = ) y conectores lógicos como &amp; ( AND ). En cada línea va una virgulilla similar a la usada en la sintaxis formula ( ~ ) y luego la etiqueta que tomarán las observaciones que cumplan con esa condición en la nueva variable (grupo_var).</p>
+<p>Esta evaluación es secuencial y su funcionamiento provoca que el usuario del lenguaje tenga el control de lo que esta sucediendo, por lo que cualquier mala definición de las condiciones puede provocar resultados incorrectos.</p>
+<p>Si incorporamos el argumento <strong>.default</strong> podemos indicar que valor toma si no se cumple ninguna de las condiciones anteriores.</p>
+<p>Por ejemplo, podríamos tener algun valor perdido (NA) en <code>var1</code> y queremos que la variable <code>grupo_var</code> etiquete esos valores perdidos como “Sin dato”:</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb44"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb44-1"><a href="#cb44-1" aria-hidden="true" tabindex="-1"></a><span class="co"># var1 es una variable cuantitativa de números enteros con algun valor NA</span></span>
+<span id="cb44-2"><a href="#cb44-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb44-3"><a href="#cb44-3" aria-hidden="true" tabindex="-1"></a>datos <span class="ot">&lt;-</span> datos <span class="sc">|&gt;</span> </span>
+<span id="cb44-4"><a href="#cb44-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">grupo_var =</span> <span class="fu">case_when</span>( </span>
+<span id="cb44-5"><a href="#cb44-5" aria-hidden="true" tabindex="-1"></a>        var1 <span class="sc">&gt;=</span> <span class="dv">0</span> <span class="sc">&amp;</span> var1 <span class="sc">&lt;</span> <span class="dv">25</span>  <span class="sc">~</span>  <span class="st">"Grupo1"</span>, </span>
+<span id="cb44-6"><a href="#cb44-6" aria-hidden="true" tabindex="-1"></a>        var1 <span class="sc">&gt;</span> <span class="dv">24</span> <span class="sc">&amp;</span> var1 <span class="sc">&lt;</span> <span class="dv">65</span>  <span class="sc">~</span>    <span class="st">"Grupo 2"</span>, </span>
+<span id="cb44-7"><a href="#cb44-7" aria-hidden="true" tabindex="-1"></a>        var1 <span class="sc">&gt;=</span> <span class="dv">65</span>             <span class="sc">~</span>    <span class="st">"Grupo 3"</span>,</span>
+<span id="cb44-8"><a href="#cb44-8" aria-hidden="true" tabindex="-1"></a>        <span class="at">.default =</span> <span class="st">"Sin dato"</span>))</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Las salidas son de tipo <strong><em>carácter</em></strong> (chr) y debemos manejar el ordenamiento de las etiquetas como vimos anteriormente, por medio de factores o comenzando con caracteres ordenados alfabeticamente.</p>
+<p>Para simplificar el trabajo de estos intervalos de clase irregulares y no provocar errores en la confección de las condiciones, tidyverse tiene a la función <code>between()</code>.</p>
+</section>
+<section id="intervalos---función-between" class="level4">
+<h4 class="anchored" data-anchor-id="intervalos---función-between">Intervalos - función <strong>between()</strong></h4>
+<p>Báicamente opera como un atajo para condiciones de intervalos. Define dentro de los argumentos los límites inferior y superior de un intervalo y se utiliza dentro de una función de condición tipo <code>if_else()</code> o <code>case_when()</code>.</p>
+<p>Aplicado sobre el ejemplo anterior se vería así:</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb45"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb45-1"><a href="#cb45-1" aria-hidden="true" tabindex="-1"></a><span class="co"># var1 es una variable cuantitativa de números enteros con algun valor NA</span></span>
+<span id="cb45-2"><a href="#cb45-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb45-3"><a href="#cb45-3" aria-hidden="true" tabindex="-1"></a>datos <span class="ot">&lt;-</span> datos <span class="sc">|&gt;</span> </span>
+<span id="cb45-4"><a href="#cb45-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">grupo_var =</span> <span class="fu">case_when</span>( </span>
+<span id="cb45-5"><a href="#cb45-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">between</span>(var1, <span class="dv">0</span>, <span class="dv">24</span>)   <span class="sc">~</span>  <span class="st">"Grupo1"</span>, </span>
+<span id="cb45-6"><a href="#cb45-6" aria-hidden="true" tabindex="-1"></a>        <span class="fu">between</span>(var1, <span class="dv">25</span>, <span class="dv">64</span>)  <span class="sc">~</span>    <span class="st">"Grupo 2"</span>, </span>
+<span id="cb45-7"><a href="#cb45-7" aria-hidden="true" tabindex="-1"></a>        <span class="fu">between</span>(var1, <span class="dv">65</span>, <span class="cn">Inf</span>) <span class="sc">~</span>    <span class="st">"Grupo 3"</span>,</span>
+<span id="cb45-8"><a href="#cb45-8" aria-hidden="true" tabindex="-1"></a>        <span class="at">.default =</span> <span class="st">"Sin dato"</span>))</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Los valores declarados como límites quedan incluídos siempre dentro del intervalo (son cerrados ambos). También podemos utilizar valores reservados como <code>Inf</code> o <code>-Inf</code> cuando desconocemos con que valor máximo o mínimo nos vamos a encontrar en la variable cuantitativa original.</p>
+</section>
+<section id="ejemplos-con-variable-edad" class="level4">
+<h4 class="anchored" data-anchor-id="ejemplos-con-variable-edad">Ejemplos con variable edad</h4>
+<p>Tomemos un caso clásico como la variable edad medida en años, variable que generalmente tenemos en toda tabla de datos vinculada a personas. En este ejemplo la variable tiene 106 observaciones.</p>
+<p>Una posibilidad es dicotomizarla usando el valor de la mediana que divide 2 dos partes toda la distribución.</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb46"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb46-1"><a href="#cb46-1" aria-hidden="true" tabindex="-1"></a>datos <span class="sc">|&gt;</span> </span>
+<span id="cb46-2"><a href="#cb46-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">mediana =</span> <span class="fu">median</span>(edad))</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 1 × 1
+  mediana
+    &lt;dbl&gt;
+1      56</code></pre>
+</div>
+</div>
+<p>Aplicando el valor 56 dentro de un if_else podriamos hacer:</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb48"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb48-1"><a href="#cb48-1" aria-hidden="true" tabindex="-1"></a>datos <span class="ot">&lt;-</span> datos <span class="sc">|&gt;</span> </span>
+<span id="cb48-2"><a href="#cb48-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">grupo_edad1 =</span> <span class="fu">if_else</span>(<span class="at">condition =</span> edad <span class="sc">&gt;</span> <span class="dv">56</span>, </span>
+<span id="cb48-3"><a href="#cb48-3" aria-hidden="true" tabindex="-1"></a>                                  <span class="at">true =</span> <span class="st">"mayor a la mediana"</span>, </span>
+<span id="cb48-4"><a href="#cb48-4" aria-hidden="true" tabindex="-1"></a>                                  <span class="at">false =</span> <span class="st">"menor o igual a la mediana"</span>))</span>
+<span id="cb48-5"><a href="#cb48-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb48-6"><a href="#cb48-6" aria-hidden="true" tabindex="-1"></a>datos <span class="sc">|&gt;</span> </span>
+<span id="cb48-7"><a href="#cb48-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">count</span>(grupo_edad1)</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 2 × 2
+  grupo_edad1                    n
+  &lt;chr&gt;                      &lt;int&gt;
+1 mayor a la mediana            52
+2 menor o igual a la mediana    54</code></pre>
+</div>
+</div>
+<p>Observamos en el conteo que <code>grupo_edad1</code> se construyó adecuadamente pero el orden de los niveles no es correcto si queremos que siga el ordenamiento natural de edad (de menor a mayor).</p>
+<p>Una de las formas que vimos es convertir a factor:</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb50"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb50-1"><a href="#cb50-1" aria-hidden="true" tabindex="-1"></a>datos <span class="ot">&lt;-</span> datos <span class="sc">|&gt;</span> </span>
+<span id="cb50-2"><a href="#cb50-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">grupo_edad1 =</span> <span class="fu">if_else</span>(<span class="at">condition =</span> edad <span class="sc">&gt;</span> <span class="dv">56</span>, </span>
+<span id="cb50-3"><a href="#cb50-3" aria-hidden="true" tabindex="-1"></a>                                  <span class="at">true =</span> <span class="st">"mayor a la mediana"</span>, </span>
+<span id="cb50-4"><a href="#cb50-4" aria-hidden="true" tabindex="-1"></a>                                  <span class="at">false =</span> <span class="st">"menor o igual a la mediana"</span>),</span>
+<span id="cb50-5"><a href="#cb50-5" aria-hidden="true" tabindex="-1"></a>         <span class="at">grupo_edad1 =</span> <span class="fu">factor</span>(grupo_edad1, </span>
+<span id="cb50-6"><a href="#cb50-6" aria-hidden="true" tabindex="-1"></a>                                 <span class="at">levels =</span> <span class="fu">c</span>(<span class="st">"menor o igual a la mediana"</span>,</span>
+<span id="cb50-7"><a href="#cb50-7" aria-hidden="true" tabindex="-1"></a>                                            <span class="st">"mayor a la mediana"</span>)))</span>
+<span id="cb50-8"><a href="#cb50-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb50-9"><a href="#cb50-9" aria-hidden="true" tabindex="-1"></a>datos <span class="sc">|&gt;</span> </span>
+<span id="cb50-10"><a href="#cb50-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">count</span>(grupo_edad1)</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 2 × 2
+  grupo_edad1                    n
+  &lt;fct&gt;                      &lt;int&gt;
+1 menor o igual a la mediana    54
+2 mayor a la mediana            52</code></pre>
+</div>
+</div>
+<p>Vemos que en el conteo el formato de la variable ya no es <code>chr</code> sino <code>fct</code> y el orden de las etiquetas siguen la forma <em>“menor a mayor”</em>.</p>
+<p>Otra forma es:</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb52"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb52-1"><a href="#cb52-1" aria-hidden="true" tabindex="-1"></a>datos <span class="ot">&lt;-</span> datos <span class="sc">|&gt;</span> </span>
+<span id="cb52-2"><a href="#cb52-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">grupo_edad1 =</span> <span class="fu">if_else</span>(<span class="at">condition =</span> edad <span class="sc">&gt;</span> <span class="dv">56</span>, </span>
+<span id="cb52-3"><a href="#cb52-3" aria-hidden="true" tabindex="-1"></a>                                  <span class="at">true =</span> <span class="st">"2.mayor a la mediana"</span>, </span>
+<span id="cb52-4"><a href="#cb52-4" aria-hidden="true" tabindex="-1"></a>                                  <span class="at">false =</span> <span class="st">"1.menor o igual a la mediana"</span>))</span>
+<span id="cb52-5"><a href="#cb52-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb52-6"><a href="#cb52-6" aria-hidden="true" tabindex="-1"></a>datos <span class="sc">|&gt;</span> </span>
+<span id="cb52-7"><a href="#cb52-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">count</span>(grupo_edad1)</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 2 × 2
+  grupo_edad1                      n
+  &lt;chr&gt;                        &lt;int&gt;
+1 1.menor o igual a la mediana    54
+2 2.mayor a la mediana            52</code></pre>
+</div>
+</div>
+<p>Si en cambio necesitamos que los grupos sean mas de dos y que estos intervalos de clase sean regulares, podemos usar <code>cut_interval</code></p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb54"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb54-1"><a href="#cb54-1" aria-hidden="true" tabindex="-1"></a>datos <span class="ot">&lt;-</span> datos <span class="sc">|&gt;</span> </span>
+<span id="cb54-2"><a href="#cb54-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">grupo_edad2 =</span> <span class="fu">cut_interval</span>(<span class="at">x =</span> edad, </span>
+<span id="cb54-3"><a href="#cb54-3" aria-hidden="true" tabindex="-1"></a>                                    <span class="at">length =</span> <span class="dv">10</span>))</span>
+<span id="cb54-4"><a href="#cb54-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb54-5"><a href="#cb54-5" aria-hidden="true" tabindex="-1"></a>datos <span class="sc">|&gt;</span> </span>
+<span id="cb54-6"><a href="#cb54-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">count</span>(grupo_edad2)</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 8 × 2
+  grupo_edad2     n
+  &lt;fct&gt;       &lt;int&gt;
+1 [0,10]          3
+2 (10,20]         3
+3 (20,30]         2
+4 (30,40]         3
+5 (40,50]        13
+6 (50,60]        52
+7 (60,70]        27
+8 (70,80]         3</code></pre>
+</div>
+</div>
+<p>La salida muestra 8 grupos etarios con etiquetas ordenadas con notación matemática, donde un corchete indica que el límite del intervalo es cerrado, es decir contiene el valor y un paréntesis es abierto y no lo hace.Así es que el primer grupo va de 0 a 10 años y el segundo de 11 a 20.</p>
+<p>Estos sucede así porque en forma predeterminada el argumento <strong>right</strong> está en <code>TRUE</code>. Veamos que pasa si lo cambiamos a <code>FALSE</code>:</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb56"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb56-1"><a href="#cb56-1" aria-hidden="true" tabindex="-1"></a>datos <span class="ot">&lt;-</span> datos <span class="sc">|&gt;</span> </span>
+<span id="cb56-2"><a href="#cb56-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">grupo_edad2 =</span> <span class="fu">cut_interval</span>(<span class="at">x =</span> edad, </span>
+<span id="cb56-3"><a href="#cb56-3" aria-hidden="true" tabindex="-1"></a>                                    <span class="at">length =</span> <span class="dv">10</span>,</span>
+<span id="cb56-4"><a href="#cb56-4" aria-hidden="true" tabindex="-1"></a>                                    <span class="at">right =</span> F))</span>
+<span id="cb56-5"><a href="#cb56-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb56-6"><a href="#cb56-6" aria-hidden="true" tabindex="-1"></a>datos <span class="sc">|&gt;</span> </span>
+<span id="cb56-7"><a href="#cb56-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">count</span>(grupo_edad2)</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 8 × 2
+  grupo_edad2     n
+  &lt;fct&gt;       &lt;int&gt;
+1 [0,10)          3
+2 [10,20)         3
+3 [20,30)         2
+4 [30,40)         3
+5 [40,50)        10
+6 [50,60)        48
+7 [60,70)        32
+8 [70,80]         5</code></pre>
+</div>
+</div>
+<p>En esta salida el primer grupo va de 0 a 9 y el segundo de 10 a 19.</p>
+<p>Hasta ahora la variable grupo_edad2 es de tipo caracter, pero si deseamos que la salida sea factor podemos incorporar el argumento <strong>ordered_result</strong> en <code>TRUE</code>.</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb58"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb58-1"><a href="#cb58-1" aria-hidden="true" tabindex="-1"></a>datos <span class="ot">&lt;-</span> datos <span class="sc">|&gt;</span> </span>
+<span id="cb58-2"><a href="#cb58-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">grupo_edad2 =</span> <span class="fu">cut_interval</span>(<span class="at">x =</span> edad, </span>
+<span id="cb58-3"><a href="#cb58-3" aria-hidden="true" tabindex="-1"></a>                                    <span class="at">length =</span> <span class="dv">10</span>,</span>
+<span id="cb58-4"><a href="#cb58-4" aria-hidden="true" tabindex="-1"></a>                                    <span class="at">ordered_result =</span> T))</span>
+<span id="cb58-5"><a href="#cb58-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb58-6"><a href="#cb58-6" aria-hidden="true" tabindex="-1"></a>datos <span class="sc">|&gt;</span> </span>
+<span id="cb58-7"><a href="#cb58-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">count</span>(grupo_edad2)</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 8 × 2
+  grupo_edad2     n
+  &lt;ord&gt;       &lt;int&gt;
+1 [0,10]          3
+2 (10,20]         3
+3 (20,30]         2
+4 (30,40]         3
+5 (40,50]        13
+6 (50,60]        52
+7 (60,70]        27
+8 (70,80]         3</code></pre>
+</div>
+</div>
+<p>Construimos así una variable factor ordenada <ord>.</ord></p>
+<p>Por último, con el argumento <strong>labels</strong> en <code>FALSE</code> hacemos que las etiquetas de los 8 grupos sean numéricas.</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb60"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb60-1"><a href="#cb60-1" aria-hidden="true" tabindex="-1"></a>datos <span class="ot">&lt;-</span> datos <span class="sc">|&gt;</span> </span>
+<span id="cb60-2"><a href="#cb60-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">grupo_edad2 =</span> <span class="fu">cut_interval</span>(<span class="at">x =</span> edad, </span>
+<span id="cb60-3"><a href="#cb60-3" aria-hidden="true" tabindex="-1"></a>                                    <span class="at">length =</span> <span class="dv">10</span>,</span>
+<span id="cb60-4"><a href="#cb60-4" aria-hidden="true" tabindex="-1"></a>                                    <span class="at">labels =</span> F))</span>
+<span id="cb60-5"><a href="#cb60-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb60-6"><a href="#cb60-6" aria-hidden="true" tabindex="-1"></a>datos <span class="sc">|&gt;</span> </span>
+<span id="cb60-7"><a href="#cb60-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">count</span>(grupo_edad2)</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 8 × 2
+  grupo_edad2     n
+        &lt;int&gt; &lt;int&gt;
+1           1     3
+2           2     3
+3           3     2
+4           4     3
+5           5    13
+6           6    52
+7           7    27
+8           8     3</code></pre>
+</div>
+</div>
+<p>Otro ejemplo, podría ser aplicando <code>case_when()</code> donde discretizamos la edad en 4 grupos irregulares, forzando sus etiquetas para lograr el orden adecuado.</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb62"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb62-1"><a href="#cb62-1" aria-hidden="true" tabindex="-1"></a>datos <span class="ot">&lt;-</span> datos <span class="sc">|&gt;</span> </span>
+<span id="cb62-2"><a href="#cb62-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">grupo3 =</span> <span class="fu">case_when</span>(</span>
+<span id="cb62-3"><a href="#cb62-3" aria-hidden="true" tabindex="-1"></a>    edad <span class="sc">&lt;</span> <span class="dv">13</span>              <span class="sc">~</span> <span class="st">"1.Niño"</span>,</span>
+<span id="cb62-4"><a href="#cb62-4" aria-hidden="true" tabindex="-1"></a>    edad <span class="sc">&gt;</span> <span class="dv">12</span> <span class="sc">&amp;</span> edad <span class="sc">&lt;</span> <span class="dv">26</span>  <span class="sc">~</span> <span class="st">"2.Adolescente"</span>,</span>
+<span id="cb62-5"><a href="#cb62-5" aria-hidden="true" tabindex="-1"></a>    edad <span class="sc">&gt;</span> <span class="dv">25</span> <span class="sc">&amp;</span> edad <span class="sc">&lt;</span> <span class="dv">65</span>  <span class="sc">~</span> <span class="st">"3.Adulto_joven"</span>,</span>
+<span id="cb62-6"><a href="#cb62-6" aria-hidden="true" tabindex="-1"></a>    edad <span class="sc">&gt;</span> <span class="dv">64</span>              <span class="sc">~</span> <span class="st">"4.Adulto_mayor"</span></span>
+<span id="cb62-7"><a href="#cb62-7" aria-hidden="true" tabindex="-1"></a>  ))</span>
+<span id="cb62-8"><a href="#cb62-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb62-9"><a href="#cb62-9" aria-hidden="true" tabindex="-1"></a>datos <span class="sc">|&gt;</span> </span>
+<span id="cb62-10"><a href="#cb62-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">count</span>(grupo3)   </span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 4 × 2
+  grupo3             n
+  &lt;chr&gt;          &lt;int&gt;
+1 1.Niño             3
+2 2.Adolescente      5
+3 3.Adulto_joven    86
+4 4.Adulto_mayor    12</code></pre>
+</div>
+</div>
+<p>Si no hubiesemos etiquetado con los numeros por delante el orden alfabético hacía que Niño fuese a parar al final del conteo.</p>
+<p>De la misma forma pero más sencillo y controlado es:</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb64"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb64-1"><a href="#cb64-1" aria-hidden="true" tabindex="-1"></a>datos <span class="ot">&lt;-</span> datos <span class="sc">|&gt;</span> </span>
+<span id="cb64-2"><a href="#cb64-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">grupo3 =</span> <span class="fu">case_when</span>(</span>
+<span id="cb64-3"><a href="#cb64-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">between</span>(edad, <span class="dv">0</span>, <span class="dv">12</span>)   <span class="sc">~</span> <span class="st">"1.Niño"</span>,</span>
+<span id="cb64-4"><a href="#cb64-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">between</span>(edad, <span class="dv">13</span>, <span class="dv">25</span>)  <span class="sc">~</span> <span class="st">"2.Adolescente"</span>,</span>
+<span id="cb64-5"><a href="#cb64-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">between</span>(edad, <span class="dv">26</span>, <span class="dv">64</span>)  <span class="sc">~</span> <span class="st">"3.Adulto_joven"</span>,</span>
+<span id="cb64-6"><a href="#cb64-6" aria-hidden="true" tabindex="-1"></a>    <span class="fu">between</span>(edad, <span class="dv">65</span>, <span class="cn">Inf</span>) <span class="sc">~</span> <span class="st">"4.Adulto_mayor"</span></span>
+<span id="cb64-7"><a href="#cb64-7" aria-hidden="true" tabindex="-1"></a>  ))</span>
+<span id="cb64-8"><a href="#cb64-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb64-9"><a href="#cb64-9" aria-hidden="true" tabindex="-1"></a>datos <span class="sc">|&gt;</span> </span>
+<span id="cb64-10"><a href="#cb64-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">count</span>(grupo3)  </span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 4 × 2
+  grupo3             n
+  &lt;chr&gt;          &lt;int&gt;
+1 1.Niño             3
+2 2.Adolescente      5
+3 3.Adulto_joven    86
+4 4.Adulto_mayor    12</code></pre>
+</div>
+</div>
+</section>
+</section>
+<section id="función-summarise" class="level3">
+<h3 class="anchored" data-anchor-id="función-summarise">Función <strong>summarise()</strong></h3>
+<p>La función <code>summarise()</code> (se puede escribir también <code>summarize()</code>) resume variables de un conjunto de datos.</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb66"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb66-1"><a href="#cb66-1" aria-hidden="true" tabindex="-1"></a>datos <span class="sc">|&gt;</span> </span>
+<span id="cb66-2"><a href="#cb66-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">promedio_casos =</span> <span class="fu">mean</span>(casos), </span>
+<span id="cb66-3"><a href="#cb66-3" aria-hidden="true" tabindex="-1"></a>            <span class="at">casos_totales =</span> <span class="fu">sum</span>(casos))</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 1 × 2
+  promedio_casos casos_totales
+           &lt;dbl&gt;         &lt;dbl&gt;
+1           192.          9211</code></pre>
+</div>
+</div>
+<p>Su uso es muy interesante cuando la combinamos con <code>group_by()</code> (función que detallaremos luego). Esta situación permite estratificar los resultados por grupos específicos.</p>
+<p>Por ejemplo, podemos agrupar el por año y simultáneamente aplicar el mismo <code>summarise()</code> anterior.</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb68"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb68-1"><a href="#cb68-1" aria-hidden="true" tabindex="-1"></a>datos <span class="sc">|&gt;</span>  </span>
+<span id="cb68-2"><a href="#cb68-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(año) <span class="sc">|&gt;</span>  </span>
+<span id="cb68-3"><a href="#cb68-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">promedio_casos =</span> <span class="fu">mean</span>(casos), </span>
+<span id="cb68-4"><a href="#cb68-4" aria-hidden="true" tabindex="-1"></a>            <span class="at">casos_totales =</span> <span class="fu">sum</span>(casos))</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 2 × 3
+    año promedio_casos casos_totales
+  &lt;dbl&gt;          &lt;dbl&gt;         &lt;dbl&gt;
+1  2015           224.          5369
+2  2016           160.          3842</code></pre>
+</div>
+</div>
+<p>El resultado es una tabla con dos filas, una para cada grupo (año 2015 y año 2016) con los valores promedio y casos totales respectivos.</p>
+<p>Algunas de las funciones del R base que se pueden utilizar dentro de los argumentos de esta función son:</p>
+<ul>
+<li><code>min()</code> mínimo</li>
+<li><code>max()</code> máximo</li>
+<li><code>mean()</code> media</li>
+<li><code>median()</code> mediana</li>
+<li><code>var()</code> varianza</li>
+<li><code>sd()</code> desvío</li>
+<li><code>sum()</code> sumatoria</li>
+</ul>
+<p>Otras funciones que se pueden incorporar las provee el mismo paquete <strong>dplyr</strong>, por ejemplo:</p>
+<ul>
+<li><code>first()</code> primer valor en el vector</li>
+<li><code>last()</code> último valor en el vector</li>
+<li><code>n()</code> número de valores en el vector</li>
+<li><code>n_distinct()</code> números de valores distintos en el vector</li>
+</ul>
+<p>Desde la versión 1.4.0 de <strong>dplyr</strong> la función <code>summarise()</code> incorpora un nuevo argumento para agrupamientos temporales. El argumento <code>.by =</code> trabaja igual que un <code>group_by()</code> previo pero lo hace solo para realizar el calculo definido dentro del resumen evitando que el dataframe de salida mantenga el agrupamiento.</p>
+<p>La estructura básica de la función actualizada es:</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb70"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb70-1"><a href="#cb70-1" aria-hidden="true" tabindex="-1"></a>datos <span class="sc">|&gt;</span> </span>
+<span id="cb70-2"><a href="#cb70-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(</span>
+<span id="cb70-3"><a href="#cb70-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">var_resumen =</span> <span class="fu">funcion</span>(var),</span>
+<span id="cb70-4"><a href="#cb70-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">.by =</span> var_grupo</span>
+<span id="cb70-5"><a href="#cb70-5" aria-hidden="true" tabindex="-1"></a>  )</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Aplicada en el ejemplo previo:</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb71"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb71-1"><a href="#cb71-1" aria-hidden="true" tabindex="-1"></a>datos <span class="sc">|&gt;</span>  </span>
+<span id="cb71-2"><a href="#cb71-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">promedio_casos =</span> <span class="fu">mean</span>(casos), </span>
+<span id="cb71-3"><a href="#cb71-3" aria-hidden="true" tabindex="-1"></a>            <span class="at">casos_totales =</span> <span class="fu">sum</span>(casos),</span>
+<span id="cb71-4"><a href="#cb71-4" aria-hidden="true" tabindex="-1"></a>            <span class="at">.by =</span> año)</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 2 × 3
+    año promedio_casos casos_totales
+  &lt;dbl&gt;          &lt;dbl&gt;         &lt;dbl&gt;
+1  2015           224.          5369
+2  2016           160.          3842</code></pre>
+</div>
+</div>
+</section>
+<section id="función-group_by" class="level3">
+<h3 class="anchored" data-anchor-id="función-group_by">Función <strong>group_by()</strong></h3>
+<p>Decíamos recién que la función <code>group_by()</code> es útil cuando trabaja conjuntamente con <code>summarise()</code> dado que agrupa un conjunto de filas seleccionado en un conjunto de filas de resumen de acuerdo con los valores de una o más columnas o expresiones.</p>
+<p>Para ejemplificar su trabajo asociado obtendremos una nueva tabla con el cálculo de las tasas crudas para cada jurisdicción por año (similar al ejemplo de la aplicación de <code>mutate()</code>:</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb73"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb73-1"><a href="#cb73-1" aria-hidden="true" tabindex="-1"></a>datos <span class="sc">|&gt;</span> </span>
+<span id="cb73-2"><a href="#cb73-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(jurisdiccion, año) <span class="sc">|&gt;</span>  </span>
+<span id="cb73-3"><a href="#cb73-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">tasa =</span> casos<span class="sc">/</span>pob<span class="sc">*</span><span class="dv">100000</span>)</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 48 × 3
+# Groups:   jurisdiccion [24]
+   jurisdiccion   año  tasa
+   &lt;chr&gt;        &lt;dbl&gt; &lt;dbl&gt;
+ 1 Buenos Aires  2015  9.10
+ 2 Buenos Aires  2016  5.70
+ 3 CABA          2015 29.5 
+ 4 CABA          2016 14   
+ 5 Catamarca     2015 17.4 
+ 6 Catamarca     2016 12.7 
+ 7 Chaco         2015  1.30
+ 8 Chaco         2016  0.8 
+ 9 Chubut        2015 19.4 
+10 Chubut        2016 15.4 
+# ℹ 38 more rows</code></pre>
+</div>
+</div>
+<p>En la mayoría de estos ejemplos la salida es directa, es decir no construimos nuevos objetos contenedores de los datos producidos y vemos los resultados en consola o en el visualizador de RStudio. Pero en muchas situaciones vamos a necesitar generar nuevos conjunto de datos con las transformaciones realizadas. Si en alguna de estas ocasiones llegamos a agrupar datos mediante <code>group_by()</code> y posteriormente necesitamos volver a tener la información desagrupada existe una función vinculada denominada <code>ungroup()</code> que vamos a necesitar aplicar o bien si no se desea tener el agrupamiento de forma fija se puede usar el argumento <code>.by =</code> del <code>summarise()</code> como mostramos anteriormente.</p>
+</section>
+<section id="combinaciones" class="level3">
+<h3 class="anchored" data-anchor-id="combinaciones">Combinaciones</h3>
+<p>En los ejemplos anteriores vimos como se van integrando alguna de las funciones mediante el uso de la tubería <strong>%&gt;%</strong> o <strong>|&gt;</strong>. La idea detrás de la búsqueda gramatical del paquete es poder enlazar las acciones para construir oraciones más complejas.</p>
+<p>Un ejemplo que podría integrar gran parte de los visto sería:</p>
+<p>Obtener una nueva tabla con las tasas crudas de casos notificados de VIH, por año y jurisdicción, mayores a 20 x 100000 habitantes ordenadas de mayor a menor.</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb75"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb75-1"><a href="#cb75-1" aria-hidden="true" tabindex="-1"></a>datos <span class="sc">|&gt;</span>                                   <span class="co"># siempre partimos de los datos</span></span>
+<span id="cb75-2"><a href="#cb75-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(año, jurisdiccion) <span class="sc">|&gt;</span>           <span class="co"># agrupamos</span></span>
+<span id="cb75-3"><a href="#cb75-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">tasa =</span> casos<span class="sc">/</span>pob<span class="sc">*</span><span class="dv">100000</span>) <span class="sc">|&gt;</span>    <span class="co"># resumimos</span></span>
+<span id="cb75-4"><a href="#cb75-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(tasa <span class="sc">&gt;</span> <span class="dv">20</span>) <span class="sc">|&gt;</span>                     <span class="co"># filtramos</span></span>
+<span id="cb75-5"><a href="#cb75-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(<span class="fu">desc</span>(tasa))                       <span class="co"># ordenamos   </span></span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 5 × 3
+# Groups:   año [2]
+    año jurisdiccion      tasa
+  &lt;dbl&gt; &lt;chr&gt;            &lt;dbl&gt;
+1  2015 CABA              29.5
+2  2015 Tierra del Fuego  23.6
+3  2015 Jujuy             22.0
+4  2016 Tierra del Fuego  21.7
+5  2015 Santa Cruz        20.3</code></pre>
+</div>
+</div>
+<p>Observemos que una buena manera de construir el código es respetar un salto de línea para cada término de la oración para una lectura más clara.</p>
+<p>Demostramos así la potencialidad que tienen estas funciones combinadas donde en esta situación integramos las funciones <code>group_by()</code>, <code>summarise()</code> , <code>filter()</code> y <code>arrange()</code> en una misma operación.</p>
+</section>
+<section id="función-count" class="level3">
+<h3 class="anchored" data-anchor-id="función-count">Función <strong>count()</strong></h3>
+<p>Esta última función que presentamos permite contar rápidamente los valores únicos de una o más variables.</p>
+<p>Produce fácilmente tablas de frecuencias absolutas que luego posibilitan construir frecuencias relativas.</p>
+<p>La aplicamos sobre la variable <strong>jurisdiccion</strong> de <em>datos</em></p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb77"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb77-1"><a href="#cb77-1" aria-hidden="true" tabindex="-1"></a>datos <span class="sc">|&gt;</span> </span>
+<span id="cb77-2"><a href="#cb77-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">count</span>(jurisdiccion)</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 24 × 2
+   jurisdiccion     n
+   &lt;chr&gt;        &lt;int&gt;
+ 1 Buenos Aires     2
+ 2 CABA             2
+ 3 Catamarca        2
+ 4 Chaco            2
+ 5 Chubut           2
+ 6 Cordoba          2
+ 7 Corrientes       2
+ 8 Entre Rios       2
+ 9 Formosa          2
+10 Jujuy            2
+# ℹ 14 more rows</code></pre>
+</div>
+</div>
+<p>Tiene un par de argumentos opcionales:</p>
+<ul>
+<li><strong>name</strong>: es el nombre de la columna con el conteo. Por defecto se llama <strong>n</strong></li>
+<li><strong>sort</strong>: ordena la tabla de frecuencia de mayor a menor</li>
+<li><strong>wt</strong>: se puede opcionalmente incorporar una variable con la ponderación (factor de expansión) para el calculo de la frecuencia.</li>
+</ul>
+</section>
+</section>
+<section id="uniones-en-datos-relacionales" class="level2">
+<h2 class="anchored" data-anchor-id="uniones-en-datos-relacionales">Uniones en datos relacionales</h2>
+<p>Existen situaciones donde debemos analizar datos que se encuentran en diferentes tablas.</p>
+<p>Con el fin de responder a nuestras preguntas de interés en ocasiones deberemos unirlas previamente.</p>
+<p>De manera general, se le llama <strong><em>datos relacionales</em></strong> a esas múltiples tablas de datos que provienen muchas veces de sistemas de bases de datos construidas bajo el modelo relacional o bien cuando las tablas de datos tienen fuentes distintas pero comparten alguna variable común que permita “conectarlas”.</p>
+<p>Un ejemplo recurrente sucede cuando necesitamos calcular la tasa de algún evento de salud y tenemos en una tabla el conteo (dato agregado) del evento (numerador) y en otra el conteo de la población en riesgo (denominador).</p>
+<section id="tipos-de-operaciones" class="level3">
+<h3 class="anchored" data-anchor-id="tipos-de-operaciones">Tipos de operaciones</h3>
+<p>Para trabajar con datos relacionales necesitamos de <em>funciones-verbos</em> que vinculen pares de tablas.</p>
+<p>Las tres familias de funciones del paquete <strong>dplyr</strong> diseñadas para trabajar con datos relacionales son:</p>
+<ul>
+<li><p><strong>Uniones de transformación</strong> (del inglés <em>mutating joins</em>), agregan nuevas variables a una tabla a partir de observaciones coincidentes de otra tabla.</p></li>
+<li><p><strong>Uniones de filtro</strong> (del inglés <em>filtering joins</em>), filtran observaciones de una tabla en función de la coincidencia o no coincidencia de otra tabla.</p></li>
+<li><p><strong>Operaciones en filas y columnas</strong>, sirven para unir tablas por columnas o por filas.</p></li>
+</ul>
+</section>
+<section id="claves" class="level3">
+<h3 class="anchored" data-anchor-id="claves">Claves</h3>
+<ul>
+<li><p>Las variables usadas para conectar cada par de variables se llaman <strong>claves</strong> (del inglés <em>key</em>)</p></li>
+<li><p>Una clave es una variable (o un conjunto de variables) que identifican de manera <em>única</em> una observación.</p></li>
+</ul>
+<p>Existen dos tipos de claves:</p>
+<ul>
+<li><p>Una <strong>clave primaria</strong> identifica únicamente una observación en su propia tabla.</p></li>
+<li><p>Una <strong>clave foránea</strong> únicamente identifica una observación en otra tabla.</p></li>
+</ul>
+<p>Una vez que identificadas las claves primarias en las tablas, es una buena práctica verificar que identifican de forma <strong>única cada observación</strong>. Una forma de hacerlo es usar <code>count()</code> con las claves primarias y buscar las entradas con n mayor a uno:</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb79"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb79-1"><a href="#cb79-1" aria-hidden="true" tabindex="-1"></a>datos <span class="sc">|&gt;</span> </span>
+<span id="cb79-2"><a href="#cb79-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">count</span>(clave_primaria) <span class="sc">|&gt;</span> </span>
+<span id="cb79-3"><a href="#cb79-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(n <span class="sc">&gt;</span> <span class="dv">1</span>)</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>La salida debería mostrar que no hay ninguna observación que cumpla la condición de n &gt; 1, es decir todas las observaciones tienen una sola clave primaria unívoca.</p>
+<p>En ocasiones podemos tener claves primarias compuestas por más de una variable. Tendremos que utilizar entonces esta combinación de variables a la vez en las uniones que realicemos.</p>
+<p>Otra situación inversa es no tener ninguna variable como clave primaria, aunque sepamos que cada observación pertenece a una misma unidad de análisis pero de elementos (sujetos, etc) diferentes. Aquí se puede usar la función <code>row_number()</code> que numera en orden ascendente las observaciones de la tabla y almacena esta numeración en una variable, creando una <strong>clave subrogada</strong>.</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb80"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb80-1"><a href="#cb80-1" aria-hidden="true" tabindex="-1"></a>datos <span class="ot">&lt;-</span> datos <span class="sc">|&gt;</span> </span>
+<span id="cb80-2"><a href="#cb80-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">clave =</span> <span class="fu">row_number</span>()) </span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="uniones-de-transformación" class="level3">
+<h3 class="anchored" data-anchor-id="uniones-de-transformación">Uniones de transformación</h3>
+<p>La forma más simple de unión es la unión interior (del inglés inner join). Una unión interior une pares de observaciones siempre que sus claves sean iguales.</p>
+<p><strong>Unión interior</strong></p>
+<p>Una unión interior mantiene las observaciones que aparecen en ambas tablas. La estructura del código sirve de base para las demás uniones:</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb81"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb81-1"><a href="#cb81-1" aria-hidden="true" tabindex="-1"></a>datos_x <span class="sc">|&gt;</span> </span>
+<span id="cb81-2"><a href="#cb81-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">inner_join</span>(datos_y, <span class="at">by =</span> <span class="st">"variable_clave"</span>) </span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="images/02/inner-join.PNG" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:50.0%"></p>
+</figure>
+</div>
+<p>La propiedad más importante de una unión interior es que las filas no coincidentes no se incluyen en el resultado</p>
+<p><strong>Uniones exteriores</strong></p>
+<p>Una unión exterior mantiene las observaciones que aparecen en al menos una de las tablas.</p>
+<ul>
+<li>Una unión izquierda (left join) mantiene todas las observaciones en x.</li>
+</ul>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="images/02/left.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:50.0%"></p>
+</figure>
+</div>
+<ul>
+<li>Una unión derecha (right join) mantiene todas las observaciones en y.</li>
+</ul>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="images/02/right.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:50.0%"></p>
+</figure>
+</div>
+<ul>
+<li>Una unión completa (full join) mantiene todas las observaciones en x e y.</li>
+</ul>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="images/02/full.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:50.0%"></p>
+</figure>
+</div>
+<p>Estas uniones funcionan agregando una observación “virtual” adicional a cada tabla. Esta observación tiene una clave que siempre coincide (de no haber otras claves coincidentes) y un valor que se llena con <strong>NA</strong>.</p>
+<p>Otra forma de ilustrar diferentes tipos de uniones es mediante un diagrama de Venn.</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="images/02/venn.PNG" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:50.0%"></p>
+</figure>
+</div>
+<p>Sin embargo, tiene una limitante importante: un diagrama de Venn no puede mostrar qué ocurre con las claves que no identifican de manera única una observación.</p>
+</section>
+<section id="claves-duplicadas" class="level3">
+<h3 class="anchored" data-anchor-id="claves-duplicadas">Claves duplicadas</h3>
+<p>Hasta ahora todas las situaciones han asumido que las claves son únicas. Pero esto no siempre es así.</p>
+<p>Existen dos posibilidades habituales:</p>
+<ul>
+<li>Una tabla tiene claves duplicadas producto de una relación uno a varios.</li>
+</ul>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="images/02/dupli-key.PNG" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:50.0%"></p>
+</figure>
+</div>
+<ul>
+<li>Ambas tablas tienen claves duplicadas (producto de una relación real varios a varios o por algún “error”)</li>
+</ul>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="images/02/dupli-key2.PNG" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:50.0%"></p>
+</figure>
+</div>
+<p>Siempre que unimos claves duplicadas, obtenemos todas las posibles combinaciones, es decir, el producto cartesiano</p>
+</section>
+<section id="variables-claves" class="level3">
+<h3 class="anchored" data-anchor-id="variables-claves">Variables claves</h3>
+<p>La forma común del argumento <code>by =</code> donde se define/n la/s variable/s clave/s es igualarlo al nombre la variable o variables concatenadas con <code>c()</code> que deberán tener el mismo nombre en las dos tablas a unir.</p>
+<p>Otra maneras de conectar las tablas sería:</p>
+<ul>
+<li><p>Sin definir <code>by =</code> o bien <code>by = NULL</code>, que de forma predeterminada utiliza todas las variables que se llamen de la misma forma (respetando mayúsculas y minúsculas). Esta se denomina <strong>unión natural</strong>.</p></li>
+<li><p>Utilizar la función <code>join_by()</code> en el argumento <code>by =</code> que nos da la posibilidad de declarar cuales son las variables de unión cuando estas tengan nombres distintos en cada tabla.</p></li>
+</ul>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb82"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb82-1"><a href="#cb82-1" aria-hidden="true" tabindex="-1"></a>datos_x <span class="sc">|&gt;</span> </span>
+<span id="cb82-2"><a href="#cb82-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">inner_join</span>(datos_y, </span>
+<span id="cb82-3"><a href="#cb82-3" aria-hidden="true" tabindex="-1"></a>             <span class="at">by =</span> <span class="fu">join_by</span>(var_clave_x <span class="sc">==</span> var_clave_y)) </span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Observen que la igualdad de las variables claves de <strong>x</strong> e <strong>y</strong> es un operador de comaparación <code>==</code></p>
+<p>En caso que hubiese más de una variable clave de unión se puede hacer:</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb83"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb83-1"><a href="#cb83-1" aria-hidden="true" tabindex="-1"></a>datos_x <span class="sc">|&gt;</span> </span>
+<span id="cb83-2"><a href="#cb83-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">inner_join</span>(datos_y, </span>
+<span id="cb83-3"><a href="#cb83-3" aria-hidden="true" tabindex="-1"></a>             <span class="at">by =</span> <span class="fu">join_by</span>(var1_clave_x <span class="sc">==</span> var1_clave_y,</span>
+<span id="cb83-4"><a href="#cb83-4" aria-hidden="true" tabindex="-1"></a>                          var2_clave_x <span class="sc">==</span> var2_clave_y,)) </span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="uniones-de-filtro" class="level3">
+<h3 class="anchored" data-anchor-id="uniones-de-filtro">Uniones de filtro</h3>
+<p>La función <code>semi_join()</code> mantiene todas las observaciones de la tabla <strong>x</strong> donde la <strong><em>clave coincide</em></strong> con la clave de la tabla <strong>y</strong></p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="images/02/semi.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:50.0%"></p>
+</figure>
+</div>
+<p>Para hacer lo inverso, <code>anti_join()</code> descarta todas las observaciones de la tabla <strong>x</strong> donde la <strong><em>clave coincide</em></strong> con la clave de la tabla <strong>y</strong></p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="images/02/anti.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:50.0%"></p>
+</figure>
+</div>
+</section>
+<section id="unión-por-filas-y-por-columnas" class="level3">
+<h3 class="anchored" data-anchor-id="unión-por-filas-y-por-columnas">Unión por filas y por columnas</h3>
+<p>En algunas ocasiones necesitamos unir tablas que tienen formatos particulares por medio de filas o por medio de columnas.</p>
+<p>Las funciones de <strong>dplyr</strong> para esta tarea son:</p>
+<ul>
+<li><p><strong>bind_rows()</strong> Une una tabla debajo de otra. Aplica cuando tenemos la misma estructura en tabla de datos divida en varios archivos (por ejemplo, producto de carga simultánea de datos en diferentes computadoras con diferentes data-entry)</p></li>
+<li><p><strong>bind_cols()</strong> Une una tabla al lado de la otra. Es peligroso su uso si la confundimos con las uniones de transformación porque perdemos integridad de datos en las observaciones. Sirve sólo si el “orden” de las observaciones pueden garantizar la misma identidad de las partes a unir.</p></li>
+</ul>
+</section>
+</section>
+<section id="datos-ordenados" class="level2">
+<h2 class="anchored" data-anchor-id="datos-ordenados">Datos ordenados</h2>
+<p>Las tablas de datos con la que trabajamos dentro de tidyverse deben cumplir con ciertas características de los “datos ordenados” (tidy data).</p>
+<p>Llamamos <strong>tidy data</strong> cuando:</p>
+<ul>
+<li>Cada variable está en una columna</li>
+<li>Cada observación está en una fila</li>
+<li>Cada celda del cruce entre una columna y una fila es un valor</li>
+<li>Cada tabla pertenece a una unidad de observación</li>
+</ul>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="images/02/tidy_data.PNG" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:60.0%"></p>
+</figure>
+</div>
+<p>A veces las tablas se parecen a esto:</p>
+<div class="cell" data-layout-align="center">
+<div class="cell-output-display">
+<table class="caption-top table table-sm table-striped small" data-quarto-postprocess="true">
+<thead>
+<tr class="header">
+<th style="text-align: left;" data-quarto-table-cell-role="th">country</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">2010</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">2011</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">2012</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">2013</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Argentina</td>
+<td style="text-align: right;">40374224</td>
+<td style="text-align: right;">40728738</td>
+<td style="text-align: right;">41086927</td>
+<td style="text-align: right;">41446246</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Brazil</td>
+<td style="text-align: right;">195210154</td>
+<td style="text-align: right;">196935134</td>
+<td style="text-align: right;">198656019</td>
+<td style="text-align: right;">200361925</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Uruguay</td>
+<td style="text-align: right;">3371982</td>
+<td style="text-align: right;">3383486</td>
+<td style="text-align: right;">3395253</td>
+<td style="text-align: right;">3407062</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p>Cumple con las reglas de “datos ordenados”?</p>
+<p>No.&nbsp;</p>
+<p>No lo hace porque lo que vemos como cabecera de columnas en 2010, 2011, etc. son categorías de la variable año (<strong>year</strong>) y no nombres de variables.</p>
+<p>En cambio esta tabla, aunque tenga la misma información, si cumple con el formato ordenado.</p>
+<div class="cell" data-layout-align="center">
+<div class="cell-output-display">
+<table class="caption-top table table-sm table-striped small" data-quarto-postprocess="true">
+<thead>
+<tr class="header">
+<th style="text-align: left;" data-quarto-table-cell-role="th">country</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">year</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">population</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Argentina</td>
+<td style="text-align: right;">2010</td>
+<td style="text-align: right;">40374224</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Argentina</td>
+<td style="text-align: right;">2011</td>
+<td style="text-align: right;">40728738</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Argentina</td>
+<td style="text-align: right;">2012</td>
+<td style="text-align: right;">41086927</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Argentina</td>
+<td style="text-align: right;">2013</td>
+<td style="text-align: right;">41446246</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Brazil</td>
+<td style="text-align: right;">2010</td>
+<td style="text-align: right;">195210154</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Brazil</td>
+<td style="text-align: right;">2011</td>
+<td style="text-align: right;">196935134</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Brazil</td>
+<td style="text-align: right;">2012</td>
+<td style="text-align: right;">198656019</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Brazil</td>
+<td style="text-align: right;">2013</td>
+<td style="text-align: right;">200361925</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Uruguay</td>
+<td style="text-align: right;">2010</td>
+<td style="text-align: right;">3371982</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Uruguay</td>
+<td style="text-align: right;">2011</td>
+<td style="text-align: right;">3383486</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Uruguay</td>
+<td style="text-align: right;">2012</td>
+<td style="text-align: right;">3395253</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Uruguay</td>
+<td style="text-align: right;">2013</td>
+<td style="text-align: right;">3407062</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p>Generalmente los problemas comunes en tabla “desordenadas” de datos son:</p>
+<ul>
+<li><p>Una variable se extiende por varias columnas.</p></li>
+<li><p>Una observación está dispersa entre múltiples filas</p></li>
+</ul>
+<p>El paquete <strong>tidyr</strong> de tidyverse resuelve estos problemas y mediante sus funciones <strong>pivot_</strong> nos permite pivotear las tablas a lo “ancho” o “largo”.</p>
+<ul>
+<li><p>Función <strong>pivot_longer()</strong> - Convierte nombres de columnas en valores de una nueva variable.</p></li>
+<li><p>Función <strong>pivot_wider()</strong> - Convierte valores de una variable en columnas nuevas.</p></li>
+</ul>
+<p>Para pasar de formato ancho a largo, es decir cuando los valores de una variable se extiende por varias columnas, se utilizan como mínimo estos argumentos:</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb84"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb84-1"><a href="#cb84-1" aria-hidden="true" tabindex="-1"></a>tabla_ancho <span class="sc">|&gt;</span> </span>
+<span id="cb84-2"><a href="#cb84-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_longer</span>(<span class="at">cols =</span> <span class="sc">-</span>paises,        <span class="co"># todas las columnas -paises</span></span>
+<span id="cb84-3"><a href="#cb84-3" aria-hidden="true" tabindex="-1"></a>               <span class="at">names_to =</span> <span class="st">"anio"</span>,     <span class="co"># nombre de la columna de los nombres</span></span>
+<span id="cb84-4"><a href="#cb84-4" aria-hidden="true" tabindex="-1"></a>               <span class="at">values_to =</span> <span class="st">"casos"</span>)   <span class="co"># nombre la columna de los valores</span></span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="images/02/tabla_longer.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:50.0%"></p>
+</figure>
+</div>
+<p>El formato inverso, cuando una observación está dispersa entre múltiples filas, sería:</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb85"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb85-1"><a href="#cb85-1" aria-hidden="true" tabindex="-1"></a>tabla_largo <span class="sc">|&gt;</span> </span>
+<span id="cb85-2"><a href="#cb85-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_wider</span>(<span class="at">names_from =</span> tipo,    <span class="co"># nombres de los valores de tipo</span></span>
+<span id="cb85-3"><a href="#cb85-3" aria-hidden="true" tabindex="-1"></a>              <span class="at">values_from =</span> casos)  <span class="co"># valores de los valores de casos</span></span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="images/02/tabla_wider.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:60.0%"></p>
+</figure>
+</div>
+
+
+</section>
+
+<a onclick="window.scrollTo(0, 0); return false;" role="button" id="quarto-back-to-top"><i class="bi bi-arrow-up"></i> Volver arriba</a></main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copiado");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copiado");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+        const codeEl = trigger.previousElementSibling.cloneNode(true);
+        for (const childEl of codeEl.children) {
+          if (isCodeAnnotation(childEl)) {
+            childEl.remove();
+          }
+        }
+        return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp('/' + window.location.host + '/');
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+</div> <!-- /content -->
+
+
+
+
+</body></html>
