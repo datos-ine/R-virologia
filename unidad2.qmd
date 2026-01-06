@@ -5,6 +5,7 @@ editor:
     wrap: 72
 ---
 
+[Descargar este documento en PDF](unidad2.pdf){.btn .btn-primary}
 
 ```{r}
 #| echo: false

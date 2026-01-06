@@ -30,7 +30,9 @@ format:
     toc-location: right
     toc-title: "Contenidos"
     search: true
-
+  pdf:
+    prefer-html: true
+    documentclass: article
 
 
 

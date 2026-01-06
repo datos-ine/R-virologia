@@ -228,7 +228,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#funciones-para-gráficos" id="toc-funciones-para-gráficos" class="nav-link" data-scroll-target="#funciones-para-gráficos">Funciones para gráficos</a></li>
   <li><a href="#importar-funciones-propias" id="toc-importar-funciones-propias" class="nav-link" data-scroll-target="#importar-funciones-propias">Importar funciones propias</a></li>
   </ul>
-</nav>
+<div class="quarto-alternate-formats"><h2>Otros formatos</h2><ul><li><a href="extra.pdf"><i class="bi bi-file-pdf"></i>PDF</a></li></ul></div></nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
@@ -252,6 +252,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </header>
 
 
+<p><a href="extra.pdf" class="btn btn-primary">Descargar este documento en PDF</a></p>
 <section id="bucles-tradicionales" class="level2">
 <h2 class="anchored" data-anchor-id="bucles-tradicionales">Bucles tradicionales</h2>
 <p>Un bucle es una estructura de control que permite ejecutar un conjunto de instrucciones repetidamente mientras se cumple una condición específica. Los bucles, se encuentran en todos los lenguajes de programación y se utilizan para automatizar tareas repetitivas (iterar).</p>
@@ -379,23 +380,23 @@ El valor de i es: 5 </code></pre>
 <span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>datos</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 10 × 5
-   grupo       a      b       c       d
-   &lt;chr&gt;   &lt;dbl&gt;  &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;
- 1 A      0.715   0.867 -0.549  -0.181 
- 2 B      0.630  -1.64  -1.10    0.132 
- 3 A      0.507   0.875 -0.942   1.15  
- 4 B      1.42   -1.30   1.93   -0.370 
- 5 A      0.349  -0.564  0.200  -0.790 
- 6 B      0.712   0.320  0.816  -0.348 
- 7 B      1.08    1.77  -0.0506 -0.197 
- 8 B     -1.01   -0.327 -0.577   1.95  
- 9 A      0.379  -0.473  0.206  -0.0977
-10 A     -0.0204 -0.827 -1.32   -2.19  </code></pre>
+   grupo       a      b      c        d
+   &lt;chr&gt;   &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;    &lt;dbl&gt;
+ 1 A     -0.888   0.368  1.60  -0.897  
+ 2 B      1.83    1.47   1.63   1.21   
+ 3 A     -0.0930 -1.26  -1.19   1.87   
+ 4 A      1.08   -0.184  0.785  0.610  
+ 5 B      1.59    0.510  2.43   0.00609
+ 6 A     -0.116   0.236 -0.956  0.173  
+ 7 A     -0.978  -0.368  1.42   0.184  
+ 8 A      0.312   0.397 -0.702 -0.505  
+ 9 A     -1.26    0.171 -1.77  -0.236  
+10 A      0.759   2.23   1.06   0.983  </code></pre>
 </div>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="fu">map_dbl</span>(<span class="at">.x =</span> datos, <span class="at">.f =</span> mean)</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>      grupo           a           b           c           d 
-         NA  0.47561157 -0.12926632 -0.13881665 -0.09388459 </code></pre>
+<pre><code>    grupo         a         b         c         d 
+       NA 0.2235625 0.3562649 0.4312773 0.3400235 </code></pre>
 </div>
 </div>
 <p>Calcula la media por cada una de las variables numéricas. Como la variable grupo no lo es me devuelve una advertencia y un NA como resultado.</p>
@@ -404,8 +405,8 @@ El valor de i es: 5 </code></pre>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="fu">map_dbl</span>(<span class="at">.x =</span> datos <span class="sc">|&gt;</span> <span class="fu">select</span>(<span class="sc">-</span>grupo), </span>
 <span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>        <span class="at">.f =</span> mean)</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>          a           b           c           d 
- 0.47561157 -0.12926632 -0.13881665 -0.09388459 </code></pre>
+<pre><code>        a         b         c         d 
+0.2235625 0.3562649 0.4312773 0.3400235 </code></pre>
 </div>
 </div>
 <p>Observen que dentro del argumento <code>.x</code> construimos una estructura con tuberías donde seleccionamos a todas las variables menos a <strong>grupo</strong> (esto se puede hacer en los argumentos de muchas funciones).</p>

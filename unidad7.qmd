@@ -22,6 +22,8 @@ pacman::p_load(
 )
 ```
 
+[Descargar este documento en PDF](unidad7.pdf){.btn .btn-primary}
+
 ## Introducción
 
 ::: {.callout-tip appearance="simple" icon="false"}

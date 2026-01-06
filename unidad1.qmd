@@ -5,6 +5,8 @@ editor:
     wrap: 72
 ---
 
+[Descargar este documento en PDF](unidad1.pdf){.btn .btn-primary}
+
 ## Qué es el lenguaje R?
 
 El sitio oficial [r-project.org](https://www.r-project.org/) dice que *"R es un entorno de software libre para gráficos y computación estadística. Se compila y se ejecuta en una amplia variedad de plataformas UNIX, Windows y MacOS.”.* 

@@ -5,6 +5,8 @@ editor:
     wrap: 72
 ---
 
+[Descargar este documento en PDF](unidad8.pdf){.btn .btn-primary}
+
 ## Documentos Quarto
 
 Quarto ofrece un marco de creación unificado para la ciencia de datos, que combina código, resultados del código y escritura. Es decir, combina un lenguaje de programación (R, en nuestro caso pero podríamos usar otros lenguajes como python o julia) con un lenguaje de documentación (markdown + otras utilidades).

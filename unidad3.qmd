@@ -5,6 +5,8 @@ editor:
     wrap: 72
 ---
 
+[Descargar este documento en PDF](unidad3.pdf){.btn .btn-primary}
+
 En el ámbito de los proyectos de análisis de datos, el preprocesamiento, también conocido como preparación de datos, es una etapa crucial que precede al análisis propiamente dicho. Esta fase esencial tiene como objetivo acondicionar los datos para su posterior análisis, garantizando su confiabilidad e integridad.
 
 Las tareas de preprocesamiento son específicas para cada conjunto de datos y dependen de los objetivos del proyecto y las técnicas de análisis que se emplearán. Sin embargo, existen tareas comunes que son aplicables a la mayoría de los casos, entre las que se encuentran el diagnóstico y la limpieza de datos.
@@ -188,10 +190,7 @@ diagnose(datos)
 library(dlookr)
 
 diagnose(datos) |> 
-  mutate(across(where(is.double),~round(.x, digits = 2))) |> 
-DT::datatable(
-  fillContainer = F, options = list(pageLength = 10), filter = "none", 
-  style = "bootstrap4", autoHideNavigation = T)
+  mutate(across(where(is.double),~round(.x, digits = 2))) 
 ```
 
 Al ser compatible con tidyverse se puede editar antes o después de la función, por ejemplo si quisiéramos filtrar variables con valores faltantes (de mayor a menor):
@@ -220,10 +219,7 @@ datos|>
 datos|> 
   select(-starts_with("FECHA"), -FIS) |> 
  diagnose_category() |> 
-  mutate(across(where(is.double),~round(.x, digits = 2))) |> 
-DT::datatable(
-  fillContainer = T, options = list(pageLength = 10), filter = "none", 
-  style = "bootstrap4")
+  mutate(across(where(is.double),~round(.x, digits = 2))) 
 ```
 
 ### diagnose_numeric()
@@ -240,10 +236,7 @@ datos|>
 ```{r, warning=F, message=F, echo=F}
 datos|> 
  diagnose_numeric() |> 
-  mutate(across(where(is.double),~round(.x, digits = 2))) |> 
-DT::datatable(
-  fillContainer = F, options = list(pageLength = 10), filter = "none", 
-  style = "bootstrap4", autoHideNavigation = T)
+  mutate(across(where(is.double),~round(.x, digits = 2))) 
 ```
 
 Observamos que sobre la única variable numérica de datos nos calcula el mínimo, primer cuartil, media, mediana, tercer cuartil, máximo, la cantidad de ceros, la cantidad de números negativos y la cantidad de datos atípicos.
@@ -262,10 +255,7 @@ datos|>
 ```{r, warning=F, message=F, echo=F}
 datos|> 
  diagnose_outlier() |> 
-  mutate(across(where(is.double),~round(.x, digits = 2))) |> 
-DT::datatable(
-  fillContainer = F, options = list(pageLength = 10), filter = "none", 
-  style = "bootstrap4", autoHideNavigation = T)
+  mutate(across(where(is.double),~round(.x, digits = 2))) 
 ```
 
 Aquí la variable EDAD_DIAGNOSTICO no tiene datos atípicos por lo que el conteo y proporción es de cero, la media de los outlier no existe y la media contando y no contando estos outlier da lo mismo (37,02)

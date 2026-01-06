@@ -22,6 +22,8 @@ pacman::p_load(
 )
 ```
 
+[Descargar este documento en PDF](extra.pdf){.btn .btn-primary}
+
 ## Bucles tradicionales
 
 Un bucle es una estructura de control que permite ejecutar un conjunto de instrucciones repetidamente mientras se cumple una condición específica. Los bucles, se encuentran en todos los lenguajes de programación y se utilizan para automatizar tareas repetitivas (iterar).

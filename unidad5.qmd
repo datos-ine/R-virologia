@@ -22,6 +22,8 @@ pacman::p_load(
 )
 ```
 
+[Descargar este documento en PDF](unidad5.pdf){.btn .btn-primary}
+
 ## Introducción
 
 Con las herramientas conocidas hasta el momento sabemos obtener resúmenes estadísticos de variables cuantitativas usando a `summarise()` y estratificados a partir de `group_by()` o el argumento `by =` de  `summarise()`.

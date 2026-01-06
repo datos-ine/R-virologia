@@ -22,6 +22,8 @@ pacman::p_load(
 )
 ```
 
+[Descargar este documento en PDF](unidad4.pdf){.btn .btn-primary}
+
 ## Variables de tiempo
 
 <center>

@@ -34,6 +34,8 @@ kbl_format <- function(x) {
 }
 ```
 
+[Descargar este documento en PDF](unidad6.pdf){.btn .btn-primary}
+
 ## Introducción
 
 La **estadística inferencial** es la rama de la estadística que permite formular conclusiones sobre una población a partir del análisis de una muestra. Se apoya en el cálculo de probabilidades, que proporciona el marco teórico para modelar fenómenos aleatorios y generalizar los resultados muestrales a toda la población. Dado que las inferencias basadas en muestras están sujetas a incertidumbre, es fundamental expresarlas siempre en términos **probabilísticos**.
@@ -61,7 +63,7 @@ Por ejemplo, supongamos que queremos conocer el valor medio de colesterol total 
 
 -   La media muestral, que se obtiene a partir de los datos de la muestra, se representa como $\bar{x}$ y es un **estimador** o estadístico muestral. 
 
-![](images/06/poblacion_muestra.svg){fig-align="center" width=75%}
+![](images/06/poblacion_muestra.png){fig-align="center" width=75%}
 
 La **distribución muestral de un estadístico** es la distribución de todos los valores posibles que ese estadístico puede tomar al calcularse en muestras aleatorias del mismo tamaño extraídas de una misma población. Este concepto es central en la inferencia estadística, ya que permite cuantificar la incertidumbre asociada a las estimaciones.
 
