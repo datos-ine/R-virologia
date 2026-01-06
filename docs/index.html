@@ -2,11 +2,10 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="es" xml:lang="es"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.7.31">
+<meta name="generator" content="quarto-1.8.25">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
-<meta name="author" content="Christian Ballejo">
 
 <title>Introducción al lenguaje R + RStudio</title>
 <style>
@@ -33,14 +32,15 @@ ul.task-list li input[type="checkbox"] {
 <meta name="quarto:offset" content="./">
 <script src="site_libs/quarto-html/quarto.js" type="module"></script>
 <script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="site_libs/quarto-html/axe/axe-check.js" type="module"></script>
 <script src="site_libs/quarto-html/popper.min.js"></script>
 <script src="site_libs/quarto-html/tippy.umd.min.js"></script>
 <script src="site_libs/quarto-html/anchor.min.js"></script>
 <link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="site_libs/quarto-html/quarto-syntax-highlighting-e1a5c8363afafaef2c763b6775fbf3ca.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-7b89279ff1a6dce999919e0e67d4d9ec.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="site_libs/bootstrap/bootstrap-dfb324f25d9b1687192fa8be62ac8f9c.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="site_libs/bootstrap/bootstrap-e31584831b205ffbb2d98406f31c2a5b.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "sidebar",
   "copy-button": false,
@@ -55,7 +55,7 @@ ul.task-list li input[type="checkbox"] {
   ],
   "show-item-context": false,
   "language": {
-    "search-no-results-text": "Sin resultados",
+    "search-no-results-text": "No se han encontrado resultados",
     "search-matching-documents-text": "documentos encontrados",
     "search-copy-link-title": "Copiar el enlace en la búsqueda",
     "search-hide-matches-text": "Ocultar resultados adicionales",
@@ -97,7 +97,8 @@ ul.task-list li input[type="checkbox"] {
   <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
     <div class="pt-lg-2 mt-2 text-left sidebar-header">
       <a href="./index.html" class="sidebar-logo-link">
-      <img src="./images/logos_ine.svg" alt="" class="sidebar-logo py-0 d-lg-inline d-none">
+      <img src="./images/logos_ine.svg" alt="" class="sidebar-logo light-content py-0 d-lg-inline d-none">
+      <img src="./images/logos_ine.svg" alt="" class="sidebar-logo dark-content py-0 d-lg-inline d-none">
       </a>
       </div>
         <div class="mt-2 flex-shrink-0 align-items-center">
@@ -187,12 +188,6 @@ ul.task-list li input[type="checkbox"] {
 
 <div class="quarto-title-meta">
 
-    <div>
-    <div class="quarto-title-meta-heading">Autor/a</div>
-    <div class="quarto-title-meta-contents">
-             <p>Christian Ballejo </p>
-          </div>
-  </div>
     
   
     
@@ -204,102 +199,112 @@ ul.task-list li input[type="checkbox"] {
 
 
 <p><strong>I. ORIENTACIONES GENERALES</strong></p>
-<p>Fortalecimiento de capacidades del <em>Departamento de Epidemiología e Información Estratégica</em> del <strong>Hospital Hospital de Alta Complejidad El Calafate-SAMIC</strong>.</p>
+<p>Fortalecimiento de capacidades del Departamento de Virología del INEI-ANLIS</p>
 <p><strong>II. ELEMENTOS DEL DISEÑO</strong></p>
-<p>Nombre de la actividad: <strong>Introducción al lenguaje R aplicado a sistemas y servicios de salud</strong></p>
+<p>Nombre de la actividad: Introducción al lenguaje R + RStudio</p>
 <p><strong>2. Fundamentación</strong></p>
-<p>El Departamento de Epidemiología e Información Estratégica en Salud del Hospital Hospital de Alta Complejidad El Calafate-SAMIC (DEIES) trabaja procesando datos provenientes de diferentes fuentes digitales con el fin de resumir la información y presentarla en informes técnicos que faciliten la toma de decisiones.</p>
-<p>El adecuado manejo de los sistemas de información requiere de recursos humanos calificados en el procesamiento y análisis de datos, capaces de identificar necesidades y problemas relevantes en la materia, y de lidiar con la complejidad creciente de los sistemas de información en salud. A su vez, es necesario dar respuesta a la demanda global de actualización en el análisis de datos, en paralelo a los adelantos tecnológicos y a la modernización de los procesos de trabajo.</p>
-<p>Actualmente es necesario dotar con estas competencias a los integrantes del DEIES, estandarizar sus procesos de trabajo aumentando su eficiencia, facilitar el intercambio de información útil y su visualización ante requerimientos externos al departamento, y mantener organizadamente el cúmulo de datos que posee. También aplicar herramientas modernas como Quarto para la elaboración de informes técnicos y la creación de presentaciones gráficas interactivas en formato HTML, útiles para la construcción de salas de situación de salud, tanto coyunturales como de tendencias, así como también representar visualmente indicadores epidemiológicos con precisión y claridad, identificar tendencias críticas en salud pública de forma oportuna y optimizar el flujo de trabajo mediante procesos reproducibles y automatizados.</p>
-<p>La adopción de software gratuito y de código abierto como el lenguaje R y Quarto, un sistema de publicación técnica de código abierto, ofrece una solución moderna y eficiente para abordar las necesidades mencionadas. Estas herramientas permiten el tratamiento y manipulación de datos con alta reproducibilidad, una capacidad estadística avanzada y una forma de publicación versátil y adaptable a diversos contextos</p>
+<p>El departamento de Virologia del INEI requiere para el cumplimiento de sus funciones, ya sea como Laboratorios Nacionales de Referencia o como investigadores científicos, trabajar con datos con el fin de analizar y resumir la información y presentarla en informes técnicos, publicaciones científicas, reportes epidemiológicos, que, entre otros, contribuyan a la toma de decisiones en salud pública. El adecuado manejo de los sistemas de información requiere de recursos humanos calificados en el procesamiento y análisis de datos, capaces de identificar necesidades y problemas relevantes en la materia, y de lidiar con la complejidad creciente de los sistemas de información en salud. A su vez, es necesario dar respuesta a la demanda global de actualización en el análisis de datos, en paralelo a los adelantos tecnológicos y a la modernización de los procesos de trabajo. Actualmente es necesario dotar con estas competencias a los integrantes del Departamento de Virología, estandarizar sus procesos de trabajo aumentando su eficiencia, facilitar el intercambio de información útil y su visualización ante requerimientos externos al departamento, y mantener organizadamente el cúmulo de datos que genera y posee. También aplicar herramientas modernas como Quarto para la elaboración de informes técnicos o científicos, la creación de presentaciones gráficas interactivas en formato HTML, útiles para la construcción de salas de situación de salud, tanto coyunturales como de tendencias, así como también representar visualmente indicadores epidemiológicos y resultados científicos con precisión y claridad, identificar tendencias críticas en salud pública de forma oportuna y optimizar el flujo de trabajo mediante procesos reproducibles y automatizados. En este sentido, el Instituto Nacional de Epidemiología “Dr.&nbsp;Juan H. Jara” (INE) posee una amplia trayectoria en la formación de distintos profesionales de la salud pública en el área de epidemiología y ciencia de datos. Para continuar en este camino y dar respuesta a las demandas señaladas, se torna imprescindible plantear una capacitación que aborde los aspectos mencionados, promoviendo el uso de tecnologías innovadoras para el análisis y la gestión de información en salud. La adopción de software gratuito y de código abierto como el lenguaje R y Quarto, un sistema de publicación técnica de código abierto, ofrece una solución moderna y eficiente para abordar las necesidades mencionadas. Estas herramientas permiten el tratamiento y manipulación de datos con alta reproducibilidad, una capacidad estadística avanzada y una forma de publicación versátil y adaptable a diversos contextos.</p>
 <p><strong>3. Contribución esperada</strong></p>
-<p>Mejora en la estandarización de procesos de limpieza, procesamiento y análisis de las bases de datos generando así un flujo de intercambio de información dinámico y de calidad entre los y las agentes del DEIES , permitiendo la reproducibilidad y mejora de todos los procesos. Producción de informes técnicos, documentos estáticos y tableros dinámicos con información epidemiológica del Hospital</p>
+<p>La actividad busca fortalecer la capacidad de trabajo con datos, desde los procesos de limpieza, hasta el análisis y comunicación de resultados. Asimismo, se espera potenciar la producción de informes técnicos y científicos, documentos estáticos y tableros dinámicos con información epidemiológica y científica, facilitando la toma de decisiones basadas en datos precisos y actualizados</p>
 <p><strong>4. Perfil del participante y requisitos</strong></p>
-<p>Perfil del participante: Integrantes del DEIES que se desempeñen en áreas vinculadas al análisis de datos y que deseen adquirir conocimientos para el procesamiento y análisis de datos con R/ RStudio.</p>
-<p>Requisitos Obligatorios: competencias intermedias en gestión de archivos y software en sistema operativo Windows. Utilización básica de Microsoft Excel. Conocimientos básicos de estadística descriptiva.</p>
-<p>Deseables: conocimientos básicos-intermedios de bases de datos y de lectura de idioma inglés. Equipamiento necesario: Se recomienda contar con computadoras que tengan al menos procesadores I5, 8GB de Memoria RAM o superior y sistema operativo Windows 10/11 con conexión a internet, micrófono y parlantes para la realización de los sincrónicos y prácticas del curso.</p>
+<p>Perfil del participante: Integrantes del Departamento de Virología del INEI-ANLIS que deseen adquirir conocimientos para el procesamiento y análisis de datos con R/ RStudio.</p>
+<p>Requisitos</p>
+<p>Obligatorios: competencias intermedias en gestión de archivos y software en sistema operativo Windows. Utilización básica de Microsoft Excel. Conocimientos básicos de estadística descriptiva e inferencial.</p>
+<p>Deseables: conocimientos básicos-intermedios de bases de datos y de lectura de idioma inglés.</p>
+<p>Equipamiento necesario: Se recomienda contar con computadoras que tengan al menos procesadores I5, 8GB de Memoria RAM o superior y sistema operativo Windows 10/11 con conexión a internet, micrófono y parlantes para la realización de los sincrónicos y prácticas del curso.</p>
 <p><strong>5. Objetivos</strong></p>
 <p>Se espera que al finalizar este curso los participantes puedan:</p>
 <ul>
-<li><p>Comprender los fundamentos del lenguaje R</p></li>
-<li><p>Utilizar adecuadamente las herramientas de RStudio</p></li>
-<li><p>Importar y exportar bases de datos de diferentes formatos</p></li>
-<li><p>Entender y aplicar código de R base, tidyverse y otros paquetes específcos.</p></li>
-<li><p>Realizar análisis descriptivo utilizando funciones estadísticas</p></li>
-<li><p>Procesar y transformar datos utilizando funciones específicas</p></li>
-<li><p>Depurar, ordenar y unir tablas de datos.</p></li>
-<li><p>Realizar gráficos descriptivos</p></li>
-<li><p>Producir informes y tableros mediante Quarto (HTML, Word, etc)</p></li>
+<li>Comprender los fundamentos del lenguaje R</li>
+<li>Utilizar adecuadamente las herramientas de RStudio</li>
+<li>Importar y exportar bases de datos de diferentes formatos</li>
+<li>Entender y aplicar código de R base, tidyverse y otros paquetes específicos.</li>
+<li>Realizar análisis descriptivo utilizando funciones estadísticas</li>
+<li>Procesar y transformar datos utilizando funciones específicas</li>
+<li>Depurar, ordenar y unir tablas de datos.</li>
+<li>Realizar gráficos descriptivos</li>
+<li>Utilizar el lenguaje R para realizar análisis inferencial frecuentista paramétrico y no paramétrico.</li>
+<li>Producir informes y tableros mediante Quarto (HTML, Word, etc)</li>
 </ul>
 <p><strong>6. Contenidos</strong></p>
-<p><strong>Unidad 1: Instalación e introducción al lenguaje R</strong></p>
+<p>Unidad 1: Instalación e introducción al lenguaje R</p>
 <p>1.1 Descarga e instalación de R, Rtools y RStudio</p>
 <p>1.2 Introducción al lenguaje R: Scripts. Objetos. Funciones y argumentos. Librerías y dependencias. Tipos de datos. Estructuras de datos. Asignación. Errores y advertencias. Operadores. Tuberías. Filosofía tidyverse.</p>
 <p>1.3 Rstudio: Característica del entorno de desarrollo integrado. Proyectos. Consola. Memoria. Historial. Ayuda. Paquetes. Atajos de teclado</p>
 <p>1.4 Sintaxis en R. Scripts. Documentación. Hoja de estilo del lenguaje. Buenas prácticas</p>
 <p>1.5 Lectura de datos. Texto plano, Excel y otros formatos específicos.</p>
-<p><strong>Unidad 2: Procesamiento de datos</strong></p>
-<p>2.1 Gestión de datos con tidyverse. Paquete dplyr.</p>
-<p>2.2 Uniones de tablas de datos. Familia de join’s y bind’s</p>
-<p>2.3 Datos “tidy” y “no-tidy”. Pivoteos. Paquete tidyr.</p>
-<p><strong>Unidad 3: Exploración, diagnóstico y limpieza de datos</strong></p>
-<p>3.1 Exploración de tipos de datos y diagnóstico con paquetes skimr y dlookr</p>
-<p>3.2 Manejo de duplicados. Limpieza de datos</p>
-<p>3.3 Diagnóstico de valores perdidos (NA). Paquete naniar</p>
-<p>3.4 Exportación de datos limpios en diferentes formatos.</p>
-<p><strong>Unidad 4: Tratamiento de datos específicos</strong></p>
+<p>Unidad 2: Exploración, diagnóstico y limpieza de datos</p>
+<p>2.1 Estructura de datos. Valores perdidos (NA)</p>
+<p>2.2 Exploración y diagnóstico con paquetes skimr y dlookr</p>
+<p>2.3 Manejo de duplicados. Limpieza de datos</p>
+<p>2.4 Diagnóstico de valores perdidos. Paquete naniar</p>
+<p>2.5 Exportación de datos limpios en diferentes formatos.</p>
+<p>Unidad 3: Procesamiento de datos</p>
+<p>3.1 Gestión de datos con tidyverse. Paquete dplyr.</p>
+<p>3.2 Uniones de tablas de datos. Familia de join’s y bind’s</p>
+<p>3.3 Datos “tidy” y “no-tidy”. Pivoteos. Paquete tidyr.</p>
+<p>Unidad 4: Tratamiento de datos específicos</p>
 <p>4.1 Variables de tiempo. Librería Lubridate.</p>
 <p>4.2 Cadenas de caracteres y factores. Paquete stringr y forcats</p>
-<p><strong>Unidad 5: Estadísticos, operaciones múltiples y resúmenes</strong></p>
+<p>Unidad 5: Estadística descriptiva</p>
 <p>5.1 Cálculos: Proporciones, razones y tasas.</p>
 <p>5.2 Resumen estadístico. Medidas de tendencia central, posición y dispersión.</p>
 <p>5.3 Cálculos masivos. Función across() y rowwise()</p>
 <p>5.4 Paquete rstatix y gtsummary.</p>
-<p><strong>Unidad 6: Visualización de datos</strong></p>
-<p>6.1 Gramática de gráficos con ggplot2. Gráficos estadísticos.</p>
-<p>6.2 Capas geométricas de líneas, puntos, barras, histogramas y boxplots. Facetas</p>
-<p>6.3 Pirámides poblacionales. Curvas epidémicas y corredores endémicos.</p>
-<p>6.4 Exportación en diferentes formatos (raster y vectorial)</p>
-<p><strong>Unidad 7: Control de flujo y funciones</strong></p>
-<p>7.1 Bucles y condicionales</p>
-<p>7.2 Creación de funciones</p>
-<p><strong>Unidad 8: Comunicar con Quarto</strong></p>
+<p>Unidad 6: Inferencia estadística</p>
+<p>6.1 Estimaciones con intervalos de confianza.</p>
+<p>6.2 Test de bondad de ajuste. Normalidad. Homocedasticidad.</p>
+<p>6.3 Test de hipótesis paramétricas y no paramétricas.</p>
+<p>6.4 ANOVA. Test de comparaciones múltiples</p>
+<p>Unidad 7: Visualización de datos</p>
+<p>7.1 Gramática de gráficos con ggplot2. Gráficos estadísticos.</p>
+<p>7.2 Capas geométricas de líneas, puntos, barras, histogramas y boxplots. Facetas</p>
+<p>7.3 Pirámides poblacionales. Curvas epidémicas y corredores endémicos.</p>
+<p>7.4 Exportación en diferentes formatos (raster y vectorial)</p>
+<p>Unidad 8: Comunicar con RStudio</p>
 <p>8.1 Quarto. Paquete tinytext.</p>
 <p>8.2 Lenguaje de marcas markdown. Cabeceras YAML. Paquete flextable. Personalización estética</p>
 <p>8.3 Documentos estáticos PDF y Word</p>
 <p>8.4 Páginas HTML y tableros dinámicos</p>
 <p><strong>7. Estrategias metodológicas y recursos didácticos</strong></p>
-<p>Realización de trabajos prácticos (TP) semanales. Se utilizará de apoyo un aula virtual alojada dentro de la plataforma educativa moodle de ANLIS.</p>
-<p>Actividades de desarrollo: cada semana se abordará una unidad, en un primer encuentro sincrónico el docente explicará los puntos temáticos, en un segundo encuentro se llevará a cabo la práctica relacionada. Las clases teóricas y prácticas serán virtuales, de una duración aproximada máxima de dos horas, mediante Webex, que luego quedarán disponibles en la plataforma de aprendizaje. Cada unidad se acompañará de materiales de apoyo, prácticas y recursos en el aula virtual. Las actividades serán monitoreadas por el docente a través de la plataforma educativa, a la vez que ofrecerá apoyo a través de un foro de consultas.</p>
+<p>Realización de trabajos prácticos (TP) semanales.</p>
+<p>Se utilizará de apoyo un aula virtual alojada dentro de la plataforma educativa moodle de ANLIS. Actividades de desarrollo: cada semana se abordará una unidad, en un primer encuentro sincrónico el docente explicará los puntos temáticos, en un segundo encuentro se llevará a cabo la práctica relacionada. Las clases teóricas y prácticas serán virtuales, de una duración aproximada máxima de dos horas, mediante Zoom, que luego quedarán disponibles en la plataforma de aprendizaje. Cada unidad se acompañará de materiales de apoyo, prácticas y recursos en el aula virtual. Las actividades serán monitoreadas por el docente a través de la plataforma educativa, a la vez que ofrecerá apoyo a través de un foro de consultas.</p>
 <p><strong>8. Descripción de la modalidad</strong></p>
 <p>Virtual</p>
 <p><strong>9. Bibliografía para el participante</strong></p>
-<p>Hadley Wickham, Mine Çetinkaya-Rundel, and Garrett Grolemund (2023) R for Data Science (2e). Disponible en https://r4ds.hadley.nz/</p>
-<p>Hadley Wickham, Danielle Navarro, and Thomas Lin Pedersen (2023) ggplot2: Elegant graphics for data analysis (3e). https://ggplot2-book.org/</p>
-<p>Tipos de gráficos https://www.data-to-viz.com/</p>
-<p>Neale Batra y otros (2022) R para epidemiología aplicada y salud pública. https://epirhandbook.com/es/index.html</p>
+<p>Hadley Wickham, Mine Çetinkaya-Rundel, and Garrett Grolemund (2023) R for Data Science (2e). Disponible en <a href="https://r4ds.hadley.nz/" class="uri">https://r4ds.hadley.nz/</a></p>
+<p>Hadley Wickham, Danielle Navarro, and Thomas Lin Pedersen (2023) ggplot2: Elegant graphics for data analysis (3e). <a href="https://ggplot2-book.org/" class="uri">https://ggplot2-book.org/</a></p>
+<p>Tipos de gráficos <a href="https://www.data-to-viz.com/" class="uri">https://www.data-to-viz.com/</a></p>
+<p>Neale Batra y otros (2022) R para epidemiología aplicada y salud pública. <a href="https://epirhandbook.com/es/index.html" class="uri">https://epirhandbook.com/es/index.html</a></p>
 <p><strong>10. Evaluación de los aprendizajes</strong></p>
-<p>Se requerirá la entrega y aprobación de 7 trabajos prácticos. Los trabajos prácticos evaluativos parciales serán individuales y estarán relacionados a las unidades 2 a la 8. Se publicará una consigna en el aula virtual con puntos a resolver mediante código en lenguaje R que deberán entregar a la semana siguiente. La evaluación final consistirá en un trabajo práctico grupal que consistirá en procesar datos crudos y obtener un producto final con una serie de resultados a visualizar con tablas y gráficos. Los pasos a considerar en el trabajo práctico final son: Creación de un proyecto RStudio Lectura de datos Exploración y diagnóstico. Formateo y depuración de datos crudos a datos limpios Obtención de resúmenes descriptivos y creación de nuevas variables Elaboración de tablas y gráficos Creación de documento o tablero dinámico</p>
+<p>Se requerirá la entrega y aprobación de 7 trabajos prácticos.</p>
+<p>Los trabajos prácticos evaluativos parciales serán individuales y estarán relacionados a las unidades 1 a la 7. Se publicará una consigna en el aula virtual con puntos a resolver mediante código en lenguaje R que deberán entregar a la semana siguiente.</p>
+<p>La evaluación final consistirá en un trabajo práctico grupal que consistirá en procesar datos crudos y obtener un producto final con una serie de resultados a visualizar con tablas y gráficos. Los pasos a considerar en el trabajo práctico final son:</p>
+<p>Creación de un proyecto RStudio</p>
+<p>Lectura de datos</p>
+<p>Exploración y diagnóstico.</p>
+<p>Formateo y depuración de datos crudos a datos limpios</p>
+<p>Obtención de resúmenes descriptivos y creación de nuevas variables</p>
+<p>Elaboración de tablas y gráficos</p>
+<p>Creación de documento o tablero dinámico</p>
 <p><strong>11. Instrumentos para la evaluación</strong></p>
-<p>Instrumentos para la evaluación de los aprendizajes Registro de Asistencia de las/os participantes.</p>
-<p>Grilla para la corrección de TPs. Grilla para la corrección del TP grupal final Instrumentos para la evaluación de la actividad</p>
-<p>Encuesta de satisfacción de la actividad de carácter anónimo</p>
+<p>Instrumentos para la evaluación de los aprendizajes</p>
+<p>Registro de Asistencia de las/os participantes. Grilla para la corrección de TPs. Grilla para la corrección del TP grupal final Instrumentos para la evaluación de la actividad Encuesta de satisfacción de la actividad de carácter anónimo</p>
 <p><strong>12. Perfil del instructor</strong></p>
-<p>Especialista en Sistemas / Datos con orientación a la epidemiología y salud pública</p>
+<p>Especialista en Sistemas – Especialista de Datos con orientación a la epidemiología y salud pública</p>
 <p><strong>13. Requisitos de asistencia y aprobación</strong></p>
-<p>Para la aprobación se requiere asistencia en el 80% de las clases sincrónicas (teóricas y prácticas).</p>
-<p>Realización de la totalidad de TP´s planteados</p>
+<p>Para la aprobación se requiere asistencia en el 80% de las clases sincrónicas (teóricas y prácticas). Aprobación de la totalidad de TP´s planteados y del TP integrador final.</p>
 <p><strong>14. Duración en horas</strong></p>
-<p>El curso tendrá una duración total de 76 horas distribuidas a lo largo de 10 semanas.</p>
+<p>El curso tendrá una duración total de 80 horas distribuidas a lo largo de 10 semanas.</p>
 <p><strong>15. Detalle de la duración</strong></p>
-<p>32 horas sincrónicas distribuidas en 16 encuentros de 2 horas cada uno (2 veces por semana durante 8 semanas) y 44 horas asincrónicas, calculadas 4 horas por semana durante las 8 semanas del curso para la lectura del material (1 hora), la realización de los trabajos prácticos (3 horas) y la elaboración del TP integrador final (12 horas)</p>
+<p>32 horas sincrónicas distribuidas en 16 encuentros de 2 horas cada uno (2 veces por semana durante 8 semanas) y 48 horas asincrónicas, calculadas 4 horas por semana durante las 8 semanas del curso para la lectura del material (1 hora), la realización de los trabajos prácticos (3 horas) y la elaboración del TP integrador final (16 horas)</p>
 <p><strong>16. Lugar</strong></p>
-<p>Las clases virtuales se realizarán a través de la plataforma Webex. Se contará con un campus virtual para la publicación de material y recursos, consultas y entrega y corrección de TPs: http://capacitacion.anlis.gob.ar/</p>
+<p>Las clases virtuales se realizarán a través de la plataforma Zoom.</p>
+<p>Se contará con un campus virtual para la publicación de material y recursos, consultas y entrega y corrección de TPs: http://capacitacion.anlis.gob.ar/</p>
 <p><strong>17. Cronograma tentativo</strong></p>
-<p>Comienzo jueves 3 de abril y finalización viernes 6 de junio de 2025.</p>
-<p>Encuentros sincrónicos teóricos: los jueves 3, 10, 17, 24 de abril, 1 de mayo (se sube al aula grabado), 8, 15, 22 de mayo de 10 a 12 hs.</p>
-<p>Encuentros sincrónicos prácticos: los viernes 4, 11, 18, 25 de abril, 2, 9, 16, 23 de mayo de 9 a 11 hs.</p>
-<p>Práctico integrador final: del 23 de mayo al 6 de junio de 2025.</p>
+<p>Comienzo xx y finalización xx de 2026. Encuentros sincrónicos teóricos: Encuentros sincrónicos prácticos: Práctico integrador final:</p>
+<p><strong>18. Prestador</strong></p>
+<p>Christian Ballejo. Especialista de Datos del Servicio de Informática y Estadística del Departamento de Investigación Epidemiológica del Instituto Nacional de Epidemiología / Administración Nacional de Laboratorios e Institutos de Salud “Dr.&nbsp;Carlos G. Malbrán”.</p>
 
 
 
@@ -355,13 +360,14 @@ ul.task-list li input[type="checkbox"] {
       e.clearSelection();
     }
     const getTextToCopy = function(trigger) {
-        const codeEl = trigger.previousElementSibling.cloneNode(true);
-        for (const childEl of codeEl.children) {
-          if (isCodeAnnotation(childEl)) {
-            childEl.remove();
-          }
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
         }
-        return codeEl.innerText;
+      }
+      return codeEl.innerText;
     }
     const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
       text: getTextToCopy

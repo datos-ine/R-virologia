@@ -95,7 +95,7 @@ comentarios que no utilizarlos.
 
 Los comandos u órdenes elementales de R se denominan **funciones**. A algunas se las llama "integradas" porque están incluidas en el núcleo (R base) y sus nombres están reservados.
 
-Tambien podemos utilizar otras pertenecientes a librerías (paquetes) que se pueden instalar y activar.
+También podemos utilizar otras pertenecientes a librerías (paquetes) que se pueden instalar y activar.
 
 Toda función tiene un nombre y normalmente recibe argumentos o
 parámetros que deben ser escritos **entre paréntesis y separados por comas**. Incluso algunas de ellas que no tienen asociado ningún argumento necesitan finalizar con paréntesis `()` para ser entendidas como funciones.
@@ -864,7 +864,7 @@ Por lo tanto, nuestra tarea es hacer coincidir el formato de origen del archivo 
 
 Durante el proceso de importación, decíamos que las funciones analizan columna por columna a que tipo de dato pertenecen. Los posibles tipos de datos son: character, integer, numeric, double, logical y date/time.
 
-Por ejemplo, si tenemos un archivo con punto y coma de separador, vamos a utilizar **read_csv2()** y si queremos importar la tabla de datos que ofrece el INDEC para los datos de las Encuestas Nacionales de Factores de Riesgo utilizaremos **read_delim()** declarando **"\|"** dentro del argumento **delim =** (única función de la familia que la incorpora).
+Por ejemplo, si tenemos un archivo con punto y coma de separador, vamos a utilizar **read_csv2()** y si queremos importar la tabla de datos que ofrece el INDEC para los datos de las *Encuestas Nacionales de Factores de Riesgo* utilizaremos **read_delim()** declarando **"\|"** dentro del argumento **delim =** (única función de la familia que la incorpora).
 
 ## Agunas buenas prácticas de trabajo
 
