@@ -201,98 +201,6 @@ Supongamos que formamos intervalos a partir de todos los posibles valores de $\b
 
 Aproximadamente el **95%** de estos intervalos tendrán sus centros dentro del intervalo $\mu \pm  2\sigma$. Cada uno de estos intervalos, que se encuentran dentro de $\mu \pm  2\sigma$, puede contener el valor verdadero de $\mu$.
 
-```{r}
-#| echo: false
-# Gráfico
-g1 + 
-  # Región crítica 95% 
-  annotate(geom = "text",            
-           label = "(1 - alpha) == 0.95",           
-           parse = T,            
-           x = 0, y = .2) + 
-  
-  # x1   
-  geom_vline(xintercept = 1, 
-             lty = 3, 
-             color = pal[2]) +     
-  
-  # x3   
-  geom_vline(xintercept = 1.25, 
-             lty = 3, 
-             color = pal[3]) +      
-  
-  # x5   
-  geom_vline(xintercept = 1.75, 
-             lty = 3, 
-             color = pal[4]) +      
-  
-  # mu   
-  geom_vline(xintercept = 0, 
-             lty = 2) + 
-  
-  # x2   
-  geom_vline(xintercept = -1.5, 
-             lty = 3, 
-             color = pal[5]) +      
-  
-  # x4   
-  geom_vline(xintercept = -1.25, 
-             lty = 3, 
-             color = pal[6]) + 
-  
-  # Anotaciones texto   
-  annotate("segment", x = -1.96, xend = 0, y = .05,
-           arrow = arrow(type = "closed", 
-                         ends = "both",   
-                         length = unit(.1, "inches"))) +    
-  
-  annotate(geom = "text",            
-           label = expression(2*sigma*bar(x)),  
-           x = -1, y = .075) +         
-  
-  annotate("segment", x = 1.96, xend = 0, y = .05,     
-           arrow = arrow(type = "closed",                    
-                         ends = "both",                   
-                         length = unit(.1, "inches"))) +    
-  
-  annotate(geom = "text",            
-           label = expression(2*sigma*bar(x)),            
-           x = 1, y = .075) +       
-  
-  # Etiquetas   
-  scale_x_continuous(breaks = c(-Inf, -1.96, -1.5, -1.25, 0, 
-                                1, 1.25, 1.75, 1.96, Inf),   
-                     labels = c("",
-                                expression(alpha/2),  
-                                expression(bar(x)[2]),  
-                                expression(bar(x)[4]),  
-                                expression(mu),  
-                                expression(bar(x)[1]),
-                                expression(bar(x)[3]),  
-                                expression(bar(x)[5]),
-                                expression(alpha/2), 
-                                "")) +      
-  
-  # Títulos   
-  labs(x = expression(bar(x)), y = "")
-```
-
-Finalmente, y basándonos en las propiedades de la distribución Normal, se puede deducir la expresión del IC:
-
-$$ 
-P(Z_{\alpha/2} < Z_{1-\alpha/2)} = 1 - \alpha 
-$$ Reemplazando $Z$:
-
-$$ 
-P(Z_{\alpha/2} < \frac{\bar{x} - \mu}{\frac{\sigma}{\sqrt{n}}} < Z_{(1-\alpha/2)}) = 1-\alpha   
-$$
-
-Reordenando, la expresión del IC para la media queda:
-
-$$ 
-\bar{x} - Z_{\alpha/2}\sqrt{\frac{\sigma^2}{n}} < \mu < \bar{x} + Z_{\alpha/2}\frac{\sigma^2}{n}   
-$$
-
 ### ¿Cómo se interpreta un IC?
 
 Si hubiésemos tomado múltiples muestras del mismo tamaño de la población, en al menos $100 * (1 − \alpha)\%$ de las ocasiones el intervalo calculado contendría el parámetro poblacional real. Es decir, un IC al 95% implica que, a largo plazo, el 95% de los intervalos obtenidos a partir de muestras repetidas incluirán el valor verdadero del parámetro.
@@ -339,9 +247,47 @@ Para profundizar y visualizar simulaciones sobre estos conceptos, pueden explora
 ➡️ [**Viendo la teoría: Una introducción visual a probabilidad y estadística**](https://seeing-theory.brown.edu/frequentist-inference/es.html#section2)
 
 
+En el lenguaje R, además de calcular los intervalos de confianza por fórmula o mediante métodos bootstrap, existen varios paquetes que contemplan funciones ya creadas. Uno de ellos se denomina **DescTools** (su sitio en <https://andrisignorell.github.io/DescTools/>), que entre sus variadas funciones posee a un grupo con nombres finalizados en **CI**, para el cálculo de los intervalos de confianza, como **MeanCI()** para IC de medias, **MedianCI()** para IC de medianas, **BinomCI()** para IC de proporciones binomiales, etc 
+
+```{r}
+#| message: false
+#| warning: false
+#| echo: false
+
+library(readxl)
+library(tidyverse)
+library(DescTools)
+
+
+base <- read_excel("datos/base2023r.xlsx")
+```
+
+Estas funciones no son compatibles con tidyverse y pueden ejecutarse a la forma básica de R:
+
+```{r}
+MeanCI(base$EDAD_DIAGNOSTICO)
+```
+Por defecto, el intervalo de confianza es del 95%, pero podemos cambiarlo mediante el argumento **conf.level**.
+
+```{r}
+MeanCI(base$EDAD_DIAGNOSTICO, conf.level = 0.99)
+```
+Una forma de implementarla dentro de una estructura tidyverse es:
+
+```{r}
+base |> 
+  summarise(
+    media = mean(EDAD_DIAGNOSTICO),
+    ic_lower = MeanCI(datos$EDAD_DIAGNOSTICO)[2],
+    ic_upper = MeanCI(datos$EDAD_DIAGNOSTICO)[3]
+  )
+```
+
+Situaciones similares se dan en las otras funciones del mismo paquete para cálculo de intervalos de confianza de diferentes estimadores. 
+
 ## Normalidad y homocedasticidad
 
-Las características fundamentales a la hora de decidir si utilizaremos métodos paramétricos o no paramétricos para la inferencia estadística, es que los datos se ajusten a una distribución normal y conocer si tienen una dispersión homogénea o heterogénea. 
+Las características fundamentales a la hora de decidir si utilizaremos métodos paramétricos o no paramétricos para la inferencia estadística, es que los datos se aproximen a una distribución *normal* y conocer si tienen una dispersión homogénea o heterogénea. 
 
 ## Normalidad
 
@@ -359,55 +305,44 @@ El gráfico por excelencia para evaluar normalidad es el Q-Q Plot que consiste e
 
 Cuanto más se aproximen los datos a una normal, más alineados están los puntos entorno a la recta.
 
-En el lenguaje R hay varios paquetes que tienen funciones para construirlos:
-
-```{r}
-library(dlookr)
-library(ggpubr)
-library(moments)
-library(nortest)
-library(car)
-library(tidyverse)
-```
-
-Cargamos datos de ejemplo:
+En el lenguaje R hay varios paquetes que tienen funciones para construirlos. Vamos a mostrar algunos interesantes y para esto importaremos algunos datos simulados:
 
 ```{r}
 datos <- read_csv2("datos/datos_normalidad.csv")
 ```
 
-Evaluación gráfica de normalidad usando la función `plot_normality()` del paquete `dlookr`:
+Una evaluación gráfica de normalidad rápida la podemos conseguir usando la función `plot_normality()` del paquete `dlookr`:
 
 ```{r}
+library(dlookr)
+
 datos |> 
   plot_normality(peso) 
 ```
 
 A simple vista observamos que los puntos de la variable `peso` *se ajustan bastante bien a la recta*.
 
-También podemos generar el qqplot usando las funciones `geom_qq_line()` y `geom_qq()` de `ggplot2`:
+La gráfica trae además de un histograma de los valores de la variable, dos más con transformaciones estándares de logaritmo y raíz cuadrada.
 
-```{r}
-datos |> 
-  ggplot(mapping = aes(sample = peso)) +
-  geom_qq_line() +
-  geom_qq() +
-  theme_minimal()
-```
+Esta situación se presenta dado que en algunas situaciones permiten que los datos se aproximen a la distribución normal y podamos utilizar métodos paramétricos.
 
 La función `ggqqplot()` del paquete `ggpubr` [@ggpubr] nos permite agregar intervalos de confianza (zona gris alrededor de la recta) que nos orienta mejor sobre "donde caen" los puntos de la variable analizada:
 
 ```{r}
-datos$peso |> 
-  ggqqplot()
+library(ggpubr)
+
+datos |>  
+  ggqqplot(x = "peso")
 ```
 
 Un ejemplo donde la variable parece no cumplir con el supuesto de normalidad en estos datos de prueba es `edad`:
 
 ```{r}
-datos$edad |> 
-  ggqqplot()
+datos |> 
+  ggqqplot(x = "edad")
 ```
+
+Vemos claramente que los puntos de los quantiles se salen de la línea teórica y su zona de confianza y parecen tener otra distribución diferente a la normal.  
 
 ### Métodos analíticos
 
@@ -427,6 +362,8 @@ La curtosis mide el grado de agudeza o achatamiento de una distribución con rel
 El paquete `moments` [@moments] posee algunas funciones interesantes para analizar medidas de forma, como el estimador de Pearson para curtosis:
 
 ```{r}
+library(moments)
+
 datos |> 
   summarise(kurtosis_edad = kurtosis(edad, na.rm = T),
             kurtosis_peso = kurtosis(peso, na.rm = T))
@@ -460,7 +397,7 @@ Los histogramas que se acerquen a la clásica "campana de Gauss" tendrán curtos
 
 Una prueba de bondad de ajuste permite testear la hipótesis de que una variable aleatoria sigue cierta distribución de probabilidad y se utiliza en situaciones donde se requiere comparar una distribución observada con una teórica o hipotética.
 
-El mecanismo es idéntico a cualquier test de hipótesis salvo que aquí esperamos no descartar la hipótesis nula de igualdad, por lo que obtener valores *p* de probabilidad mayores a 0,05 es signo de que la distribución de la variable analizada se ajusta.
+El mecanismo es idéntico a cualquier test de hipótesis salvo que aquí esperamos no descartar la hipótesis nula de igualdad, por lo que obtener valores *p* de probabilidad mayores a 0,05 es signo de que la distribución de la variable analizada se ajusta bien.
 
 A continuación, presentaremos los test de hipótesis más utilizados para analizar normalidad.
 
@@ -468,7 +405,7 @@ A continuación, presentaremos los test de hipótesis más utilizados para anali
 
 Lleva el nombre de sus [autores](https://es.wikipedia.org/wiki/Test_de_Shapiro%E2%80%93Wilk) (Samuel Shapiro y Martin Wilk) y es usado preferentemente para muestras de hasta 50 observaciones.
 
-La función se encuentra desarrollada en el paquete `stats` y se llama `shapiro.test()`:
+La función se encuentra desarrollada en el paquete `stats`, se llama `shapiro.test()` y utiliza sintaxis R base:
 
 ```{r}
 shapiro.test(datos$edad)
@@ -490,11 +427,13 @@ El test asume que se conoce la media y varianza poblacional, lo que en la mayor�
 
 El test de [**Lilliefors**](https://es.wikipedia.org/wiki/Prueba_de_Lilliefors) asume que la media y varianza son desconocidas y está especialmente desarrollado para contrastar la normalidad.
 
-Es la alternativa al test de Shapiro-Wilk cuando el número de observaciones es mayor de 50.
+Es la alternativa al test de Shapiro-Wilk recomendada cuando el número de observaciones es mayor de 50.
 
 La función `lillie.test()` del paquete `nortest` [@nortest] permite aplicarlo:
 
 ```{r}
+library(nortest)
+
 lillie.test(datos$edad)
 
 lillie.test(datos$peso)
@@ -538,7 +477,7 @@ La diferencia entre ellos es el estadístico de centralidad que utilizan:
 
 Este test es un contraste de la razón de varianzas, mediante el estadístico F que sigue una distribución F-Snedecor.
 
-Se utiliza cuando las distribuciones se aproximan a la "normal" y en R base se la encuentra en la función `var.test()` que permite utilizar la sintaxis de fórmula:
+Se utiliza cuando las distribuciones se aproximan a la "normal" y en R base se la encuentra en la función `var.test()`, incluida en R base, que permite utilizar la sintaxis de fórmula:
 
 ```{r}
 #| eval: false
@@ -555,7 +494,7 @@ Comparamos las varianzas de la variable peso entre el grupo de mujeres y hombres
 
 ### Test de Bartlett
 
-Este test se puede utilizar como alternativa al F-test, sobre todo porque nos permite aplicarlo cuando tenemos más de 2 grupos de comparación. Al igual que el anterior es sensible a las desviaciones de la normalidad.
+Este test se puede utilizar como alternativa al F-test, sobre todo porque nos permite aplicarlo también cuando tenemos *más de 2 grupos de comparación*. Al igual que el anterior es sensible a las desviaciones de la normalidad.
 
 La función en R `base` es `bartlett.test()` y también se pueden usar argumentos tipo fórmula:
 
@@ -572,7 +511,11 @@ El test de Levene sirve para comparar la varianza de 2 o más grupos pero ademá
 La función `leveneTest()` se encuentra disponible en el paquete `car`. La vemos aplicada sobre `peso` para los diferentes grupos de `sexo` y utilizando la **media** como estadístico de centralidad, dado que la distribución de `peso` se aproxima a la normal.
 
 ```{r}
-leveneTest(y = peso ~ sexo, data = datos, center = "mean")
+library(car)
+
+leveneTest(y = peso ~ sexo, 
+           data = datos, 
+           center = "mean")
 ```
 
 La conclusión es la misma que la encontrada anteriormente.
@@ -580,9 +523,13 @@ La conclusión es la misma que la encontrada anteriormente.
 Ahora vamos aplicarla sobre la variable `edad`, de la que habíamos descartado "normalidad". Lo hacemos usando el argumento `center` con `"mean"` (media) y con `"median"` (mediana).
 
 ```{r}
-leveneTest(y = edad ~ sexo, data = datos, center = "mean")
+leveneTest(y = edad ~ sexo, 
+           data = datos, 
+           center = "mean")
 
-leveneTest(y = edad ~ sexo, data = datos, center = "median")
+leveneTest(y = edad ~ sexo, 
+           data = datos, 
+           center = "median")
 ```
 
 Los resultados son diferentes. Mientras con el centrado en la media nos da un *p* valor significativo menor a 0,05 con el centrado en la mediana no nos permite descartar homocedasticidad.
@@ -616,9 +563,7 @@ Los contrastes de hipótesis se realizan generalmente bajo las siguientes condic
 
 -   Se extrae una muestra aleatoria de dicha población.
 
-El conjunto de estas técnicas de inferencia se denomina **técnicas paramétricas**. Sin embargo, existen otros métodos, denominados **técnicas no paramétricas** o contrastes de distribuciones libres, que no requieren estimar parámetros ni suponer una ley de probabilidad específica para la población. Algunos de estos métodos serán desarrollados más adelante en este módulo.
-
-Es importante señalar que los contrastes de hipótesis se utilizan no solo en estudios transversales, sino con mayor frecuencia en diseños en los que *a priori* existen grupos de comparación, como en estudios de casos y controles, cohortes, ensayos clínicos, entre otros. Desarrollaremos aquí la teoría que los sustenta y los utilizaremos a lo largo de todo el curso.
+El conjunto de estas técnicas de inferencia se denomina **técnicas paramétricas**. Sin embargo, existen otros métodos, denominados **técnicas no paramétricas** o contrastes de distribuciones libres, que no requieren estimar parámetros ni suponer una ley de probabilidad específica para la población. Algunos de estos métodos serán desarrollados más adelante en esta unidad.
 
 ### Estructura del test de hipótesis
 
@@ -908,194 +853,17 @@ Hemos discutido el significado de $\alpha$ (error Tipo I); ahora veamos qué imp
 
 A diferencia de $\alpha$ que se fija en un único valor y es determinado por el investigador, $\beta$ varía según el valor real del parámetro en estudio. Por ejemplo, si consideramos la hipótesis nula $H_0: \mu_1 - \mu_2 = 0$, habrá un valor de $\beta$ para cada posible diferencia entre $\mu_1$​ y $\mu_2$ cuando el valor real no sea cero. La probabilidad de detectar correctamente una diferencia real - es decir, de obtener un resultado estadísticamente significativo cuando la diferencia existe- se denomina **potencia estadística** y se expresa como $1-\beta$.
 
-Los contrastes de hipótesis no son exclusivos de los estudios transversales; por el contrario, su uso es más común en estudios analíticos que involucran grupos de comparación, tales como estudios de casos y controles, cohortes o ensayos clínicos. Por ejemplo, en un ensayo clínico que evalúa dos tratamientos, la potencia estadística refleja la capacidad del estudio para identificar un efecto real del tratamiento.
-
 Es deseable que la potencia del estudio sea lo mayor posible, ya que esto incrementa la probabilidad de detectar diferencias verdaderas. Sin embargo, no es posible minimizar ambos errores simultáneamente ya que al disminuir $\alpha$ (es decir, al ser más exigentes para rechazar la $H_0$​), $\beta$ tiende a aumentar, y viceversa. En los contrastes, la hipótesis privilegiada es $H_0$ que solo será rechazada cuando la evidencia de su falsedad supere el umbral del $1-\alpha$. Esto significa que, a menos que la evidencia en contra de $H_0$ sea muy significativa, se opta por no rechazarla. Lo ideal a la hora de definir un test es encontrar un compromiso entre $\beta$ y $\alpha$.
 
-```{r}
-#| echo: false
-tibble(x = c(-6, 6)) |> 
-  
-  ggplot(mapping = aes(x = x)) +
-  
-  # Curva normal H0
-  stat_function(fun = dnorm, 
-                size = 1, aes(color = "H0")) +
-  
-  # Curva normal H1
-  stat_function(fun = dnorm, args = list(mean = 2, sd = 1),
-                size = 1, aes(color = "H1")) +
-  
-  # Línea vertical
-  geom_vline(xintercept = 1, lty = 2) +
-  
-  # Anotación de alfa
-  annotate("text", 
-           x = 3, 
-           y = 0.05, 
-           label = "paste('Riesgo ', alpha)", 
-           parse = T) +
-  
-  annotate(geom = "segment",
-            arrow = arrow(type = "closed",
-                          length = unit(.1, "inches")),
-           x = 3, xend = 2,
-           y = 0.045, yend = 0.01) +
- 
-  # Anotación de beta
-  annotate(geom = "text",
-           x = -1, y = 0.05,
-           label = "paste('Riesgo ', beta)",
-           parse = T) +
-  
-   annotate(geom = "segment",
-            arrow = arrow(type = "closed",
-                          length = unit(.1, "inches")),
-           x = -1, xend = 0,
-           y = 0.045, yend = 0.01) +
-  
-  # Etiquetas
-  annotate(geom = "text",
-           x = 5, y = 0.3,
-           label = "Test de una sola cola: \n B > A \n (Z = 1.645)") +
-  
-  # Breaks eje X
-  scale_x_continuous(breaks = c(-Inf, 0, 2, Inf),
-                     labels = c("", 
-                                expression(1 - alpha),
-                                expression(1 - beta),
-                                "")) +
-  # Colores
-  scico::scale_color_scico_d(palette = "tokyo", end = .75) +
-  
-  # Tema
-  labs(x = NULL, y = NULL) +
-  theme_minimal() +
-  theme(axis.text.x = element_text(face = "bold", size = 11),
-        legend.title = element_blank())
-```
-
-Mientras que para tests bilaterales:
-
-```{r}
-#| echo: false
-tibble(x = c(-7, 7)) |> 
-  
-  ggplot(mapping = aes(x = x)) +
-  
-  # Curva normal H0
-  stat_function(fun = dnorm, 
-                size = 1, aes(color = "H0")) +
-  
-  # Curva normal H1
-  stat_function(fun = dnorm, args = list(mean = 3, sd = 1),
-                size = 1, aes(color = "H1")) +
-  
-  stat_function(fun = dnorm, args = list(mean = -3, sd = 1),
-                size = 1, aes(color = "H1")) +
-  
-  # Área de superposición entre H0 y H1 (media = 3)
-  stat_function(
-    fun = function(x) {
-      pmin(dnorm(x), dnorm(x, mean = 3, sd = 1))
-    },
-    geom = "area",
-    fill = pal[7], alpha = 0.5) +
-  
-  # Área de superposición entre H0 y H1 (media = -3)
-  stat_function(
-    fun = function(x) {
-      pmin(dnorm(x), dnorm(x, mean = -3, sd = 1))
-    },
-    geom = "area",
-    fill = pal[7], alpha = 0.5) +
-  
-  # Líneas verticales
-  geom_vline(xintercept = -2.5, lty = 2) +
-  
-  geom_vline(xintercept = 2.5, lty = 2) +
-  
-  # Anotación de beta izq
-  annotate(geom = "text",
-           x = -4, y = 0.05,
-           label = "paste('Riesgo ', beta)",
-           parse = T) +
-
-   annotate(geom = "segment",
-            arrow = arrow(type = "closed",
-                          length = unit(.1, "inches")),
-           x = -3, xend = -1,
-           y = 0.045, yend = 0.01) +
-  
-  # Anotación de beta der
-  annotate(geom = "text",
-           x = 4, y = 0.05,
-           label = "paste('Riesgo ', beta)",
-           parse = T) +
-
-   annotate(geom = "segment",
-            arrow = arrow(type = "closed",
-                          length = unit(.1, "inches")),
-           x = 3, xend = 1,
-           y = 0.045, yend = 0.01) +
-  
-  # Anotación de alfa izq
-  annotate(geom = "text",
-           x = -4, y = 0.025,
-           label = "paste('Riesgo ', alpha)",
-           parse = T) +
-
-   annotate(geom = "segment",
-            arrow = arrow(type = "closed",
-                          length = unit(.1, "inches")),
-           x = -3.5, xend = -2.75,
-           y = 0.02, yend = 0.01) +
-  
-  # Anotación de alfa der
-  annotate(geom = "text",
-           x = 4, y = 0.025,
-           label = "paste('Riesgo ', alpha)",
-           parse = T) +
-
-   annotate(geom = "segment",
-            arrow = arrow(type = "closed",
-                          length = unit(.1, "inches")),
-           x = 3.5, xend = 2.75,
-           y = 0.02, yend = 0.01) +
-
-  # Etiquetas
-  annotate(geom = "text",
-           x = 5, y = 0.3,
-           label = "B > A \n (Z = 1.96)") +
-  
-  annotate(geom = "text",
-           x = -5, y = 0.3,
-           label = "B < A \n (Z = -1.96)") +
-
-  # Breaks eje X
-  scale_x_continuous(breaks = c(-Inf, -3, 3, Inf),
-                     labels = c("",
-                                expression(alpha/2 == 0.025),
-                                expression(alpha/2 == 0.025),
-                                "")) +
-  # Colores
-  scico::scale_color_scico_d(palette = "tokyo", end = .75) +
-  
-  # Tema
-  labs(x = NULL, y = NULL) +
-  theme_minimal() +
-  theme(axis.text.x = element_text(face = "bold", size = 11),
-        legend.title = element_blank())
-```
-
 Finalmente, podemos decir que la potencia estadística ofrece un segundo mecanismo de seguridad en un contraste de hipótesis. Es como contar con una protección adicional en la toma de decisiones: si solo dispusiéramos del nivel de significación ($\alpha$), tendríamos menos garantías. Al incorporar la potencia ($1-\beta$) agregamos un segundo control. Por ello, en un contraste no basta con tener un valor *p* pequeño; también se necesita una potencia alta, que en la práctica suele fijarse en un 80% (es decir, $1 - \beta = 0.8$).\
+
 Por otro lado, cuando existe una diferencia real —o un efecto real de una terapia, o una verdadera diferencia entre dos fármacos—, la **magnitud** de ese efecto influye en la facilidad para detectarlo. Los efectos grandes son más fáciles de identificar que los pequeños. Para estimar la potencia de una prueba, debemos especificar el **efecto mínimo** que valga la pena identificar.
 
 La potencia de un test estadístico depende de tres factores que actúan de manera interrelacionada:
 
 -   El **riesgo de error** que se tolerará al rechazar la hipótesis de ausencia de efecto o diferencia ($\alpha$).
 
--   La **dimensión de la diferencia** que se desea identificar en relación con la variabilidad en las poblaciones.
+-   La **dimensión de la diferencia** que se desea identificar en relación con la variabilidad en las poblaciones. (tamaño del efecto)
 
 -   El **tamaño de la muestra**.
 
@@ -1128,7 +896,7 @@ Donde:
 
 La función se ejecuta incorporando todos los argumentos obligatorios (`d`,`n`, `power` y `sig.level`) menos el que se quiere calcular. En ese caso se iguala a `NULL` o se omite.
 
-Supongamos que queremos conocer el tamaño de la muestra para detectar diferencias en la media de la hemoglobina glicosilada entre dos grupos de pacientes con tratamientos de control de la diabetes distintos. Aceptamos un nivel de efecto convencional de una pequeña desviación ($d_{Cohen} = 0.2$), una potencia del 80% y una significación habitual de 0,05.
+Supongamos que queremos conocer el tamaño de la muestra para detectar diferencias en la media de la hemoglobina glicosilada (HbA1c) entre dos grupos de pacientes con tratamientos de control de la diabetes distintos. Aceptamos un nivel de efecto convencional de una pequeña desviación ($d_{Cohen} = 0.2$), una potencia del 80% y una significación habitual de 0,05.
 
 Cargamos el paquete requerido:
 
@@ -1368,9 +1136,61 @@ digraph G {
 }
 ```
 
+Hasta aquí la parte teórica de las pruebas de hipótesis. Para su aplicación en R podríamos utilizar muchas de las funciones que el lenguaje trae originalmente pero vamos a hacerlo con el paquete **rstatix** que presentamos en la unidad anterior, dado que presenta funciones que hacen lo mismo pero con compatibilidad tidyverse.
+
+Los nombres de sus funciones son similares a las originales pero en lugar de un punto utilizan un guión bajo como separador, por ejemplo la clásica `t.test()` se reemplaza por `t_test()` y por supuesto todos sus inputs y outputs son dataframes.
+
+Veamos algunos ejemplos. Tomemos la variable **peso** que anteriormente verificamos que tenia una distribución aproximadamente normal.
+
+Si queremos hacer una comparación de su media con una media estándar conocida (o teórica/hipotética), por ejemplo mu = 70,5 kgrs, ejecutamos:
+
+```{r}
+library(rstatix)
+
+datos  |>   
+  t_test(peso ~ 1, mu = 70.5)
+```
+
+El p-valor es de 0,266 y por lo tanto no rechazamos la hipotesis nula de igualdad. Observemos que el objeto que devuelve la función es un dataframe con 7 columnas, de las que destacan n (cantidad de observaciones de la muestra), statitics (estadístico de prueba -en este caso la $t$ de Student-), df (los grados de libertad) y p (el valor de probabilidad). Y que el argumento principal de las funciones utilizan el formato fórmula. 
+
+Lo mismo, pero usando dos muestras de peso (una de mujeres y otra de varones), lo que sería una comparación de dos medias de muestras independientes:
+
+```{r}
+datos |> 
+  t_test(peso ~ sexo, 
+         paired = FALSE,    # independientes
+         var.equal = TRUE) 
+```
+
+Agregamos el argumento `var.equal = TRUE` porque vimos anteriormente que las varianzas de la variable peso en los dos grupos de sexo eran iguales.
+
+El test no permite rechazar la hipótesis nula de que las medias de los pesos entre mujeres y varones son iguales. (p valor = 0,952)
+
+Si en cambio tuviésemos que trabajar con la variable **edad**, ésta no se aproximaba a la normal, por lo que deberíamos utilizar una prueba de hipótesis no paramétrica. En este caso, la prueba **U de Mann-Whitney**, conocida en el ámbito de R como prueba de **Wilcoxon** o como prueba de **suma de rangos de Wilcoxon para dos muestras independientes**  (es una alternativa no paramétrica a la prueba t para comparar dos medias). Se recomienda especialmente cuando los datos no siguen una distribución normal.
+
+Al igual que la prueba t, la prueba de Wilcoxon se presenta en dos versiones: de una muestra y de dos muestras. Se utilizan prácticamente en las mismas situaciones que las pruebas t correspondientes. 
+
+```{r}
+datos |> 
+  wilcox_test(edad ~ sexo, 
+         paired = FALSE)    # independientes
+```
+
+El test de Wilcoxon nos informa que no hay elementos suficientes para decir que las distribuciones (o sus medianas específicamente) de edad según sexo son diferentes (p = 0,587).
+
+Las otras funciones implementadas por el paquete usan sintaxis similares y devuelven esquemas de resultados compatibles con lo mostrado. Entre las más utilizadas, encontramos:
+
+- `sign_test()` para prueba de signos (no paramétrico - muestras pareadas)
+
+- `prop_test()` para pruebas de proporciones
+
+- `chisq_test()` para prueba de chi cuadrado
+
+- `fisher_test()` para prueba exacta de Fisher
+
 ## ANOVA
 
-El análisis de varianza (ANOVA) es una extensión del modelo lineal general que se utiliza para comparar las medias de una variable dependiente continua ($Y$) entre diferentes niveles de una variable explicativa categórica ($X$), que debe tener al menos tres niveles.
+El *análisis de varianza* (ANOVA) es una extensión del modelo lineal general que se utiliza para comparar las medias de una variable dependiente continua ($Y$) entre diferentes niveles de una variable explicativa categórica ($X$), que debe tener al menos tres niveles.
 
 La hipótesis nula ($H_0$) del test estadístico establece que las medias de la variable dependiente son iguales en todos los grupos, mientras que la hipótesis alternativa ($H_1$) plantea que al menos dos medias difieren significativamente:
 
@@ -1385,6 +1205,105 @@ La variabilidad total se descompone en dos componentes:
 -   **Intervarianza (SSB):** Variabilidad entre los grupos.
 
 -   **Intravarianza (SSE):** Variabilidad dentro de los grupos.
+
+```{r}
+#| echo: false
+
+library(patchwork)
+
+# Función para crear datos de distribuciones normales
+create_distributions <- function(means, sd, n = 1000) {
+  data <- data.frame()
+  for (i in seq_along(means)) {
+    temp <- data.frame(
+      value = rnorm(n, mean = means[i], sd = sd),
+      group = paste0("Group ", i)
+    )
+    data <- rbind(data, temp)
+  }
+  return(data)
+}
+
+# Panel A: Between-group variation (mayor diferencia entre medias, menor SD)
+data_between <- create_distributions(means = c(5, 7.5, 10), sd = 1, n = 1000)
+
+plot_a <- ggplot(data_between, aes(x = value, color = group, fill = group)) +
+  geom_density(alpha = 0.1, linewidth = 1) +
+  # Líneas verticales para las medias
+  geom_vline(xintercept = 5, linetype = "dashed", color = "#0072B2", linewidth = 0.5) +
+  geom_vline(xintercept = 7.5, linetype = "dashed", color = "#E69F00", linewidth = 0.5) +
+  geom_vline(xintercept = 10, linetype = "dashed", color = "#999999", linewidth = 0.5) +
+  # Flechas entre grupos
+  annotate("segment", x = 5, xend = 7.5, y = 0.35, yend = 0.35,
+           arrow = arrow(ends = "both", length = unit(0.15, "cm")), 
+           linewidth = 0.5, color = "black") +
+  annotate("segment", x = 7.5, xend = 10, y = 0.35, yend = 0.35,
+           arrow = arrow(ends = "both", length = unit(0.15, "cm")), 
+           linewidth = 0.5, color = "black") +
+  scale_color_manual(values = c("#0072B2", "#E69F00", "#999999")) +
+  scale_fill_manual(values = c("#0072B2", "#E69F00", "#999999")) +
+  labs(
+    title = "Variación entre grupos",
+    subtitle = "(es decir, diferencias entre las medias de los grupos)",
+    x = "Valor",
+    y = NULL
+  ) +
+  theme_minimal() +
+  theme(
+    legend.position = "none",
+    plot.title = element_text(color = "#D55E00", face = "bold", size = 12),
+    plot.subtitle = element_text(size = 9),
+    panel.grid = element_blank(),
+    axis.text.y = element_blank(),
+    axis.ticks.y = element_blank()
+  ) +
+  coord_cartesian(xlim = c(2, 13), ylim = c(0, 0.5))
+
+# Panel B: Within-group variation (medias similares, mayor SD)
+data_within <- create_distributions(means = c(5, 7.5, 10), sd = 1, n = 1000)
+
+plot_b <- ggplot(data_within, aes(x = value, color = group, fill = group)) +
+  geom_density(alpha = 0.1, linewidth = 1) +
+  # Líneas verticales para las medias
+  geom_vline(xintercept = 5, linetype = "dashed", color = "#0072B2", linewidth = 0.5) +
+  geom_vline(xintercept = 7.5, linetype = "dashed", color = "#E69F00", linewidth = 0.5) +
+  geom_vline(xintercept = 10, linetype = "dashed", color = "#999999", linewidth = 0.5) +
+  # Flechas dentro de cada grupo
+  annotate("segment", x = 4, xend = 6, y = 0.2, yend = 0.2,
+           arrow = arrow(ends = "both", length = unit(0.15, "cm")), 
+           linewidth = 0.5, color = "black") +
+  annotate("segment", x = 6.5, xend = 8.5, y = 0.2, yend = 0.2,
+           arrow = arrow(ends = "both", length = unit(0.15, "cm")), 
+           linewidth = 0.5, color = "black") +
+  annotate("segment", x = 9, xend = 11, y = 0.2, yend = 0.2,
+           arrow = arrow(ends = "both", length = unit(0.15, "cm")), 
+           linewidth = 0.5, color = "black") +
+  scale_color_manual(values = c("#0072B2", "#E69F00", "#999999")) +
+  scale_fill_manual(values = c("#0072B2", "#E69F00", "#999999")) +
+  labs(
+    title = "Variación dentro del grupo",
+    subtitle = "(es decir, variación dentro de cada grupo)",
+    x = "Valor",
+    y = NULL
+  ) +
+  theme_minimal() +
+  theme(
+    legend.position = "none",
+    plot.title = element_text(color = "#D55E00", face = "bold", size = 12),
+    plot.subtitle = element_text(size = 9),
+    panel.grid = element_blank(),
+    axis.text.y = element_blank(),
+    axis.ticks.y = element_blank()
+  ) +
+  coord_cartesian(xlim = c(2, 13), ylim = c(0, 0.5))
+
+# Combinar los gráficos con patchwork
+plot_a + plot_b + 
+  plot_annotation(tag_levels = 'A') &
+  theme(plot.tag = element_text(face = "bold", size = 14))
+
+```
+
 
 El estadístico $F$ del ANOVA, que sigue una distribución F de Fisher-Snedecor, compara estas dos fuentes de variabilidad:
 
@@ -1418,15 +1337,9 @@ Para que los resultados del ANOVA sean válidos, deben cumplirse los siguientes 
 
 -   **Homocedasticidad:** Las varianzas de los grupos deben ser homogéneas.
 
-### Funciones de R 
+### Funciones de rstatix
 
-Podemos realizar un test ANOVA de 1 factor o 1 vía mediante la función `aov()` de R `base`. Utiliza sintaxis fórmula del tipo $var_cuanti∼factor$ y su resultado es un objeto lista (modelo “aov-lm”).
-
-Siempre conviene que asignemos los resultados a objetos que luego nos servirán para aplicar otras funciones como `summary()` para obtener los resultados completos, incluido el p-valor.
-
-También podemos usar la función `lm()` del paquete `stats` que ajusta modelos lineales y luego la función `anova()` sobre el objeto para obtener la significancia del test F.
-
-Si los resultados del test F nos muestra un $p-valor$ menor a 0,05 el análisis sugiriere que al menos dos grupos son diferentes entre sí.
+Utilizaremos un dataset que viene preparado para mostras el uso de la función `anova_test()` 
 
 
 ### Comparaciones múltiples
@@ -1446,6 +1359,11 @@ Para realizar las comparaciones múltiples mediante test de Tukey usamos el coma
 ```{r, eval=F}
 contrast(comp, method = "pairwise")
 ```
+
+
+## Otros
+
+- cor.mat() y sus funciones anexas
 
 
 

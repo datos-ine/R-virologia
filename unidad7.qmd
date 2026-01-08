@@ -404,9 +404,30 @@ Según la forma, las pirámides pueden ser:
 - Estacionaria: Base y parte media similares, refleja estabilidad demográfica (ejemplo: países con baja natalidad y mortalidad equilibrada).
 - Regresiva (contractiva): Base más angosta que la parte superior, indica envejecimiento de la población (ejemplo: países con baja natalidad y población envejecida).
 
-Para su construcción, como siempre, partimos los datos. Estos tienen que contener las variables Edad (grupos etarios regulares cada 5 años), Sexo (mujeres y varones) y población de cada subgrupo.
+Para su construcción, como siempre, partimos los datos. Estos tienen que contener las variables Edad (grupos etarios regulares cada 5 años), Sexo (mujeres y varones) y población de cada subgrupo. Similar a esta forma:
+
+```{r, echo=F}
+read_excel("datos/census_data_2017.xls", 
+                        range = "D4:G24", 
+                        col_names = F) |> 
+              dplyr::rename("Edad"=...1,"Total"=...2,"Hombres"=...3,"Mujeres"=...4) |> 
+  mutate(Edad = factor(Edad, levels = c("0-4", "5-9",  "10-14", "15-19", "20-24", "25-29", "30-34", "35-39", "40-44", "45-49", "50-54", "55-59", "60-64", "65-69", "70-74", "75-79", "80-84", "85-89", "90-94", "95-99", "100+"))) |> 
+  pivot_longer(cols = c(Hombres, Mujeres), names_to = "Sexo", values_to = "Poblacion") 
+```
+
 
 Luego ingresamos con esos datos en una estructura de ggplot, pero antes debemos incorporar un signo negativo a las poblaciones de los varones (para que las barras se construyan hacia la izquierda del eje 0).
+
+```{r, echo=F}
+read_excel("datos/census_data_2017.xls", 
+                        range = "D4:G24", 
+                        col_names = F) |> 
+              dplyr::rename("Edad"=...1,"Total"=...2,"Hombres"=...3,"Mujeres"=...4) |> 
+  mutate(Edad = factor(Edad, levels = c("0-4", "5-9",  "10-14", "15-19", "20-24", "25-29", "30-34", "35-39", "40-44", "45-49", "50-54", "55-59", "60-64", "65-69", "70-74", "75-79", "80-84", "85-89", "90-94", "95-99", "100+"))) |> 
+  pivot_longer(cols = c(Hombres, Mujeres), names_to = "Sexo", values_to = "Poblacion") |> 
+                 mutate(Sexo = if_else(Sexo == "Hombres", "Varones", Sexo),
+                        Poblacion = if_else(Sexo=="Varones",Poblacion*-1, Poblacion))
+``` 
 
 Una estructura completa de pirámide podría ser:
 
@@ -443,33 +464,6 @@ read_excel("datos/census_data_2017.xls",
                labs(y = "Población", title = "Piramide poblacional Argentina xxxx")
 
 ```
-## Corredor endémico
-
-Otras herramientas epidemiológica muy utilizadas, son los corredores endémicos. Aplicados a la vigilancia epidemiológica para la toma de decisiones, activando alertas y para poder comparar tendencias antes y despues de una intervención, por ejemplo.
-
-Permiten visualizar y analizar la variabilidad de una enfermedad a lo largo del tiempo en una población determinada.
-
-Existen varias técnicas para su construcción. La más común es utilizar cuartiles:
-
-1. Selección de datos históricos: Se recopilan datos de incidencia de la enfermedad en años previos, idealmente de al menos 5 o 7 años.
-2. Cálculo de percentiles: Se dividen los datos en franjas de riesgo utilizando percentiles (ejemplo: P25, P50, P75 y P90), lo que permite identificar umbrales para diferentes niveles de alerta.
-3. Visualización gráfica: Se representa la incidencia semanal o mensual en un gráfico con bandas de colores que indican distintas zonas de riesgo:
-  - Zona de éxito (bajo riesgo): Incidencia por debajo del percentil 25.
-  - Zona de seguridad (esperada): Entre los percentiles 25 y 75.
-  - Zona de alerta: Entre los percentiles 75 y 90.
-  - Zona de epidemia: Por encima del percentil 90.
-
-De esta forma, se pueden detectar brotes cuando los casos actuales superan las zonas de alerta y/o epidemia.
-
-Otra manera de construir estos corredores es por medio de la media geométrica. Método publicado por Marcelo Bortman [ver publicación](https://www.scielosp.org/pdf/rpsp/1999.v5n1/1-8/es).
-
-Consiste en calcular la media geométrica de las tasas y sus intervalos de confianza (mayor solidez estadística).
-
-La media geométrica la calculamos haciendo el logaritmo de la tasa para cada año, luego se calcula la media y los intervalos de confianza, y finalmente se hace el antilogaritmo
-
-Una limitación del método es que los valores deben ser siempre mayores de 0, ya que no es posible calcular el logaritmo de 0 ni de números negativos. Para sortear ese escollo, Betty Kirkwood recomienda sumarles 1 a todos los valores originales, realizar los cálculos y, finalmente, restar 1 a los valores finales. 
-
-En el script **Corredor.R** de la unidad 6 hay un ejemplo paso a paso, partiendo de datos de vigilancia de enfermedades respiratorias, para generar corredores endémicos por los dos métodos. 
 
 ## Personalización
 

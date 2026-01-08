@@ -496,7 +496,7 @@ Sin duda este abordaje tiene mayor utilidad cuando las operaciones por fila cont
 
 ## Estadísticos compatibles con tidyverse
 
-El interprete de R trae muchas funciones estadísticas descriptivas y para inferencia disponibles en su versión base pero ninguna de estas son compatibles con la filosofia de trabajo de tidyverse. Es por eso que para utilizar funciones como `mean()` o `median()` por ejemplo, debemos introducirlas dentro de estructuras como `summarise()`. Las funciones de este tipo trabajan sobre vectores y no tienen en cuenta a los dataframes que encapsulan a los vectores como variables.
+El interprete de R trae muchas funciones estadísticas descriptivas y para inferencia disponibles en su versión base pero ninguna de estas son compatibles con la filosofía de trabajo de tidyverse. Es por eso que para utilizar funciones como `mean()` o `median()` por ejemplo, debemos introducirlas dentro de estructuras como `summarise()`. Las funciones de este tipo trabajan sobre vectores y no tienen en cuenta a los dataframes que encapsulan a los vectores como variables.
 
 ```{r}
 #| echo: false
@@ -550,13 +550,13 @@ datos |>
   summarise(media_edad = mean(Edad))
 ```
 
-Cuando los estadísticos son más complejos que estas funciones descriptivas y devuelven un conjunto de resultados en forma de lista ni siquiera alcanza con aplicarlas dentro de un andamiaje de tidyverse como `summarise()`.
+Cuando los estadísticos son más complejos que estas funciones descriptivas y devuelven un conjunto de resultados en forma de **lista** ni siquiera alcanza con aplicarlas dentro de un andamiaje de tidyverse como `summarise()`.
 
-Un ejemplo de ello, son todas las funciones de R base para comparaciones de inferencia. Tomemos el caso de la prueba **t de Student**, que sirve para comparar las medias de muestras aproximadamente normales.
+Un ejemplo de ello, son todas las funciones de R base para comparaciones (pruebas de hipotesis). Tomemos el caso de la prueba **t de Student**, que sirve para comparar las medias de muestras aproximadamente *normales*.
 
 La función de R base es `t.test()` y sus argumentos obligatorios son `x` e `y` o bien utilizar un formato fórmula (`var1` ~ `var2`) 
 
-Para comparar dos conjuntos de datos con la forma x e y los datos tienen que estar en dos variables separadas y por lo tanto no cumplir con el formato "ordenado".
+Para comparar dos conjuntos de datos con la forma **x** e **y** los datos tienen que estar en dos variables separadas y por lo tanto no cumplir con el formato "ordenado".
 
 ```{r}
 #| echo: false
@@ -592,7 +592,7 @@ En este caso el `t.test()` lleva formula y datos en el argumento data.
 t.test(formula = Edad ~ Muestra, data = datos)
 ```
 
-Lo importante acá no es el resultado sino la forma en que lo devuelve. Observaran que no se trata de un formato ordenado ni se parece a una tabla. El tidyverse siempre (salvo raras excepciones, como con `pull()`) devuelve una tabla de datos ordenada y por eso todas estas funciones son incompatibles, aún utilizando un `summarise()` y nos dan error:
+Lo importante acá no es el resultado sino la forma en que se dá el input y output. Observaran que no se trata de un formato ordenado ni se parece a una tabla. El tidyverse siempre (salvo raras excepciones, como con `pull()`) devuelve una tabla de datos ordenada y por no cumplir con esa salida todas estas funciones son incompatibles, aún utilizando un `summarise()` (nos dan error):
 
 ```{r}
 #| error: true
@@ -603,7 +603,7 @@ Hace unos años a un desarrollador se le ocurrió crear un paquete que contiene 
 
 El paquete se llama **rstatix** y provee un marco simple e intuitivo compatible con el uso de tuberías, coherente con la filosofía de diseño "tidyverse", para realizar pruebas estadísticas descriptivas básicas y otras más avanzadas de inferencia y modelado.
 
-Las funciones de inferencia estadística, para comparar medias y proporciones (métodos paramétricos y no paramétricos), ANOVAS, analisis post-hoc, correlaciones y tamaños de efecto, así como también valores p ajustados o agregados de etiquetas de significación no serán explicados en este curso pero aquellxs que les interese profundizar y utilizarlas le pueden sacar un provecho muy útil a este paquete, cuyo sitio es <https://rpkgs.datanovia.com/rstatix/index.html>.
+Las funciones de inferencia estadística, para comparar medias y proporciones (métodos paramétricos y no paramétricos), ANOVAS, analisis post-hoc, correlaciones y tamaños de efecto, así como también valores p ajustados o agregados de etiquetas de significación se pueden ver en la documentación oficial del paquete:   <https://rpkgs.datanovia.com/rstatix/index.html>. Algunas de ellas las veremos en la próxima unidad sobre inferencia estadística.
 
 Respecto del ejemplo anterior la función de **rstatix** que reemplaza al `t.test()` tradicional es `t_test()`, es decir que al modo tidyverse reemplaza en el nombre el punto por un guión bajo (sucede en todas las funciones del paquete). 
 
@@ -623,7 +623,7 @@ datos |>
   select(p)
 ```
 
-Dentro de los estadísticos descriptivos la función `get_summary_stats()` devuelve un resumen univariado para variables cuantitativas.
+Dentro de los estadísticos descriptivos del paquete, la función `get_summary_stats()` devuelve un resumen univariado para variables cuantitativas.
 
 ```{r}
 datos |> 
