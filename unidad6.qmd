@@ -278,8 +278,8 @@ Una forma de implementarla dentro de una estructura tidyverse es:
 base |> 
   summarise(
     media = mean(EDAD_DIAGNOSTICO),
-    ic_lower = MeanCI(datos$EDAD_DIAGNOSTICO)[2],
-    ic_upper = MeanCI(datos$EDAD_DIAGNOSTICO)[3]
+    ic_lower = MeanCI(base$EDAD_DIAGNOSTICO)[2],
+    ic_upper = MeanCI(base$EDAD_DIAGNOSTICO)[3]
   )
 ```
 
@@ -1339,8 +1339,58 @@ Para que los resultados del ANOVA sean válidos, deben cumplirse los siguientes 
 
 ### Funciones de rstatix
 
-Utilizaremos un dataset que viene preparado para mostras el uso de la función `anova_test()` 
+Utilizaremos un conjunto de datos para mostrar el uso de la función `anova_test()` del paquete rstatix que permite hacer, entre otras cosas, un ANOVA de 1 vía.
 
+La concentración plasmática elevada de lipoproteínas de alta densidad (HDL) se acompaña de un menor riesgo de padecer cardiopatía coronaria. 
+
+Varios estudios sugieren que el ejercicio vigoroso eleva la concentración de HDL. 
+Con el fin de investigar si el trote incrementa la concentración plasmática de HDL, G. Harley Hartung et al. cuantificaron la concentración de HDL en corredores de maratón, trotadores y varones sedentarios (35 a 66 años de edad). 
+
+La concentración promedio de HDL en estos últimos fue de 43,3 mg/100 ml con una desviación estándar de 14,2 mg/100 ml. 
+
+La media y desvío estandar de la concentración de HDL en los trotadores y maratonistas fueron de 58,0 y 17,7 mg/100 ml y de 64,8 y 14,3 mg/100 ml, respectivamente. 
+
+Si cada grupo constaba de 70 varones, comprobemos si existen o no diferencias en la concentración promedio de HDL en los diversos grupos de esta muestra.
+
+Primero vamos a leer los datos y realizar una breve descripción estadística.
+
+```{r}
+hdl <- read_csv2("datos/Anova-HDL.txt")
+
+hdl |> 
+  group_by(grupo) |> 
+  get_summary_stats(hdl, type = "mean_sd")
+```
+
+Luego vamos a explorar normalidad en cada grupo y aprovecharemos una función del paquete que compatibiliza a la función `shapiro.test()` (bondad de ajuste de normalidad) de R base.
+
+```{r}
+hdl |> 
+  group_by(grupo) |> 
+  shapiro_test(hdl) 
+```
+Los valores de HDL cada grupo se aproximan a la distribución normal.
+
+El siguiente supuesto del ANOVA es la homocedasticidad entre los valores de los tres grupos.
+
+```{r}
+bartlett.test(hdl ~ grupo, # utiliza sintaxis fórmula
+              data = hdl) 
+
+```
+No hay evidencias significativas de falta de homocedasticidad (p valor > 0,05).
+
+Cumplidos los dos supuestos que chequeamos, avanzamos con el ANOVA mediante `anova_test()`.
+
+```{r}
+hdl |> 
+  anova_test(hdl ~ grupo)
+```
+La tabla devuelta consta del nombre de la variable de grupo, los grados de libertad, tanto de los grupos como de la variable cuantitativa, el valor del estadístico F y su p-valor asociado. También muestra el ges (generalized eta squared), que es un tamaño de efecto del ANOVA. Se interpreta como proporción de varianza explicada y va de 0 a 1.
+
+En este caso el factor grupo (Sedentario, Trotador y Maratonista) explica aproximadamente el 26 % de la variabilidad total de HDL.
+
+El p-valor es muy bajo, menor a 0,05, sugiriendo que hay evidencias suficientes para considerar que al menos dos medias son diferentes.
 
 ### Comparaciones múltiples
 
@@ -1348,22 +1398,20 @@ Una vez que comprobamos que existen diferencias significativas entre grupos, nos
 
 Si las varianzas son homocedásticas pero los grupos difieren en tamaño, podemos usar el test de Tukey si tenemos que comparar entre varios grupos, o la **corrección de Bonferroni** para grupos más reducidos.
 
-El paquete `emmeans` es una herramienta muy versátil y poderosa para realizar comparaciones múltiples. Comenzaremos utilizando la función `emmeans()` con el argumento `specs =` a la variable de grupo/factor para crear un objeto que contenga las medias marginales por grupo:
+El paquete propone la función `tukey_hsd()` para efectuar este análisis post-hoc de comparaciones múltiples. 
 
-```{r, eval=F}
-comp <- emmeans(anova, specs = "grupo")
+```{r}
+hdl |> 
+  tukey_hsd(hdl ~ grupo)
 ```
+Hay mayor diferencia entre los grupos Sedentario-Maratonista y Trotador-Sedentario que en Trotador-Maratonista, aunque todos tiene *valor-p ajustado* significativo (p < 0,05).
 
-Para realizar las comparaciones múltiples mediante test de Tukey usamos el comando `contrast()` con el argumento `method = "pairwise"`:
+Si hubiesemos tenido alguna variante en los datos (distribuciones sesgadas no normales, datos repetidos, heterocedasticidad, etc) el paquete permite usar otras alternativas paramétricas y no paramétricas como:
 
-```{r, eval=F}
-contrast(comp, method = "pairwise")
-```
+- `welch_anova_test()` para test de ANOVA de 1 vía asumiendo varianzas desiguales entre grupos
 
+- `kruskal_test()` para test de Kruskal-Wallis (versión no paramétrica del ANOVA)
 
-## Otros
-
-- cor.mat() y sus funciones anexas
 
 
 

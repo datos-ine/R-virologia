@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="es" xml:lang="es"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.8.25">
+<meta name="generator" content="quarto-1.8.21">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
@@ -72,7 +72,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <script src="site_libs/quarto-html/tippy.umd.min.js"></script>
 <script src="site_libs/quarto-html/anchor.min.js"></script>
 <link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="site_libs/quarto-html/quarto-syntax-highlighting-7b89279ff1a6dce999919e0e67d4d9ec.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-ea1d7ac60288e0f1efdbc993fd8432ae.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
 <link href="site_libs/bootstrap/bootstrap-e31584831b205ffbb2d98406f31c2a5b.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
@@ -274,7 +274,7 @@ window.Quarto = {
   <li><a href="#anova" id="toc-anova" class="nav-link" data-scroll-target="#anova">ANOVA</a></li>
   <li><a href="#anova-de-un-factor-o-de-una-vía" id="toc-anova-de-un-factor-o-de-una-vía" class="nav-link" data-scroll-target="#anova-de-un-factor-o-de-una-vía">ANOVA de un factor o de una vía</a>
   <ul class="collapse">
-  <li><a href="#funciones-de-r" id="toc-funciones-de-r" class="nav-link" data-scroll-target="#funciones-de-r">Funciones de R</a></li>
+  <li><a href="#funciones-de-rstatix" id="toc-funciones-de-rstatix" class="nav-link" data-scroll-target="#funciones-de-rstatix">Funciones de rstatix</a></li>
   <li><a href="#comparaciones-múltiples" id="toc-comparaciones-múltiples" class="nav-link" data-scroll-target="#comparaciones-múltiples">Comparaciones múltiples</a></li>
   </ul></li>
   </ul>
@@ -381,26 +381,6 @@ Z = \frac{\bar{x}-\mu}{\sigma}
 <p>Sabemos que, independientemente de la localización de los valores, aproximadamente el <strong>95%</strong> de los valores posibles de <span class="math inline">\(\bar{x}\)</span> en la distribución muestral estarán a menos de dos desviaciones estándar de la media <span class="math inline">\(\mu\)</span>. Es decir, el intervalo <span class="math inline">\(\mu \pm 2\sigma\)</span> contendrá el <strong>95%</strong> de los valores posibles de <span class="math inline">\(\bar{x}\)</span>.</p>
 <p>Supongamos que formamos intervalos a partir de todos los posibles valores de <span class="math inline">\(\bar{x}\)</span>, calculados a partir de todas las muestras posibles de tamaño <span class="math inline">\(n\)</span> tomadas de la población de interés. Esto generará una gran cantidad de intervalos de la forma <span class="math inline">\(\mu \pm  2\sigma\)</span>, todos con la misma amplitud, centrados en torno a una <span class="math inline">\(\mu\)</span> desconocida.</p>
 <p>Aproximadamente el <strong>95%</strong> de estos intervalos tendrán sus centros dentro del intervalo <span class="math inline">\(\mu \pm  2\sigma\)</span>. Cada uno de estos intervalos, que se encuentran dentro de <span class="math inline">\(\mu \pm  2\sigma\)</span>, puede contener el valor verdadero de <span class="math inline">\(\mu\)</span>.</p>
-<div class="cell" data-layout-align="center">
-<div class="cell-output-display">
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><img src="unidad6_files/figure-html/unnamed-chunk-3-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="672"></p>
-</figure>
-</div>
-</div>
-</div>
-<p>Finalmente, y basándonos en las propiedades de la distribución Normal, se puede deducir la expresión del IC:</p>
-<p><span class="math display">\[
-P(Z_{\alpha/2} &lt; Z_{1-\alpha/2)} = 1 - \alpha
-\]</span> Reemplazando <span class="math inline">\(Z\)</span>:</p>
-<p><span class="math display">\[
-P(Z_{\alpha/2} &lt; \frac{\bar{x} - \mu}{\frac{\sigma}{\sqrt{n}}} &lt; Z_{(1-\alpha/2)}) = 1-\alpha   
-\]</span></p>
-<p>Reordenando, la expresión del IC para la media queda:</p>
-<p><span class="math display">\[
-\bar{x} - Z_{\alpha/2}\sqrt{\frac{\sigma^2}{n}} &lt; \mu &lt; \bar{x} + Z_{\alpha/2}\frac{\sigma^2}{n}   
-\]</span></p>
 <section id="cómo-se-interpreta-un-ic" class="level3">
 <h3 class="anchored" data-anchor-id="cómo-se-interpreta-un-ic">¿Cómo se interpreta un IC?</h3>
 <p>Si hubiésemos tomado múltiples muestras del mismo tamaño de la población, en al menos <span class="math inline">\(100 * (1 − \alpha)\%\)</span> de las ocasiones el intervalo calculado contendría el parámetro poblacional real. Es decir, un IC al 95% implica que, a largo plazo, el 95% de los intervalos obtenidos a partir de muestras repetidas incluirán el valor verdadero del parámetro.</p>
@@ -430,11 +410,44 @@ SE = \sqrt{\frac{\hat{p}(1-\hat{p})}{n}}
 <p>Dado que un intervalo de confianza implica una declaración probabilística, su cálculo se fundamenta en las distribuciones muestrales de los estimadores y en el correspondiente error estándar. Aunque las fórmulas pueden parecer complejas, los paquetes estadísticos (como R) realizan estos cálculos automáticamente. Lo fundamental es comprender en qué depende la amplitud del IC (nivel de confianza, error estándar y tamaño muestral) y cómo cada uno de estos componentes influye en la precisión de la estimación.</p>
 <p>Para profundizar y visualizar simulaciones sobre estos conceptos, pueden explorar recursos interactivos como:</p>
 <p>➡️ <a href="https://seeing-theory.brown.edu/frequentist-inference/es.html#section2"><strong>Viendo la teoría: Una introducción visual a probabilidad y estadística</strong></a></p>
+<p>En el lenguaje R, además de calcular los intervalos de confianza por fórmula o mediante métodos bootstrap, existen varios paquetes que contemplan funciones ya creadas. Uno de ellos se denomina <strong>DescTools</strong> (su sitio en <a href="https://andrisignorell.github.io/DescTools/" class="uri">https://andrisignorell.github.io/DescTools/</a>), que entre sus variadas funciones posee a un grupo con nombres finalizados en <strong>CI</strong>, para el cálculo de los intervalos de confianza, como <strong>MeanCI()</strong> para IC de medias, <strong>MedianCI()</strong> para IC de medianas, <strong>BinomCI()</strong> para IC de proporciones binomiales, etc</p>
+<p>Estas funciones no son compatibles con tidyverse y pueden ejecutarse a la forma básica de R:</p>
+<div class="cell" data-layout-align="center">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">MeanCI</span>(base<span class="sc">$</span>EDAD_DIAGNOSTICO)</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>    mean   lwr.ci   upr.ci 
+37.01500 34.41676 39.61324 </code></pre>
+</div>
+</div>
+<p>Por defecto, el intervalo de confianza es del 95%, pero podemos cambiarlo mediante el argumento <strong>conf.level</strong>.</p>
+<div class="cell" data-layout-align="center">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">MeanCI</span>(base<span class="sc">$</span>EDAD_DIAGNOSTICO, <span class="at">conf.level =</span> <span class="fl">0.99</span>)</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>    mean   lwr.ci   upr.ci 
+37.01500 33.58825 40.44175 </code></pre>
+</div>
+</div>
+<p>Una forma de implementarla dentro de una estructura tidyverse es:</p>
+<div class="cell" data-layout-align="center">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>base <span class="sc">|&gt;</span> </span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">media =</span> <span class="fu">mean</span>(EDAD_DIAGNOSTICO),</span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">ic_lower =</span> <span class="fu">MeanCI</span>(base<span class="sc">$</span>EDAD_DIAGNOSTICO)[<span class="dv">2</span>],</span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">ic_upper =</span> <span class="fu">MeanCI</span>(base<span class="sc">$</span>EDAD_DIAGNOSTICO)[<span class="dv">3</span>]</span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>  )</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 1 × 3
+  media ic_lower ic_upper
+  &lt;dbl&gt;    &lt;dbl&gt;    &lt;dbl&gt;
+1  37.0     34.4     39.6</code></pre>
+</div>
+</div>
+<p>Situaciones similares se dan en las otras funciones del mismo paquete para cálculo de intervalos de confianza de diferentes estimadores.</p>
 </section>
 </section>
 <section id="normalidad-y-homocedasticidad" class="level2">
 <h2 class="anchored" data-anchor-id="normalidad-y-homocedasticidad">Normalidad y homocedasticidad</h2>
-<p>Las características fundamentales a la hora de decidir si utilizaremos métodos paramétricos o no paramétricos para la inferencia estadística, es que los datos se ajusten a una distribución normal y conocer si tienen una dispersión homogénea o heterogénea.</p>
+<p>Las características fundamentales a la hora de decidir si utilizaremos métodos paramétricos o no paramétricos para la inferencia estadística, es que los datos se aproximen a una distribución <em>normal</em> y conocer si tienen una dispersión homogénea o heterogénea.</p>
 </section>
 <section id="normalidad" class="level2">
 <h2 class="anchored" data-anchor-id="normalidad">Normalidad</h2>
@@ -449,51 +462,16 @@ SE = \sqrt{\frac{\hat{p}(1-\hat{p})}{n}}
 <h3 class="anchored" data-anchor-id="métodos-gráficos">Métodos gráficos</h3>
 <p>El gráfico por excelencia para evaluar normalidad es el Q-Q Plot que consiste en comparar los cuantiles de la distribución observada con los cuantiles teóricos de una distribución normal con la misma media y desviación estándar que los datos.</p>
 <p>Cuanto más se aproximen los datos a una normal, más alineados están los puntos entorno a la recta.</p>
-<p>En el lenguaje R hay varios paquetes que tienen funciones para construirlos:</p>
+<p>En el lenguaje R hay varios paquetes que tienen funciones para construirlos. Vamos a mostrar algunos interesantes y para esto importaremos algunos datos simulados:</p>
 <div class="cell" data-layout-align="center">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(dlookr)</span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggpubr)</span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(moments)</span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(nortest)</span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(car)</span>
-<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>datos <span class="ot">&lt;-</span> <span class="fu">read_csv2</span>(<span class="st">"datos/datos_normalidad.csv"</span>)</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
-<p>Cargamos datos de ejemplo:</p>
+<p>Una evaluación gráfica de normalidad rápida la podemos conseguir usando la función <code>plot_normality()</code> del paquete <code>dlookr</code>:</p>
 <div class="cell" data-layout-align="center">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>datos <span class="ot">&lt;-</span> <span class="fu">read_csv2</span>(<span class="st">"datos/datos_normalidad.csv"</span>)</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
-</div>
-<p>Evaluación gráfica de normalidad usando la función <code>plot_normality()</code> del paquete <code>dlookr</code>:</p>
-<div class="cell" data-layout-align="center">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>datos <span class="sc">|&gt;</span> </span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">plot_normality</span>(peso) </span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output-display">
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><img src="unidad6_files/figure-html/unnamed-chunk-6-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="672"></p>
-</figure>
-</div>
-</div>
-</div>
-<p>A simple vista observamos que los puntos de la variable <code>peso</code> <em>se ajustan bastante bien a la recta</em>.</p>
-<p>También podemos generar el qqplot usando las funciones <code>geom_qq_line()</code> y <code>geom_qq()</code> de <code>ggplot2</code>:</p>
-<div class="cell" data-layout-align="center">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>datos <span class="sc">|&gt;</span> </span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="at">mapping =</span> <span class="fu">aes</span>(<span class="at">sample =</span> peso)) <span class="sc">+</span></span>
-<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_qq_line</span>() <span class="sc">+</span></span>
-<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_qq</span>() <span class="sc">+</span></span>
-<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>()</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output-display">
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><img src="unidad6_files/figure-html/unnamed-chunk-7-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="672"></p>
-</figure>
-</div>
-</div>
-</div>
-<p>La función <code>ggqqplot()</code> del paquete <code>ggpubr</code> <span class="citation" data-cites="ggpubr">[@ggpubr]</span> nos permite agregar intervalos de confianza (zona gris alrededor de la recta) que nos orienta mejor sobre “donde caen” los puntos de la variable analizada:</p>
-<div class="cell" data-layout-align="center">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>datos<span class="sc">$</span>peso <span class="sc">|&gt;</span> </span>
-<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggqqplot</span>()</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(dlookr)</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>datos <span class="sc">|&gt;</span> </span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">plot_normality</span>(peso) </span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
@@ -502,10 +480,15 @@ SE = \sqrt{\frac{\hat{p}(1-\hat{p})}{n}}
 </div>
 </div>
 </div>
-<p>Un ejemplo donde la variable parece no cumplir con el supuesto de normalidad en estos datos de prueba es <code>edad</code>:</p>
+<p>A simple vista observamos que los puntos de la variable <code>peso</code> <em>se ajustan bastante bien a la recta</em>.</p>
+<p>La gráfica trae además de un histograma de los valores de la variable, dos más con transformaciones estándares de logaritmo y raíz cuadrada.</p>
+<p>Esta situación se presenta dado que en algunas situaciones permiten que los datos se aproximen a la distribución normal y podamos utilizar métodos paramétricos.</p>
+<p>La función <code>ggqqplot()</code> del paquete <code>ggpubr</code> <span class="citation" data-cites="ggpubr">[@ggpubr]</span> nos permite agregar intervalos de confianza (zona gris alrededor de la recta) que nos orienta mejor sobre “donde caen” los puntos de la variable analizada:</p>
 <div class="cell" data-layout-align="center">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>datos<span class="sc">$</span>edad <span class="sc">|&gt;</span> </span>
-<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggqqplot</span>()</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggpubr)</span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>datos <span class="sc">|&gt;</span>  </span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggqqplot</span>(<span class="at">x =</span> <span class="st">"peso"</span>)</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
@@ -514,6 +497,19 @@ SE = \sqrt{\frac{\hat{p}(1-\hat{p})}{n}}
 </div>
 </div>
 </div>
+<p>Un ejemplo donde la variable parece no cumplir con el supuesto de normalidad en estos datos de prueba es <code>edad</code>:</p>
+<div class="cell" data-layout-align="center">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>datos <span class="sc">|&gt;</span> </span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggqqplot</span>(<span class="at">x =</span> <span class="st">"edad"</span>)</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="unidad6_files/figure-html/unnamed-chunk-10-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Vemos claramente que los puntos de los quantiles se salen de la línea teórica y su zona de confianza y parecen tener otra distribución diferente a la normal.</p>
 </section>
 <section id="métodos-analíticos" class="level3">
 <h3 class="anchored" data-anchor-id="métodos-analíticos">Métodos analíticos</h3>
@@ -532,9 +528,11 @@ SE = \sqrt{\frac{\hat{p}(1-\hat{p})}{n}}
 </ul>
 <p>El paquete <code>moments</code> <span class="citation" data-cites="moments">[@moments]</span> posee algunas funciones interesantes para analizar medidas de forma, como el estimador de Pearson para curtosis:</p>
 <div class="cell" data-layout-align="center">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>datos <span class="sc">|&gt;</span> </span>
-<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">kurtosis_edad =</span> <span class="fu">kurtosis</span>(edad, <span class="at">na.rm =</span> T),</span>
-<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>            <span class="at">kurtosis_peso =</span> <span class="fu">kurtosis</span>(peso, <span class="at">na.rm =</span> T))</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(moments)</span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>datos <span class="sc">|&gt;</span> </span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">kurtosis_edad =</span> <span class="fu">kurtosis</span>(edad, <span class="at">na.rm =</span> T),</span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>            <span class="at">kurtosis_peso =</span> <span class="fu">kurtosis</span>(peso, <span class="at">na.rm =</span> T))</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 1 × 2
   kurtosis_edad kurtosis_peso
@@ -545,9 +543,9 @@ SE = \sqrt{\frac{\hat{p}(1-\hat{p})}{n}}
 <p>En los dos casos estamos frente a una <em>distribución leptocúrtica</em> pero de magnitudes bien diferentes. Muy alta en el caso de la variable <code>edad</code> (8,0) y mucho menor para la variable <code>peso</code> (2,7).</p>
 <p>El índice de asimetría es un indicador que permite establecer el <em>grado de asimetría</em> que presenta una distribución. Los valores menores que 0 indican distribución asimétrica negativa; los mayores a 0: distribución asimetrica positiva y cuando sea 0, o muy próximo a 0, distribución simétrica:</p>
 <div class="cell" data-layout-align="center">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>datos <span class="sc">|&gt;</span>  </span>
-<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">asimetria_edad =</span> <span class="fu">skewness</span>(edad, <span class="at">na.rm =</span> T),</span>
-<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>            <span class="at">asimetria_peso =</span> <span class="fu">skewness</span>(peso, <span class="at">na.rm =</span> T))</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>datos <span class="sc">|&gt;</span>  </span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">asimetria_edad =</span> <span class="fu">skewness</span>(edad, <span class="at">na.rm =</span> T),</span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>            <span class="at">asimetria_peso =</span> <span class="fu">skewness</span>(peso, <span class="at">na.rm =</span> T))</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 1 × 2
   asimetria_edad asimetria_peso
@@ -558,21 +556,21 @@ SE = \sqrt{\frac{\hat{p}(1-\hat{p})}{n}}
 <p>Los valores obtenidos con la función <code>skewness()</code> del paquete <code>moments</code> nos informan que la distribución de la edad tienen una asimetría positiva (2,2) y que los valores de peso se distribuyen bastante simétricos (0,1).</p>
 <p>Estas características de las distribuciones también se pueden ver mediante histogramas o gráficos de densidad:</p>
 <div class="cell" data-layout-align="center">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>datos  <span class="sc">|&gt;</span>  </span>
-<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">plot_normality</span>(edad, <span class="at">col =</span> <span class="st">"forestgreen"</span>) </span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>datos  <span class="sc">|&gt;</span>  </span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">plot_normality</span>(edad, <span class="at">col =</span> <span class="st">"forestgreen"</span>) </span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="unidad6_files/figure-html/unnamed-chunk-12-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="672"></p>
+<p><img src="unidad6_files/figure-html/unnamed-chunk-13-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="672"></p>
 </figure>
 </div>
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>datos <span class="sc">|&gt;</span> </span>
-<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">plot_normality</span>(peso, <span class="at">col =</span> <span class="st">"royalblue"</span>) </span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>datos <span class="sc">|&gt;</span> </span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">plot_normality</span>(peso, <span class="at">col =</span> <span class="st">"royalblue"</span>) </span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="unidad6_files/figure-html/unnamed-chunk-12-2.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="672"></p>
+<p><img src="unidad6_files/figure-html/unnamed-chunk-13-2.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="672"></p>
 </figure>
 </div>
 </div>
@@ -583,14 +581,14 @@ SE = \sqrt{\frac{\hat{p}(1-\hat{p})}{n}}
 <section id="pruebas-de-bondad-de-ajuste" class="level3">
 <h3 class="anchored" data-anchor-id="pruebas-de-bondad-de-ajuste">Pruebas de bondad de ajuste</h3>
 <p>Una prueba de bondad de ajuste permite testear la hipótesis de que una variable aleatoria sigue cierta distribución de probabilidad y se utiliza en situaciones donde se requiere comparar una distribución observada con una teórica o hipotética.</p>
-<p>El mecanismo es idéntico a cualquier test de hipótesis salvo que aquí esperamos no descartar la hipótesis nula de igualdad, por lo que obtener valores <em>p</em> de probabilidad mayores a 0,05 es signo de que la distribución de la variable analizada se ajusta.</p>
+<p>El mecanismo es idéntico a cualquier test de hipótesis salvo que aquí esperamos no descartar la hipótesis nula de igualdad, por lo que obtener valores <em>p</em> de probabilidad mayores a 0,05 es signo de que la distribución de la variable analizada se ajusta bien.</p>
 <p>A continuación, presentaremos los test de hipótesis más utilizados para analizar normalidad.</p>
 <section id="test-de-shapiro-wilk" class="level4">
 <h4 class="anchored" data-anchor-id="test-de-shapiro-wilk">Test de Shapiro-Wilk</h4>
 <p>Lleva el nombre de sus <a href="https://es.wikipedia.org/wiki/Test_de_Shapiro%E2%80%93Wilk">autores</a> (Samuel Shapiro y Martin Wilk) y es usado preferentemente para muestras de hasta 50 observaciones.</p>
-<p>La función se encuentra desarrollada en el paquete <code>stats</code> y se llama <code>shapiro.test()</code>:</p>
+<p>La función se encuentra desarrollada en el paquete <code>stats</code>, se llama <code>shapiro.test()</code> y utiliza sintaxis R base:</p>
 <div class="cell" data-layout-align="center">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="fu">shapiro.test</span>(datos<span class="sc">$</span>edad)</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="fu">shapiro.test</span>(datos<span class="sc">$</span>edad)</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
     Shapiro-Wilk normality test
@@ -598,7 +596,7 @@ SE = \sqrt{\frac{\hat{p}(1-\hat{p})}{n}}
 data:  datos$edad
 W = 0.69517, p-value = 4.912e-13</code></pre>
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="fu">shapiro.test</span>(datos<span class="sc">$</span>peso)</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="fu">shapiro.test</span>(datos<span class="sc">$</span>peso)</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
     Shapiro-Wilk normality test
@@ -618,10 +616,12 @@ W = 0.98615, p-value = 0.383</code></pre>
 <section id="test-de-lilliefors" class="level4">
 <h4 class="anchored" data-anchor-id="test-de-lilliefors">Test de Lilliefors</h4>
 <p>El test de <a href="https://es.wikipedia.org/wiki/Prueba_de_Lilliefors"><strong>Lilliefors</strong></a> asume que la media y varianza son desconocidas y está especialmente desarrollado para contrastar la normalidad.</p>
-<p>Es la alternativa al test de Shapiro-Wilk cuando el número de observaciones es mayor de 50.</p>
+<p>Es la alternativa al test de Shapiro-Wilk recomendada cuando el número de observaciones es mayor de 50.</p>
 <p>La función <code>lillie.test()</code> del paquete <code>nortest</code> <span class="citation" data-cites="nortest">[@nortest]</span> permite aplicarlo:</p>
 <div class="cell" data-layout-align="center">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="fu">lillie.test</span>(datos<span class="sc">$</span>edad)</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(nortest)</span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a><span class="fu">lillie.test</span>(datos<span class="sc">$</span>edad)</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
     Lilliefors (Kolmogorov-Smirnov) normality test
@@ -629,7 +629,7 @@ W = 0.98615, p-value = 0.383</code></pre>
 data:  datos$edad
 D = 0.24892, p-value &lt; 2.2e-16</code></pre>
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="fu">lillie.test</span>(datos<span class="sc">$</span>peso)</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="fu">lillie.test</span>(datos<span class="sc">$</span>peso)</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
     Lilliefors (Kolmogorov-Smirnov) normality test
@@ -645,7 +645,7 @@ D = 0.049534, p-value = 0.7905</code></pre>
 <p>Esta prueba se basa en las transformaciones de la curtosis y la asimetría de la muestra, y solo tiene poder frente a las alternativas de que la distribución sea sesgada.</p>
 <p>El paquete <code>moments</code> la tiene implementada en <code>agostino.test()</code>:</p>
 <div class="cell" data-layout-align="center">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="fu">agostino.test</span>(datos<span class="sc">$</span>edad)</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="fu">agostino.test</span>(datos<span class="sc">$</span>edad)</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
     D'Agostino skewness test
@@ -654,7 +654,7 @@ data:  datos$edad
 skew = 2.1947, z = 6.3465, p-value = 2.203e-10
 alternative hypothesis: data have a skewness</code></pre>
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="fu">agostino.test</span>(datos<span class="sc">$</span>peso)</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="fu">agostino.test</span>(datos<span class="sc">$</span>peso)</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
     D'Agostino skewness test
@@ -683,13 +683,13 @@ alternative hypothesis: data have a skewness</code></pre>
 <section id="f-test" class="level3">
 <h3 class="anchored" data-anchor-id="f-test">F-test</h3>
 <p>Este test es un contraste de la razón de varianzas, mediante el estadístico F que sigue una distribución F-Snedecor.</p>
-<p>Se utiliza cuando las distribuciones se aproximan a la “normal” y en R base se la encuentra en la función <code>var.test()</code> que permite utilizar la sintaxis de fórmula:</p>
+<p>Se utiliza cuando las distribuciones se aproximan a la “normal” y en R base se la encuentra en la función <code>var.test()</code>, incluida en R base, que permite utilizar la sintaxis de fórmula:</p>
 <div class="cell" data-layout-align="center">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a>variable_cuantitativa <span class="sc">~</span> variable_categórica_grupos</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a>variable_cuantitativa <span class="sc">~</span> variable_categórica_grupos</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>Por ejemplo:</p>
 <div class="cell" data-layout-align="center">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="fu">var.test</span>(<span class="at">formula =</span> peso <span class="sc">~</span> sexo, <span class="at">data =</span> datos)</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a><span class="fu">var.test</span>(<span class="at">formula =</span> peso <span class="sc">~</span> sexo, <span class="at">data =</span> datos)</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
     F test to compare two variances
@@ -708,10 +708,10 @@ ratio of variances
 </section>
 <section id="test-de-bartlett" class="level3">
 <h3 class="anchored" data-anchor-id="test-de-bartlett">Test de Bartlett</h3>
-<p>Este test se puede utilizar como alternativa al F-test, sobre todo porque nos permite aplicarlo cuando tenemos más de 2 grupos de comparación. Al igual que el anterior es sensible a las desviaciones de la normalidad.</p>
+<p>Este test se puede utilizar como alternativa al F-test, sobre todo porque nos permite aplicarlo también cuando tenemos <em>más de 2 grupos de comparación</em>. Al igual que el anterior es sensible a las desviaciones de la normalidad.</p>
 <p>La función en R <code>base</code> es <code>bartlett.test()</code> y también se pueden usar argumentos tipo fórmula:</p>
 <div class="cell" data-layout-align="center">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="fu">bartlett.test</span>(<span class="at">formula =</span> peso <span class="sc">~</span> sexo, <span class="at">data =</span> datos)</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb32"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a><span class="fu">bartlett.test</span>(<span class="at">formula =</span> peso <span class="sc">~</span> sexo, <span class="at">data =</span> datos)</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
     Bartlett test of homogeneity of variances
@@ -727,7 +727,11 @@ Bartlett's K-squared = 1.8082, df = 1, p-value = 0.1787</code></pre>
 <p>El test de Levene sirve para comparar la varianza de 2 o más grupos pero además permite elegir distintos estadísticos de tendencia central. Por lo tanto, la podemos adaptar a distribuciones alejadas de la normalidad seleccionando por ejemplo la mediana.</p>
 <p>La función <code>leveneTest()</code> se encuentra disponible en el paquete <code>car</code>. La vemos aplicada sobre <code>peso</code> para los diferentes grupos de <code>sexo</code> y utilizando la <strong>media</strong> como estadístico de centralidad, dado que la distribución de <code>peso</code> se aproxima a la normal.</p>
 <div class="cell" data-layout-align="center">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a><span class="fu">leveneTest</span>(<span class="at">y =</span> peso <span class="sc">~</span> sexo, <span class="at">data =</span> datos, <span class="at">center =</span> <span class="st">"mean"</span>)</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb34"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(car)</span>
+<span id="cb34-2"><a href="#cb34-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-3"><a href="#cb34-3" aria-hidden="true" tabindex="-1"></a><span class="fu">leveneTest</span>(<span class="at">y =</span> peso <span class="sc">~</span> sexo, </span>
+<span id="cb34-4"><a href="#cb34-4" aria-hidden="true" tabindex="-1"></a>           <span class="at">data =</span> datos, </span>
+<span id="cb34-5"><a href="#cb34-5" aria-hidden="true" tabindex="-1"></a>           <span class="at">center =</span> <span class="st">"mean"</span>)</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Levene's Test for Homogeneity of Variance (center = "mean")
       Df F value Pr(&gt;F)
@@ -738,7 +742,9 @@ group  1       2 0.1605
 <p>La conclusión es la misma que la encontrada anteriormente.</p>
 <p>Ahora vamos aplicarla sobre la variable <code>edad</code>, de la que habíamos descartado “normalidad”. Lo hacemos usando el argumento <code>center</code> con <code>"mean"</code> (media) y con <code>"median"</code> (mediana).</p>
 <div class="cell" data-layout-align="center">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb32"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a><span class="fu">leveneTest</span>(<span class="at">y =</span> edad <span class="sc">~</span> sexo, <span class="at">data =</span> datos, <span class="at">center =</span> <span class="st">"mean"</span>)</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb36"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a><span class="fu">leveneTest</span>(<span class="at">y =</span> edad <span class="sc">~</span> sexo, </span>
+<span id="cb36-2"><a href="#cb36-2" aria-hidden="true" tabindex="-1"></a>           <span class="at">data =</span> datos, </span>
+<span id="cb36-3"><a href="#cb36-3" aria-hidden="true" tabindex="-1"></a>           <span class="at">center =</span> <span class="st">"mean"</span>)</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Levene's Test for Homogeneity of Variance (center = "mean")
       Df F value Pr(&gt;F)  
@@ -747,7 +753,9 @@ group  1  4.6784  0.033 *
 ---
 Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb34"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a><span class="fu">leveneTest</span>(<span class="at">y =</span> edad <span class="sc">~</span> sexo, <span class="at">data =</span> datos, <span class="at">center =</span> <span class="st">"median"</span>)</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb38"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a><span class="fu">leveneTest</span>(<span class="at">y =</span> edad <span class="sc">~</span> sexo, </span>
+<span id="cb38-2"><a href="#cb38-2" aria-hidden="true" tabindex="-1"></a>           <span class="at">data =</span> datos, </span>
+<span id="cb38-3"><a href="#cb38-3" aria-hidden="true" tabindex="-1"></a>           <span class="at">center =</span> <span class="st">"median"</span>)</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Levene's Test for Homogeneity of Variance (center = "median")
       Df F value Pr(&gt;F)
@@ -779,8 +787,7 @@ group  1  2.4413 0.1214
 <li><p>Se asume a priori que la ley de distribución de la población es conocida.</p></li>
 <li><p>Se extrae una muestra aleatoria de dicha población.</p></li>
 </ul>
-<p>El conjunto de estas técnicas de inferencia se denomina <strong>técnicas paramétricas</strong>. Sin embargo, existen otros métodos, denominados <strong>técnicas no paramétricas</strong> o contrastes de distribuciones libres, que no requieren estimar parámetros ni suponer una ley de probabilidad específica para la población. Algunos de estos métodos serán desarrollados más adelante en este módulo.</p>
-<p>Es importante señalar que los contrastes de hipótesis se utilizan no solo en estudios transversales, sino con mayor frecuencia en diseños en los que <em>a priori</em> existen grupos de comparación, como en estudios de casos y controles, cohortes, ensayos clínicos, entre otros. Desarrollaremos aquí la teoría que los sustenta y los utilizaremos a lo largo de todo el curso.</p>
+<p>El conjunto de estas técnicas de inferencia se denomina <strong>técnicas paramétricas</strong>. Sin embargo, existen otros métodos, denominados <strong>técnicas no paramétricas</strong> o contrastes de distribuciones libres, que no requieren estimar parámetros ni suponer una ley de probabilidad específica para la población. Algunos de estos métodos serán desarrollados más adelante en esta unidad.</p>
 <section id="estructura-del-test-de-hipótesis" class="level3">
 <h3 class="anchored" data-anchor-id="estructura-del-test-de-hipótesis">Estructura del test de hipótesis</h3>
 <p>Los componentes básicos de cualquier test de contraste de hipótesis son:</p>
@@ -793,7 +800,7 @@ group  1  2.4413 0.1214
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="unidad6_files/figure-html/unnamed-chunk-21-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="672"></p>
+<p><img src="unidad6_files/figure-html/unnamed-chunk-22-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="672"></p>
 </figure>
 </div>
 </div>
@@ -826,7 +833,7 @@ H_1: \mu_1 &lt; \mu_2
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="unidad6_files/figure-html/unnamed-chunk-22-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="672"></p>
+<p><img src="unidad6_files/figure-html/unnamed-chunk-23-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="672"></p>
 </figure>
 </div>
 </div>
@@ -841,7 +848,7 @@ H_1: \mu_1 &lt; \mu_2
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="unidad6_files/figure-html/unnamed-chunk-23-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="672"></p>
+<p><img src="unidad6_files/figure-html/unnamed-chunk-24-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="672"></p>
 </figure>
 </div>
 </div>
@@ -858,7 +865,7 @@ H_1: \mu_1 \neq \mu_2
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="unidad6_files/figure-html/unnamed-chunk-24-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="672"></p>
+<p><img src="unidad6_files/figure-html/unnamed-chunk-25-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="672"></p>
 </figure>
 </div>
 </div>
@@ -907,40 +914,21 @@ H_1: \mu_1 \neq \mu_2
 <p>Para quienes están familiarizados con el ámbito del diagnóstico, existe una clara analogía entre los falsos positivos y falsos negativos en las pruebas diagnósticas y, respectivamente, el error Tipo I y el error Tipo II en los contrastes de hipótesis.</p>
 <p>Hemos discutido el significado de <span class="math inline">\(\alpha\)</span> (error Tipo I); ahora veamos qué implica <span class="math inline">\(\beta\)</span>. Recordemos que el error Tipo II es análogo a los falsos negativos de las pruebas diagnósticas: es la probabilidad de no detectar una diferencia cuando, en realidad, ésta existe. En otras palabras, <span class="math inline">\(\beta\)</span> es la probabilidad de no rechazar la hipótesis nula (<span class="math inline">\(H_0\)</span>​) siendo esta falsa.</p>
 <p>A diferencia de <span class="math inline">\(\alpha\)</span> que se fija en un único valor y es determinado por el investigador, <span class="math inline">\(\beta\)</span> varía según el valor real del parámetro en estudio. Por ejemplo, si consideramos la hipótesis nula <span class="math inline">\(H_0: \mu_1 - \mu_2 = 0\)</span>, habrá un valor de <span class="math inline">\(\beta\)</span> para cada posible diferencia entre <span class="math inline">\(\mu_1\)</span>​ y <span class="math inline">\(\mu_2\)</span> cuando el valor real no sea cero. La probabilidad de detectar correctamente una diferencia real - es decir, de obtener un resultado estadísticamente significativo cuando la diferencia existe- se denomina <strong>potencia estadística</strong> y se expresa como <span class="math inline">\(1-\beta\)</span>.</p>
-<p>Los contrastes de hipótesis no son exclusivos de los estudios transversales; por el contrario, su uso es más común en estudios analíticos que involucran grupos de comparación, tales como estudios de casos y controles, cohortes o ensayos clínicos. Por ejemplo, en un ensayo clínico que evalúa dos tratamientos, la potencia estadística refleja la capacidad del estudio para identificar un efecto real del tratamiento.</p>
 <p>Es deseable que la potencia del estudio sea lo mayor posible, ya que esto incrementa la probabilidad de detectar diferencias verdaderas. Sin embargo, no es posible minimizar ambos errores simultáneamente ya que al disminuir <span class="math inline">\(\alpha\)</span> (es decir, al ser más exigentes para rechazar la <span class="math inline">\(H_0\)</span>​), <span class="math inline">\(\beta\)</span> tiende a aumentar, y viceversa. En los contrastes, la hipótesis privilegiada es <span class="math inline">\(H_0\)</span> que solo será rechazada cuando la evidencia de su falsedad supere el umbral del <span class="math inline">\(1-\alpha\)</span>. Esto significa que, a menos que la evidencia en contra de <span class="math inline">\(H_0\)</span> sea muy significativa, se opta por no rechazarla. Lo ideal a la hora de definir un test es encontrar un compromiso entre <span class="math inline">\(\beta\)</span> y <span class="math inline">\(\alpha\)</span>.</p>
-<div class="cell" data-layout-align="center">
-<div class="cell-output-display">
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><img src="unidad6_files/figure-html/unnamed-chunk-26-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="672"></p>
-</figure>
-</div>
-</div>
-</div>
-<p>Mientras que para tests bilaterales:</p>
-<div class="cell" data-layout-align="center">
-<div class="cell-output-display">
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><img src="unidad6_files/figure-html/unnamed-chunk-27-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="672"></p>
-</figure>
-</div>
-</div>
-</div>
 <p>Finalmente, podemos decir que la potencia estadística ofrece un segundo mecanismo de seguridad en un contraste de hipótesis. Es como contar con una protección adicional en la toma de decisiones: si solo dispusiéramos del nivel de significación (<span class="math inline">\(\alpha\)</span>), tendríamos menos garantías. Al incorporar la potencia (<span class="math inline">\(1-\beta\)</span>) agregamos un segundo control. Por ello, en un contraste no basta con tener un valor <em>p</em> pequeño; también se necesita una potencia alta, que en la práctica suele fijarse en un 80% (es decir, <span class="math inline">\(1 - \beta = 0.8\)</span>).<br>
-Por otro lado, cuando existe una diferencia real —o un efecto real de una terapia, o una verdadera diferencia entre dos fármacos—, la <strong>magnitud</strong> de ese efecto influye en la facilidad para detectarlo. Los efectos grandes son más fáciles de identificar que los pequeños. Para estimar la potencia de una prueba, debemos especificar el <strong>efecto mínimo</strong> que valga la pena identificar.</p>
+</p>
+<p>Por otro lado, cuando existe una diferencia real —o un efecto real de una terapia, o una verdadera diferencia entre dos fármacos—, la <strong>magnitud</strong> de ese efecto influye en la facilidad para detectarlo. Los efectos grandes son más fáciles de identificar que los pequeños. Para estimar la potencia de una prueba, debemos especificar el <strong>efecto mínimo</strong> que valga la pena identificar.</p>
 <p>La potencia de un test estadístico depende de tres factores que actúan de manera interrelacionada:</p>
 <ul>
 <li><p>El <strong>riesgo de error</strong> que se tolerará al rechazar la hipótesis de ausencia de efecto o diferencia (<span class="math inline">\(\alpha\)</span>).</p></li>
-<li><p>La <strong>dimensión de la diferencia</strong> que se desea identificar en relación con la variabilidad en las poblaciones.</p></li>
+<li><p>La <strong>dimensión de la diferencia</strong> que se desea identificar en relación con la variabilidad en las poblaciones. (tamaño del efecto)</p></li>
 <li><p>El <strong>tamaño de la muestra</strong>.</p></li>
 </ul>
 <p>Del mismo modo que en un problema de estimación se necesita una idea de la magnitud a estimar y del error aceptable para definir el tamaño de la muestra, en un contraste de hipótesis se requiere conocer el <strong>tamaño del efecto</strong> que se quiere detectar. Así, el tamaño muestral se determina en función del nivel de confianza y de la potencia de la prueba, además de otros aspectos relacionados con el diseño y la prueba estadística elegida.</p>
 <p>En epidemiología, una de las situaciones más frecuentes al diseñar un estudio es el cálculo del tamaño muestral para un <strong>nivel de confianza del 95%</strong> y una <strong>potencia del 80%</strong>, que, como se mencionó, es un nivel de potencia alto y que además permite manejar un <span class="math inline">\(\alpha\)</span> relativamente bajo. El lenguaje <strong>R</strong> cuenta con diversas funciones para <strong>calcular y visualizar</strong> la relación entre tamaño muestral, potencia, tamaño del efecto y nivel de confianza, facilitando el diseño de estudios con un adecuado balance entre la probabilidad de detectar diferencias reales y la de controlar errores estadísticos.</p>
 <p>Por ejemplo, la función <code>pwr.t.test()</code> del paquete <code>pwr</code> <span class="citation" data-cites="pwr">[@pwr]</span>, calcula la potencia para pruebas <span class="math inline">\(t\)</span> de Student de medias (para una muestra, dos muestras y muestras pareadas), basado en el tamaño de la muestra, el nivel de confianza y el tamaño de efecto:</p>
 <div class="cell" data-layout-align="center">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb36"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a><span class="fu">pwr.t.test</span>(n, d, <span class="at">sig.level =</span> <span class="fl">0.05</span>, power, type, alternative)</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb40"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a><span class="fu">pwr.t.test</span>(n, d, <span class="at">sig.level =</span> <span class="fl">0.05</span>, power, type, alternative)</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>Donde:</p>
 <ul>
@@ -955,18 +943,18 @@ Por otro lado, cuando existe una diferencia real —o un efecto real de una tera
 <li><p><code>alternative</code>: palabra que especifica la hipotesis alternativa, debe ser <code>"two.sided"</code> (predeterminado), <code>"greater"</code> or <code>"less"</code>.</p></li>
 </ul>
 <p>La función se ejecuta incorporando todos los argumentos obligatorios (<code>d</code>,<code>n</code>, <code>power</code> y <code>sig.level</code>) menos el que se quiere calcular. En ese caso se iguala a <code>NULL</code> o se omite.</p>
-<p>Supongamos que queremos conocer el tamaño de la muestra para detectar diferencias en la media de la hemoglobina glicosilada entre dos grupos de pacientes con tratamientos de control de la diabetes distintos. Aceptamos un nivel de efecto convencional de una pequeña desviación (<span class="math inline">\(d_{Cohen} = 0.2\)</span>), una potencia del 80% y una significación habitual de 0,05.</p>
+<p>Supongamos que queremos conocer el tamaño de la muestra para detectar diferencias en la media de la hemoglobina glicosilada (HbA1c) entre dos grupos de pacientes con tratamientos de control de la diabetes distintos. Aceptamos un nivel de efecto convencional de una pequeña desviación (<span class="math inline">\(d_{Cohen} = 0.2\)</span>), una potencia del 80% y una significación habitual de 0,05.</p>
 <p>Cargamos el paquete requerido:</p>
 <div class="cell" data-layout-align="center">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb37"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(pwr)</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb41"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(pwr)</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>Calculamos el tamaño de muestra:</p>
 <div class="cell" data-layout-align="center">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb38"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a><span class="fu">pwr.t.test</span>(<span class="at">d =</span> <span class="fl">0.2</span>, </span>
-<span id="cb38-2"><a href="#cb38-2" aria-hidden="true" tabindex="-1"></a>           <span class="at">power =</span> <span class="fl">0.8</span>,</span>
-<span id="cb38-3"><a href="#cb38-3" aria-hidden="true" tabindex="-1"></a>           <span class="at">sig.level =</span> <span class="fl">0.05</span>, </span>
-<span id="cb38-4"><a href="#cb38-4" aria-hidden="true" tabindex="-1"></a>           <span class="at">type =</span> <span class="st">"two.sample"</span>, </span>
-<span id="cb38-5"><a href="#cb38-5" aria-hidden="true" tabindex="-1"></a>           <span class="at">alternative =</span> <span class="st">"two.sided"</span>)</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb42"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true" tabindex="-1"></a><span class="fu">pwr.t.test</span>(<span class="at">d =</span> <span class="fl">0.2</span>, </span>
+<span id="cb42-2"><a href="#cb42-2" aria-hidden="true" tabindex="-1"></a>           <span class="at">power =</span> <span class="fl">0.8</span>,</span>
+<span id="cb42-3"><a href="#cb42-3" aria-hidden="true" tabindex="-1"></a>           <span class="at">sig.level =</span> <span class="fl">0.05</span>, </span>
+<span id="cb42-4"><a href="#cb42-4" aria-hidden="true" tabindex="-1"></a>           <span class="at">type =</span> <span class="st">"two.sample"</span>, </span>
+<span id="cb42-5"><a href="#cb42-5" aria-hidden="true" tabindex="-1"></a>           <span class="at">alternative =</span> <span class="st">"two.sided"</span>)</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
      Two-sample t test power calculation 
@@ -982,16 +970,16 @@ NOTE: n is number in *each* group</code></pre>
 </div>
 <p>También podemos graficar la salida:</p>
 <div class="cell" data-layout-align="center">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb40"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a><span class="fu">pwr.t.test</span>(<span class="at">d =</span> <span class="fl">0.2</span>, </span>
-<span id="cb40-2"><a href="#cb40-2" aria-hidden="true" tabindex="-1"></a>           <span class="at">power =</span> <span class="fl">0.8</span>,</span>
-<span id="cb40-3"><a href="#cb40-3" aria-hidden="true" tabindex="-1"></a>           <span class="at">sig.level =</span> <span class="fl">0.05</span>, </span>
-<span id="cb40-4"><a href="#cb40-4" aria-hidden="true" tabindex="-1"></a>           <span class="at">type =</span> <span class="st">"two.sample"</span>, </span>
-<span id="cb40-5"><a href="#cb40-5" aria-hidden="true" tabindex="-1"></a>           <span class="at">alternative =</span> <span class="st">"two.sided"</span>) <span class="sc">|&gt;</span> </span>
-<span id="cb40-6"><a href="#cb40-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">plot</span>()</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb44"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb44-1"><a href="#cb44-1" aria-hidden="true" tabindex="-1"></a><span class="fu">pwr.t.test</span>(<span class="at">d =</span> <span class="fl">0.2</span>, </span>
+<span id="cb44-2"><a href="#cb44-2" aria-hidden="true" tabindex="-1"></a>           <span class="at">power =</span> <span class="fl">0.8</span>,</span>
+<span id="cb44-3"><a href="#cb44-3" aria-hidden="true" tabindex="-1"></a>           <span class="at">sig.level =</span> <span class="fl">0.05</span>, </span>
+<span id="cb44-4"><a href="#cb44-4" aria-hidden="true" tabindex="-1"></a>           <span class="at">type =</span> <span class="st">"two.sample"</span>, </span>
+<span id="cb44-5"><a href="#cb44-5" aria-hidden="true" tabindex="-1"></a>           <span class="at">alternative =</span> <span class="st">"two.sided"</span>) <span class="sc">|&gt;</span> </span>
+<span id="cb44-6"><a href="#cb44-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">plot</span>()</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="unidad6_files/figure-html/unnamed-chunk-31-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="672"></p>
+<p><img src="unidad6_files/figure-html/unnamed-chunk-30-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="672"></p>
 </figure>
 </div>
 </div>
@@ -1449,12 +1437,65 @@ Esto se traduce en evaluar el tipo de experimento: ¿se comparan dos grupos o m�
 </div>
 </div>
 </div>
+<p>Hasta aquí la parte teórica de las pruebas de hipótesis. Para su aplicación en R podríamos utilizar muchas de las funciones que el lenguaje trae originalmente pero vamos a hacerlo con el paquete <strong>rstatix</strong> que presentamos en la unidad anterior, dado que presenta funciones que hacen lo mismo pero con compatibilidad tidyverse.</p>
+<p>Los nombres de sus funciones son similares a las originales pero en lugar de un punto utilizan un guión bajo como separador, por ejemplo la clásica <code>t.test()</code> se reemplaza por <code>t_test()</code> y por supuesto todos sus inputs y outputs son dataframes.</p>
+<p>Veamos algunos ejemplos. Tomemos la variable <strong>peso</strong> que anteriormente verificamos que tenia una distribución aproximadamente normal.</p>
+<p>Si queremos hacer una comparación de su media con una media estándar conocida (o teórica/hipotética), por ejemplo mu = 70,5 kgrs, ejecutamos:</p>
+<div class="cell" data-layout-align="center">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb45"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb45-1"><a href="#cb45-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(rstatix)</span>
+<span id="cb45-2"><a href="#cb45-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb45-3"><a href="#cb45-3" aria-hidden="true" tabindex="-1"></a>datos  <span class="sc">|&gt;</span>   </span>
+<span id="cb45-4"><a href="#cb45-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">t_test</span>(peso <span class="sc">~</span> <span class="dv">1</span>, <span class="at">mu =</span> <span class="fl">70.5</span>)</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 1 × 7
+  .y.   group1 group2         n statistic    df     p
+* &lt;chr&gt; &lt;chr&gt;  &lt;chr&gt;      &lt;int&gt;     &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
+1 peso  1      null model   100     -1.12    99 0.266</code></pre>
+</div>
+</div>
+<p>El p-valor es de 0,266 y por lo tanto no rechazamos la hipotesis nula de igualdad. Observemos que el objeto que devuelve la función es un dataframe con 7 columnas, de las que destacan n (cantidad de observaciones de la muestra), statitics (estadístico de prueba -en este caso la <span class="math inline">\(t\)</span> de Student-), df (los grados de libertad) y p (el valor de probabilidad). Y que el argumento principal de las funciones utilizan el formato fórmula.</p>
+<p>Lo mismo, pero usando dos muestras de peso (una de mujeres y otra de varones), lo que sería una comparación de dos medias de muestras independientes:</p>
+<div class="cell" data-layout-align="center">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb47"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb47-1"><a href="#cb47-1" aria-hidden="true" tabindex="-1"></a>datos <span class="sc">|&gt;</span> </span>
+<span id="cb47-2"><a href="#cb47-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">t_test</span>(peso <span class="sc">~</span> sexo, </span>
+<span id="cb47-3"><a href="#cb47-3" aria-hidden="true" tabindex="-1"></a>         <span class="at">paired =</span> <span class="cn">FALSE</span>,    <span class="co"># independientes</span></span>
+<span id="cb47-4"><a href="#cb47-4" aria-hidden="true" tabindex="-1"></a>         <span class="at">var.equal =</span> <span class="cn">TRUE</span>) </span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 1 × 8
+  .y.   group1 group2    n1    n2 statistic    df     p
+* &lt;chr&gt; &lt;chr&gt;  &lt;chr&gt;  &lt;int&gt; &lt;int&gt;     &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
+1 peso  Mujer  Varon     51    49    0.0601    98 0.952</code></pre>
+</div>
+</div>
+<p>Agregamos el argumento <code>var.equal = TRUE</code> porque vimos anteriormente que las varianzas de la variable peso en los dos grupos de sexo eran iguales.</p>
+<p>El test no permite rechazar la hipótesis nula de que las medias de los pesos entre mujeres y varones son iguales. (p valor = 0,952)</p>
+<p>Si en cambio tuviésemos que trabajar con la variable <strong>edad</strong>, ésta no se aproximaba a la normal, por lo que deberíamos utilizar una prueba de hipótesis no paramétrica. En este caso, la prueba <strong>U de Mann-Whitney</strong>, conocida en el ámbito de R como prueba de <strong>Wilcoxon</strong> o como prueba de <strong>suma de rangos de Wilcoxon para dos muestras independientes</strong> (es una alternativa no paramétrica a la prueba t para comparar dos medias). Se recomienda especialmente cuando los datos no siguen una distribución normal.</p>
+<p>Al igual que la prueba t, la prueba de Wilcoxon se presenta en dos versiones: de una muestra y de dos muestras. Se utilizan prácticamente en las mismas situaciones que las pruebas t correspondientes.</p>
+<div class="cell" data-layout-align="center">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb49"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb49-1"><a href="#cb49-1" aria-hidden="true" tabindex="-1"></a>datos <span class="sc">|&gt;</span> </span>
+<span id="cb49-2"><a href="#cb49-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">wilcox_test</span>(edad <span class="sc">~</span> sexo, </span>
+<span id="cb49-3"><a href="#cb49-3" aria-hidden="true" tabindex="-1"></a>         <span class="at">paired =</span> <span class="cn">FALSE</span>)    <span class="co"># independientes</span></span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 1 × 7
+  .y.   group1 group2    n1    n2 statistic     p
+* &lt;chr&gt; &lt;chr&gt;  &lt;chr&gt;  &lt;int&gt; &lt;int&gt;     &lt;dbl&gt; &lt;dbl&gt;
+1 edad  Mujer  Varon     50    49     1302. 0.587</code></pre>
+</div>
+</div>
+<p>El test de Wilcoxon nos informa que no hay elementos suficientes para decir que las distribuciones (o sus medianas específicamente) de edad según sexo son diferentes (p = 0,587).</p>
+<p>Las otras funciones implementadas por el paquete usan sintaxis similares y devuelven esquemas de resultados compatibles con lo mostrado. Entre las más utilizadas, encontramos:</p>
+<ul>
+<li><p><code>sign_test()</code> para prueba de signos (no paramétrico - muestras pareadas)</p></li>
+<li><p><code>prop_test()</code> para pruebas de proporciones</p></li>
+<li><p><code>chisq_test()</code> para prueba de chi cuadrado</p></li>
+<li><p><code>fisher_test()</code> para prueba exacta de Fisher</p></li>
+</ul>
 </section>
 </section>
 </section>
 <section id="anova" class="level2">
 <h2 class="anchored" data-anchor-id="anova">ANOVA</h2>
-<p>El análisis de varianza (ANOVA) es una extensión del modelo lineal general que se utiliza para comparar las medias de una variable dependiente continua (<span class="math inline">\(Y\)</span>) entre diferentes niveles de una variable explicativa categórica (<span class="math inline">\(X\)</span>), que debe tener al menos tres niveles.</p>
+<p>El <em>análisis de varianza</em> (ANOVA) es una extensión del modelo lineal general que se utiliza para comparar las medias de una variable dependiente continua (<span class="math inline">\(Y\)</span>) entre diferentes niveles de una variable explicativa categórica (<span class="math inline">\(X\)</span>), que debe tener al menos tres niveles.</p>
 <p>La hipótesis nula (<span class="math inline">\(H_0\)</span>) del test estadístico establece que las medias de la variable dependiente son iguales en todos los grupos, mientras que la hipótesis alternativa (<span class="math inline">\(H_1\)</span>) plantea que al menos dos medias difieren significativamente:</p>
 <ul>
 <li><p><span class="math inline">\(H_0: \mu_1 = \mu_2 = ... = \mu_i\)</span></p></li>
@@ -1466,6 +1507,15 @@ Esto se traduce en evaluar el tipo de experimento: ¿se comparan dos grupos o m�
 <li><p><strong>Intervarianza (SSB):</strong> Variabilidad entre los grupos.</p></li>
 <li><p><strong>Intravarianza (SSE):</strong> Variabilidad dentro de los grupos.</p></li>
 </ul>
+<div class="cell" data-layout-align="center">
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="unidad6_files/figure-html/unnamed-chunk-37-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
 <p>El estadístico <span class="math inline">\(F\)</span> del ANOVA, que sigue una distribución F de Fisher-Snedecor, compara estas dos fuentes de variabilidad:</p>
 <p><span class="math display">\[
 F = \frac{SSB/(k-1)}{SSE/(n-k)}
@@ -1489,25 +1539,97 @@ F = \frac{SSB/(k-1)}{SSE/(n-k)}
 <li><p><strong>Normalidad:</strong> La distribución de la variable dependiente dentro de cada grupo debe ser normal.</p></li>
 <li><p><strong>Homocedasticidad:</strong> Las varianzas de los grupos deben ser homogéneas.</p></li>
 </ul>
-<section id="funciones-de-r" class="level3">
-<h3 class="anchored" data-anchor-id="funciones-de-r">Funciones de R</h3>
-<p>Podemos realizar un test ANOVA de 1 factor o 1 vía mediante la función <code>aov()</code> de R <code>base</code>. Utiliza sintaxis fórmula del tipo <span class="math inline">\(var_cuanti∼factor\)</span> y su resultado es un objeto lista (modelo “aov-lm”).</p>
-<p>Siempre conviene que asignemos los resultados a objetos que luego nos servirán para aplicar otras funciones como <code>summary()</code> para obtener los resultados completos, incluido el p-valor.</p>
-<p>También podemos usar la función <code>lm()</code> del paquete <code>stats</code> que ajusta modelos lineales y luego la función <code>anova()</code> sobre el objeto para obtener la significancia del test F.</p>
-<p>Si los resultados del test F nos muestra un <span class="math inline">\(p-valor\)</span> menor a 0,05 el análisis sugiriere que al menos dos grupos son diferentes entre sí.</p>
+<section id="funciones-de-rstatix" class="level3">
+<h3 class="anchored" data-anchor-id="funciones-de-rstatix">Funciones de rstatix</h3>
+<p>Utilizaremos un conjunto de datos para mostrar el uso de la función <code>anova_test()</code> del paquete rstatix que permite hacer, entre otras cosas, un ANOVA de 1 vía.</p>
+<p>La concentración plasmática elevada de lipoproteínas de alta densidad (HDL) se acompaña de un menor riesgo de padecer cardiopatía coronaria.</p>
+<p>Varios estudios sugieren que el ejercicio vigoroso eleva la concentración de HDL. Con el fin de investigar si el trote incrementa la concentración plasmática de HDL, G. Harley Hartung et al.&nbsp;cuantificaron la concentración de HDL en corredores de maratón, trotadores y varones sedentarios (35 a 66 años de edad).</p>
+<p>La concentración promedio de HDL en estos últimos fue de 43,3 mg/100 ml con una desviación estándar de 14,2 mg/100 ml.</p>
+<p>La media y desvío estandar de la concentración de HDL en los trotadores y maratonistas fueron de 58,0 y 17,7 mg/100 ml y de 64,8 y 14,3 mg/100 ml, respectivamente.</p>
+<p>Si cada grupo constaba de 70 varones, comprobemos si existen o no diferencias en la concentración promedio de HDL en los diversos grupos de esta muestra.</p>
+<p>Primero vamos a leer los datos y realizar una breve descripción estadística.</p>
+<div class="cell" data-layout-align="center">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb51"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb51-1"><a href="#cb51-1" aria-hidden="true" tabindex="-1"></a>hdl <span class="ot">&lt;-</span> <span class="fu">read_csv2</span>(<span class="st">"datos/Anova-HDL.txt"</span>)</span>
+<span id="cb51-2"><a href="#cb51-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb51-3"><a href="#cb51-3" aria-hidden="true" tabindex="-1"></a>hdl <span class="sc">|&gt;</span> </span>
+<span id="cb51-4"><a href="#cb51-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(grupo) <span class="sc">|&gt;</span> </span>
+<span id="cb51-5"><a href="#cb51-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">get_summary_stats</span>(hdl, <span class="at">type =</span> <span class="st">"mean_sd"</span>)</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 3 × 5
+  grupo       variable     n  mean    sd
+  &lt;chr&gt;       &lt;fct&gt;    &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
+1 Maratonista hdl         70  64.8  14.2
+2 Sedentario  hdl         70  43.3  14.2
+3 Trotador    hdl         70  58.1  17.2</code></pre>
+</div>
+</div>
+<p>Luego vamos a explorar normalidad en cada grupo y aprovecharemos una función del paquete que compatibiliza a la función <code>shapiro.test()</code> (bondad de ajuste de normalidad) de R base.</p>
+<div class="cell" data-layout-align="center">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb53"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb53-1"><a href="#cb53-1" aria-hidden="true" tabindex="-1"></a>hdl <span class="sc">|&gt;</span> </span>
+<span id="cb53-2"><a href="#cb53-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(grupo) <span class="sc">|&gt;</span> </span>
+<span id="cb53-3"><a href="#cb53-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">shapiro_test</span>(hdl) </span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 3 × 4
+  grupo       variable statistic     p
+  &lt;chr&gt;       &lt;chr&gt;        &lt;dbl&gt; &lt;dbl&gt;
+1 Maratonista hdl          0.982 0.434
+2 Sedentario  hdl          0.971 0.100
+3 Trotador    hdl          0.992 0.947</code></pre>
+</div>
+</div>
+<p>Los valores de HDL cada grupo se aproximan a la distribución normal.</p>
+<p>El siguiente supuesto del ANOVA es la homocedasticidad entre los valores de los tres grupos.</p>
+<div class="cell" data-layout-align="center">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb55"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb55-1"><a href="#cb55-1" aria-hidden="true" tabindex="-1"></a><span class="fu">bartlett.test</span>(hdl <span class="sc">~</span> grupo, <span class="co"># utiliza sintaxis fórmula</span></span>
+<span id="cb55-2"><a href="#cb55-2" aria-hidden="true" tabindex="-1"></a>              <span class="at">data =</span> hdl) </span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+    Bartlett test of homogeneity of variances
+
+data:  hdl by grupo
+Bartlett's K-squared = 3.5696, df = 2, p-value = 0.1678</code></pre>
+</div>
+</div>
+<p>No hay evidencias significativas de falta de homocedasticidad (p valor &gt; 0,05).</p>
+<p>Cumplidos los dos supuestos que chequeamos, avanzamos con el ANOVA mediante <code>anova_test()</code>.</p>
+<div class="cell" data-layout-align="center">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb57"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb57-1"><a href="#cb57-1" aria-hidden="true" tabindex="-1"></a>hdl <span class="sc">|&gt;</span> </span>
+<span id="cb57-2"><a href="#cb57-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">anova_test</span>(hdl <span class="sc">~</span> grupo)</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>ANOVA Table (type II tests)
+
+  Effect DFn DFd      F        p p&lt;.05  ges
+1  grupo   2 207 36.384 2.88e-14     * 0.26</code></pre>
+</div>
+</div>
+<p>La tabla devuelta consta del nombre de la variable de grupo, los grados de libertad, tanto de los grupos como de la variable cuantitativa, el valor del estadístico F y su p-valor asociado. También muestra el ges (generalized eta squared), que es un tamaño de efecto del ANOVA. Se interpreta como proporción de varianza explicada y va de 0 a 1.</p>
+<p>En este caso el factor grupo (Sedentario, Trotador y Maratonista) explica aproximadamente el 26 % de la variabilidad total de HDL.</p>
+<p>El p-valor es muy bajo, menor a 0,05, sugiriendo que hay evidencias suficientes para considerar que al menos dos medias son diferentes.</p>
 </section>
 <section id="comparaciones-múltiples" class="level3">
 <h3 class="anchored" data-anchor-id="comparaciones-múltiples">Comparaciones múltiples</h3>
 <p>Una vez que comprobamos que existen diferencias significativas entre grupos, nos interesa saber cuáles grupos son diferentes entre sí. Para ello, existen distintos algoritmos de comparaciones múltiples con sus respectivas correcciones, como el test de <em>Diferencia Honestamente Significativa de Tukey,</em> también llamado Tukey HSD o <strong>test de Tukey</strong>. Esta prueba se aplica para grupos equilibrados (mismo tamaño) y varianzas similares (homocedásticas). Es una prueba conservadora, dado que mantiene bajo el error de tipo I, sacrificando la capacidad de detectar diferencias existentes.</p>
 <p>Si las varianzas son homocedásticas pero los grupos difieren en tamaño, podemos usar el test de Tukey si tenemos que comparar entre varios grupos, o la <strong>corrección de Bonferroni</strong> para grupos más reducidos.</p>
-<p>El paquete <code>emmeans</code> es una herramienta muy versátil y poderosa para realizar comparaciones múltiples. Comenzaremos utilizando la función <code>emmeans()</code> con el argumento <code>specs =</code> a la variable de grupo/factor para crear un objeto que contenga las medias marginales por grupo:</p>
+<p>El paquete propone la función <code>tukey_hsd()</code> para efectuar este análisis post-hoc de comparaciones múltiples.</p>
 <div class="cell" data-layout-align="center">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb41"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a>comp <span class="ot">&lt;-</span> <span class="fu">emmeans</span>(anova, <span class="at">specs =</span> <span class="st">"grupo"</span>)</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb59"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb59-1"><a href="#cb59-1" aria-hidden="true" tabindex="-1"></a>hdl <span class="sc">|&gt;</span> </span>
+<span id="cb59-2"><a href="#cb59-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tukey_hsd</span>(hdl <span class="sc">~</span> grupo)</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 3 × 9
+  term  group1      group2     null.value estimate conf.low conf.high    p.adj
+* &lt;chr&gt; &lt;chr&gt;       &lt;chr&gt;           &lt;dbl&gt;    &lt;dbl&gt;    &lt;dbl&gt;     &lt;dbl&gt;    &lt;dbl&gt;
+1 grupo Maratonista Sedentario          0   -21.5    -27.6    -15.4   2.42e-14
+2 grupo Maratonista Trotador            0    -6.72   -12.8     -0.633 2.65e- 2
+3 grupo Sedentario  Trotador            0    14.8      8.69    20.9   1.04e- 7
+# ℹ 1 more variable: p.adj.signif &lt;chr&gt;</code></pre>
 </div>
-<p>Para realizar las comparaciones múltiples mediante test de Tukey usamos el comando <code>contrast()</code> con el argumento <code>method = "pairwise"</code>:</p>
-<div class="cell" data-layout-align="center">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb42"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true" tabindex="-1"></a><span class="fu">contrast</span>(comp, <span class="at">method =</span> <span class="st">"pairwise"</span>)</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
+<p>Hay mayor diferencia entre los grupos Sedentario-Maratonista y Trotador-Sedentario que en Trotador-Maratonista, aunque todos tiene <em>valor-p ajustado</em> significativo (p &lt; 0,05).</p>
+<p>Si hubiesemos tenido alguna variante en los datos (distribuciones sesgadas no normales, datos repetidos, heterocedasticidad, etc) el paquete permite usar otras alternativas paramétricas y no paramétricas como:</p>
+<ul>
+<li><p><code>welch_anova_test()</code> para test de ANOVA de 1 vía asumiendo varianzas desiguales entre grupos</p></li>
+<li><p><code>kruskal_test()</code> para test de Kruskal-Wallis (versión no paramétrica del ANOVA)</p></li>
+</ul>
 
 
 </section>
@@ -1565,14 +1687,13 @@ F = \frac{SSB/(k-1)}{SSE/(n-k)}
       e.clearSelection();
     }
     const getTextToCopy = function(trigger) {
-      const outerScaffold = trigger.parentElement.cloneNode(true);
-      const codeEl = outerScaffold.querySelector('code');
-      for (const childEl of codeEl.children) {
-        if (isCodeAnnotation(childEl)) {
-          childEl.remove();
+        const codeEl = trigger.previousElementSibling.cloneNode(true);
+        for (const childEl of codeEl.children) {
+          if (isCodeAnnotation(childEl)) {
+            childEl.remove();
+          }
         }
-      }
-      return codeEl.innerText;
+        return codeEl.innerText;
     }
     const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
       text: getTextToCopy
