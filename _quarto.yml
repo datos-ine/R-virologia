@@ -10,7 +10,7 @@ website:
     logo: images/logos_ine.svg
     contents: 
       - href: index.qmd
-        text: Fundamentos
+        text: Temario
       - unidad1.qmd
       - unidad2.qmd
       - unidad3.qmd

@@ -1386,7 +1386,7 @@ Cumplidos los dos supuestos que chequeamos, avanzamos con el ANOVA mediante `ano
 hdl |> 
   anova_test(hdl ~ grupo)
 ```
-La tabla devuelta consta del nombre de la variable de grupo, los grados de libertad, tanto de los grupos como de la variable cuantitativa, el valor del estadístico F y su p-valor asociado. También muestra el ges (generalized eta squared), que es un tamaño de efecto del ANOVA. Se interpreta como proporción de varianza explicada y va de 0 a 1.
+La tabla devuelta consta del nombre de la variable de grupo, los grados de libertad, tanto de los grupos como de la variable cuantitativa, el valor del estadístico F y su p-valor asociado. También muestra el **ges** (generalized eta squared), que es un tamaño de efecto del ANOVA. Se interpreta como proporción de varianza explicada y va de 0 a 1.
 
 En este caso el factor grupo (Sedentario, Trotador y Maratonista) explica aproximadamente el 26 % de la variabilidad total de HDL.
 

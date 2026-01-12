@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="es" xml:lang="es"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.8.21">
+<meta name="generator" content="quarto-1.8.25">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
@@ -72,7 +72,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <script src="site_libs/quarto-html/tippy.umd.min.js"></script>
 <script src="site_libs/quarto-html/anchor.min.js"></script>
 <link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="site_libs/quarto-html/quarto-syntax-highlighting-ea1d7ac60288e0f1efdbc993fd8432ae.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-7b89279ff1a6dce999919e0e67d4d9ec.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
 <link href="site_libs/bootstrap/bootstrap-e31584831b205ffbb2d98406f31c2a5b.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
@@ -146,7 +146,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./index.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Fundamentos</span></a>
+ <span class="menu-text">Temario</span></a>
   </div>
 </li>
         <li class="sidebar-item">
@@ -380,23 +380,23 @@ El valor de i es: 5 </code></pre>
 <span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>datos</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 10 × 5
-   grupo       a      b       c      d
-   &lt;chr&gt;   &lt;dbl&gt;  &lt;dbl&gt;   &lt;dbl&gt;  &lt;dbl&gt;
- 1 B      1.24   -0.723 -1.49   -1.04 
- 2 B     -0.372   1.46  -0.229   0.306
- 3 A     -0.345   0.854 -2.01    0.313
- 4 B     -0.772   1.32  -1.66    0.661
- 5 A     -1.57   -0.370 -0.828   0.326
- 6 B     -0.467   0.306  0.0698  0.740
- 7 B      0.378   0.483  0.780   0.377
- 8 A     -0.164  -0.400 -1.69   -0.184
- 9 A     -0.0463  1.68  -0.154  -0.968
-10 A     -0.892   0.166 -0.833   0.496</code></pre>
+   grupo      a       b      c       d
+   &lt;chr&gt;  &lt;dbl&gt;   &lt;dbl&gt;  &lt;dbl&gt;   &lt;dbl&gt;
+ 1 A     -2.21   0.768  -1.28   1.31  
+ 2 A      0.154 -1.00    1.10   1.14  
+ 3 B      1.08  -0.467   0.454 -1.75  
+ 4 B      1.02   0.943  -1.34  -0.260 
+ 5 B      0.819  2.06    0.679  0.903 
+ 6 B      0.498  0.740  -1.18  -0.161 
+ 7 B     -1.37   0.0781 -0.618 -0.763 
+ 8 A      1.11  -0.941   0.656  0.0713
+ 9 B      0.301 -0.441   0.969 -0.0598
+10 B     -1.53  -1.67    0.552  0.451 </code></pre>
 </div>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="fu">map_dbl</span>(<span class="at">.x =</span> datos, <span class="at">.f =</span> mean)</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>     grupo          a          b          c          d 
-        NA -0.3006224  0.4775063 -0.8051050  0.1030844 </code></pre>
+<pre><code>       grupo            a            b            c            d 
+          NA -0.013049922  0.006786266 -0.001015489  0.088254863 </code></pre>
 </div>
 </div>
 <p>Calcula la media por cada una de las variables numéricas. Como la variable grupo no lo es me devuelve una advertencia y un NA como resultado.</p>
@@ -405,8 +405,8 @@ El valor de i es: 5 </code></pre>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="fu">map_dbl</span>(<span class="at">.x =</span> datos <span class="sc">|&gt;</span> <span class="fu">select</span>(<span class="sc">-</span>grupo), </span>
 <span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>        <span class="at">.f =</span> mean)</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>         a          b          c          d 
--0.3006224  0.4775063 -0.8051050  0.1030844 </code></pre>
+<pre><code>           a            b            c            d 
+-0.013049922  0.006786266 -0.001015489  0.088254863 </code></pre>
 </div>
 </div>
 <p>Observen que dentro del argumento <code>.x</code> construimos una estructura con tuberías donde seleccionamos a todas las variables menos a <strong>grupo</strong> (esto se puede hacer en los argumentos de muchas funciones).</p>
@@ -1006,13 +1006,14 @@ datos/datos_octubre_vigilancia.csv    datos/datos_septiembre_vigilancia.csv </co
       e.clearSelection();
     }
     const getTextToCopy = function(trigger) {
-        const codeEl = trigger.previousElementSibling.cloneNode(true);
-        for (const childEl of codeEl.children) {
-          if (isCodeAnnotation(childEl)) {
-            childEl.remove();
-          }
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
         }
-        return codeEl.innerText;
+      }
+      return codeEl.innerText;
     }
     const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
       text: getTextToCopy
